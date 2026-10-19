@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">auth.mod91.io</domain>
+        <trust-anchors>
+            <certificates src="@raw/auth_mod91_io"/>
+            <certificates src="@raw/auth_mod91_io_chain"/>
+        </trust-anchors>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">hermes.mod91.io</domain>
+        <trust-anchors>
+            <certificates src="@raw/hermes_mod91_io"/>
+            <certificates src="@raw/hermes_mod91_io_chain"/>
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

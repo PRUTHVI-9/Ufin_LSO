@@ -1,0 +1,527 @@
+<resources>
+    <string name="app_name">App-Purna</string>
+    <string name="app_version">15Oct26</string>
+    <string name="app_folder">ufin_lso</string>
+
+    <string name="OrgID1TestServerIP1">123.201.117.218</string>
+<!--    <string name="OrgID1TestServerIP2">117.217.120.129</string>-->
+    <string name="OrgID1TestServerIP2">117.247.92.99</string>
+    <string name="OrgID1TestServerPort">8080</string>
+
+    <string name="OrgID2TestServerIP1">182.74.149.130</string>
+    <string name="OrgID2TestServerIP2">182.74.149.130</string>
+    <string name="OrgID2TestServerPort">5085</string>
+
+    <string name="OrgID1ServerIP1">114.143.187.106</string>
+    <string name="OrgID1ServerIP2">125.99.71.194</string>
+    <string name="OrgID1ServerPort">8095</string>
+
+    <string name="OrgID2ServerIP1">114.79.180.90</string>
+    <string name="OrgID2ServerIP2">182.74.149.130</string>
+    <string name="OrgID2ServerPort">8085</string>
+
+    <string name="Tab_Member">सभासद</string>
+
+    <string name="Field_Yes">होय</string>
+    <string name="Field_No">नाही</string>
+
+    <string name="Header_Family">कुटुंब</string>
+    <string name="Field1_Family">पहिले नाव</string>
+
+    <string name="Field2_Family">मधले नाव</string>
+    <string name="Field3_Family">आडनाव</string>
+    <string name="Field4_Family">शिक्षण</string>
+    <string name="Field5_Family">नाते</string>
+
+    <string name="Field6_Family">वय</string>
+    <string name="Field7_Family">लिंग</string>
+    <string name="Field8_Family">व्यवसाय</string>
+    <string name="Field9_Family">मासिक उत्पन्न</string>
+    <string name="Field10_Family">वैवाहिक स्थिती</string>
+    <string name="Field11_Family">मोबाईल नंबर</string>
+    <string name="Field12_Family">व्यसन</string>
+    <string name="Field13_Family">आजार</string>
+    <string name="Field14_Family">HMF</string>
+    <string name="Field15_Family">वारसदार</string>
+    <string name="Field16_Family">जामीनदार</string>
+    <string name="Field17_Family">सदस्य:</string>
+    <string name="Field18_Family">आधारकार्ड क्र.</string>
+    <string name="Field19_Family">पिनकोड</string>
+    <string name="Field20_Family">रेशनकार्ड क्र.</string>
+    <string name="Field21_Family">नाव</string>
+    <string name="Field1_Assets">घरातील मालमत्ता</string>
+    <string name="Field2_Assets">टी. व्ही./एल. सी. डी.</string>
+    <string name="Field3_Assets">डी. व्ही. डी.</string>
+    <string name="Field4_Assets">कॉम्प्युटर/लॅपटॉप</string>
+    <string name="Field5_Assets">यापैकी काहीही नाही</string>
+    <string name="Field6_Assets">घरातील गरजेच्या वस्तू</string>
+
+    <string name="Field7_Assets">प्रेशर कुकर</string>
+    <string name="Field8_Assets">मिक्सर</string>
+    <string name="Field9_Assets">फ्रिज</string>
+    <string name="Field10_Assets">वॉशिंग मशीन</string>
+    <string name="Field11_Assets">कुलर</string>
+    <string name="Field12_Assets">मोबाईल हँडसेट</string>
+    <string name="Field13_Assets">एक मोबाईल</string>
+    <string name="Field14_Assets">दोन मोबाईल</string>
+    <string name="Field15_Assets">तीन मोबाईल</string>
+    <string name="Field16_Assets">वाहन</string>
+    <string name="Field17_Assets">फक्त सायकल</string>
+    <string name="Field18_Assets">मोटार सायकल/स्कुटर</string>
+    <string name="Field19_Assets">मोटारकार</string>
+    <string name="Field20_Assets">टेम्पो</string>
+    <string name="Field21_Assets">ऑटोरिक्षा</string>
+    <string name="Field22_Assets">मोटार कार भाडेतत्वावर (शिफ्ट)</string>
+    <string name="Field23_Assets">टेम्पो भाडेतत्वावर (शिफ्ट)</string>
+    <string name="Field24_Assets">ऑटोरिक्षा भाडेतत्वावर (शिफ्ट)</string>
+    <string name="Field25_Assets">रोजचा स्वयंपाक बनविताना काय इंधन वापरता?</string>
+    <string name="Field26_Assets">लाकूड/गोवरी/कोळसा</string>
+    <string name="Field27_Assets">स्टोव्ह</string>
+    <string name="Field28_Assets">गॅस</string>
+    <string name="Field29_Assets">लाईटची शेगडी</string>
+    <string name="Field30_Assets">काहीही नाही</string>
+    <string name="Field1_EconomicState">कुटुंब प्रमुख</string>
+    <string name="Field2_EconomicState">पुरुष</string>
+    <string name="Field3_EconomicState">स्त्री</string>
+    <string name="Field4_EconomicState">घरातील कोणाची विमा पॉलिसी आहे का?</string>
+    <string name="Field5_EconomicState">विमा पॉलिसी असल्यास कोणती?</string>
+    <string name="Field6_EconomicState">एल. आय. सी.</string>
+
+    <string name="Field7_EconomicState">इतर पॉलिसी</string>
+    <string name="Field8_EconomicState">कुटुंबातील कोणाला नियमित पगार मिळतो?</string>
+    <string name="Field9_EconomicState">एकाला</string>
+    <string name="Field10_EconomicState">दोघांना</string>
+    <string name="Field11_EconomicState">तिघांना</string>
+    <string name="Field12_EconomicState">तीनहून जास्त</string>
+    <string name="Field13_EconomicState">कोणाला नाही</string>
+    <string name="Field14_EconomicState">बचत</string>
+    <string name="Field15_EconomicState">बचत नाही</string>
+    <string name="Field16_EconomicState">भिशी</string>
+    <string name="Field17_EconomicState">फंड</string>
+    <string name="Field18_EconomicState">बचत गट</string>
+    <string name="Field19_EconomicState">अन्नपूर्णात आर. डी./एफ. डी.</string>
+    <string name="Field20_EconomicState">बँक</string>
+    <string name="Field21_EconomicState">इतर पतसंस्था</string>
+    <string name="Field22_EconomicState">अन्नपूर्णा आधारपूर्णा योजना</string>
+    <string name="Field23_EconomicState">इतर पेन्शन स्कीम</string>
+    <string name="Field24_EconomicState">रेशनकार्ड रंग</string>
+    <string name="Field25_EconomicState">पांढरे</string>
+    <string name="Field26_EconomicState">केशरी</string>
+    <string name="Field27_EconomicState">पिवळे</string>
+    <string name="Field28_EconomicState">सभासदाने कर्जासाठी दिलेली कागदपत्रे</string>
+    <string name="Field29_EconomicState">सभासदाकडे असलेली कागदपत्रेे</string>
+    <string name="Field1_Documents">रेशन कार्ड</string>
+    <string name="Field2_Documents">बँक पासबुक</string>
+    <string name="Field3_Documents">आधारकार्ड</string>
+    <string name="Field4_Documents">पॅनकार्ड</string>
+    <string name="Field5_Documents">इलेक्शन कार्ड</string>
+    <string name="Field6_Documents">ड्रायविंग लायसन्स</string>
+
+    <string name="Field7_Documents">लाईटबील</string>
+    <string name="Field8_Documents">घराची टॅक्सपावती</string>
+    <string name="Field9_Documents">घर/जमीन कागदपत्रे</string>
+    <string name="Field10_Documents">वाहन कागदपत्रे</string>
+    <string name="Field11_Documents">जन्मदाखला</string>
+    <string name="Field12_Documents">शाळा सोडण्याचे प्रमाणपत्र</string>
+    <string name="Field13_Documents">स्कॅन</string>
+    <string name="Field14_Documents">फोटो</string>
+    <string name="Field15_Documents">आधारकार्ड : सदस्य </string>
+    <string name="Field16_Documents">आधारकार्ड : मुख्य सदस्य</string>
+    <string name="Field17_Documents">दुकान नोंदणी प्रमाणपत्र</string>
+    <string name="Field18_Documents">घर करारपत्र</string>
+    <string name="Field19_Documents">आधारकार्ड</string>
+    <string name="Header_MothlyExpense">कुटुंबाचा महिन्याचा एकूण खर्च</string>
+    <string name="Field1_MothlyExpense">घर भाडे (घर भाड्याचे असेल तर)</string>
+    <string name="Field2_MothlyExpense">घरखर्च (किराणा)</string>
+    <string name="Field3_MothlyExpense">शिक्षणाचा खर्च</string>
+    <string name="Field4_MothlyExpense">आजारपणाचा खर्च</string>
+    <string name="Field5_MothlyExpense">इतर खर्च (सणवार, पाहुणचार)</string>
+
+    <string name="Field6_MothlyExpense">हप्ता/इतर देणी/भिशी/फंड/विमा</string>
+    <string name="Field7_MothlyExpense">बचतीसाठी भरणारी रक्कम</string>
+    <string name="Field8_MothlyExpense">एकूण खर्च</string>
+    <string name="Field1_Branch">ब्रँच</string>
+    <string name="Field2_Branch">विभाग</string>
+    <string name="Field3_Branch">ब्रँच नं.</string>
+    <string name="Field4_Branch">वस्ती</string>
+    <string name="Field5_Branch">LSO चे नाव</string>
+    <string name="Field6_Branch">गट</string>
+
+    <string name="Field7_Branch">BM चे नाव</string>
+    <string name="Field8_Branch">संदेश :</string>
+    <string name="Field9_Branch">सदस्य:</string>
+    <string name="Field10_Branch">धर्म</string>
+    <string name="Field11_Branch">जात</string>
+    <string name="Field12_Branch">पत्ता (जवळची खूण व पिनकोडसह)</string>
+    <string name="Field13_Branch">कर्ज प्रकार</string>
+    <string name="Field14_Branch">नवीन कर्ज</string>
+    <string name="Field15_Branch">पुनरकर्ज</string>
+    <string name="Field16_Branch">खाते क्र.</string>
+    <string name="Field17_Branch">एकूण कुटुंब सदस्य: </string>
+    <string name="Field18_Branch">रेशनकार्ड क्र.</string>
+    <string name="Field19_Branch">आधारकार्ड क्र.</string>
+    <string name="Field20_Branch">LSO ID</string>
+    <string name="Field21_Branch">केंद्र</string>
+    <string name="Field1_Guarantor">जामीनदार</string>
+    <!--<string name="Field17_Branch">कुटुंबातील एकूण सदस्य</string>-->
+    <string name="Field2_Guarantor">सभासदाशी असलेले नाते</string>
+    <string name="Field3_Guarantor">पत्ता</string>
+    <string name="Field4_Guarantor">कामधंदा</string>
+    <string name="Field5_Guarantor">मोबाईल नं.</string>
+    <string name="Field6_Guarantor">पिनकोड</string>
+
+    <string name="Header_Heir">वारासदाराची माहिती</string>
+    <string name="Field1_Heir">वारसदार</string>
+    <string name="Field2_Heir">सभासदाशी असलेले नाते</string>
+    <string name="Field3_Heir">वारसदाराचे वय</string>
+    <string name="Field4_Heir">कामधंदा</string>
+    <string name="Field5_Heir">वारसदार जर 18 वर्षाखालील असेल तर :</string>
+
+    <string name="Field6_Heir">पालक</string>
+    <string name="Field7_Heir">सभासदाशी असलेले नाते</string>
+    <string name="Field8_Heir">पत्ता व पिनकोड</string>
+    <string name="Field9_Heir">मोबाईल नं.</string>
+    <string name="Field1_Hobbies">सभासदाला आवड/छंद आहे का?</string>
+    <string name="Field2_Hobbies">कोणता?</string>
+    <string name="Field3_Hobbies">पेपर वाचणे/पुस्तक वाचणे/बातम्या पाहणे</string>
+    <string name="Field4_Hobbies">टी. व्ही. पाहणे (मालिका)</string>
+    <string name="Field5_Hobbies">शेजाऱ्यांशी गप्पा मारणे</string>
+    <string name="Field6_Hobbies">इतर</string>
+
+    <string name="Field7_Hobbies">इतर असल्यास आवड/छंद कोणता?</string>
+    <string name="Field1_0_House">घर</string>
+    <string name="Field1_1_House">स्वतःचे घर आहे?</string>
+    <string name="Field1_2_House">असल्यास कोणाच्या नावावर?</string>
+    <string name="Field2_House">घराच्या एकूण खोल्या</string>
+    <string name="Field3_House">एक लहान</string>
+    <string name="Field4_House">एक मोठी</string>
+
+    <string name="Field5_House">दोन मध्यम</string>
+    <string name="Field6_House">तीन किंवा जास्त</string>
+    <string name="Field7_House">घराची भिंत</string>
+    <string name="Field8_House">प्लास्टिक कागदाची</string>
+    <string name="Field9_House">पत्र्याची/मातीची</string>
+    <string name="Field10_House">विटांची</string>
+    <string name="Field11_House">प्लास्टर केलेली</string>
+    <string name="Field12_House">घरातील जमीन</string>
+
+    <string name="Field13_House">मातीची</string>
+    <string name="Field14_House">सिमेंट/कोबा</string>
+    <string name="Field15_House">साधी फरशी</string>
+    <string name="Field16_House">टाईल्स</string>
+    <string name="Field17_House">पिण्याच्या पाण्याची सोय</string>
+
+    <string name="Field18_House">सोय नाही</string>
+    <string name="Field19_House">सार्वजनिक नळ</string>
+    <string name="Field20_House">स्वतःचा नळ</string>
+    <string name="Field21_House">शौचालय सोय</string>
+    <string name="Field22_House">सार्वजनिक</string>
+
+    <string name="Field23_House">स्वतःचे</string>
+    <string name="Field24_House">स्वतःचे लाईट कनेक्शन आहे का?</string>
+    <string name="Field1_Income">वार्षिक उत्पन्न (गावाकडील शेती असेल तर)</string>
+    <string name="Field2_Income">मासिक उत्पन्न</string>
+
+    <string name="Field3_Income">इतर उत्पन्न (घरभाडे इ.)</string>
+    <string name="Field4_Income">एकूण उत्पन्न</string>
+    <string name="Field5_Income">दरमहा</string>
+    <string name="Header_Loan">कर्ज तपशील</string>
+
+    <string name="Field1_Loan">अन्नपूर्णाकडून मिळणारी कर्ज रक्कम</string>
+    <string name="Field2_Loan">कर्ज घेण्याचे कारण</string>
+    <string name="Field3_Loan">कर्ज घेतल्यानंतर खर्च कसा करणार</string>
+    <string name="Field4_Loan">कर्ज रकमेहून खर्च जास्त असल्यास पैसे कोठून उभे करणार</string>
+    <string name="Field1_OtherLoans">इतर कोणते कर्ज चालू आहे का?  </string>
+
+    <string name="Field2_OtherLoans">होय असल्यास इतर कर्जाची माहिती</string>
+    <string name="Field3_OtherLoans">बँक/संस्थेचे नाव</string>
+    <string name="Field4_OtherLoans">कर्ज रक्कम</string>
+    <string name="Field5_OtherLoans">हप्ता</string>
+    <string name="Field6_OtherLoans">किती हप्ते बाकी</string>
+
+    <string name="Field1_Repay">एकूण महिन्याचे उत्पन्न</string>
+    <string name="Field2_Repay">एकूण खर्च</string>
+    <string name="Field3_Repay">एकूण बाकी/शिल्लक</string>
+    <string name="Field4_Repay">अन्नपूर्णाचा कर्ज हप्ता</string>
+    <string name="Field5_Repay">अन्नपूर्णाकडून मिळणारे कर्ज</string>
+    <string name="Field6_Repay">कर्ज रक्कम (रु.)</string>
+
+    <string name="Field7_Repay">कालावधी (महिने)</string>
+    <string name="Field8_Repay">कर्जहप्ता (रु.)</string>
+    <string name="Field_Ruppees">रु. </string>
+    <string name="Field_Months">महिने</string>
+    <string name="Field_Installment">हप्ता रु.</string>
+    <string name="Field1_SavingAccount">सभासदाचे बँक खाते</string>
+    <string name="Field5_SavingAccount">बँक/संस्थेचे नाव</string>
+    <string name="Field8_SavingAccount">बँक ब्रँच, IFSC कोड</string>
+    <string name="Field9_SavingAccount">खाते क्र.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="WIP_ReasonToRemove_array">
+        <item></item>
+        <item>गटातील सभासद बदलायचा आहे.</item>
+        <item>सभासदाची माहिती अयोग्य भरली आहे.</item>
+        <item>सभासद/गटाने प्रीपेमेन्ट केले नाही.</item>
+        <item>गटातील सभासद क्रेडिट ब्युरो रिजेक्ट आहे.</item>
+        <item>कर्ज रक्कम चुकीची भरली आहे.</item>
+        <item>कर्ज कालावधी चुकीचा भरला आहे.</item>
+        <item>लोन प्रॉडक्ट चुकीचे आहे.</item>
+        <item>सॉफ्टवेअर चूक.</item>
+<!--//bmp 06-Jun-24-->
+        <item>केवायसी कागदपत्रे अपूर्ण आहेत</item>
+<!--//bmp 06-Jun-24-->
+    </string-array>
+
+    <string-array name="WIP_ReasonToRemove_array_Shivaji01">
+        <item></item>
+        <item>gaTatIla saBaasad badlaayacaa Aaho.</item>
+        <item>saBaasadacaI maaihtI Ayaaogya BarlaI Aaho.</item>
+        <item>saBaasad À gaTanao ip`pomaoMT kolao naahI.</item>
+        <item>gaTatIla saBaasad ËoiDT byaurao irjao@T Aaho.</item>
+        <item>kja- r@kma caukIcaI BarlaI Aaho.</item>
+        <item>kja- kalaavaQaI caukIcaa Barlaa Aaho.</item>
+        <item>laÜna p`a^D@T caukIcao Aaho.</item>
+        <item>saa^FTvaoAr caUk.</item>
+<!--//bmp 06-Jun-24-->
+        <item>kovaayasaI kagadp~o ApUNa- Aahot</item>
+<!--//bmp 06-Jun-24-->
+    </string-array>
+    <string-array name="PIF_Screen_array">
+        <item>सभासद</item>
+        <item>कुटुंब</item>
+        <item>उत्पन्न</item>
+        <item>इतर कर्जे</item>
+        <item>मासिक खर्च</item>
+        <item>कर्ज तपशील</item>
+        <item>कर्ज हप्ता</item>
+        <item>बचत खाते</item>
+        <item>जामीनदार</item>
+        <item>वारसदार</item>
+        <item>घर</item>
+        <item>उत्पन्नस्तर</item>
+        <item>मालमत्ता</item>
+        <item>आवड/छंद</item>
+        <item>कागदपत्रे</item>
+        <item>PIF Submit</item>
+    </string-array>
+    <string-array name="whoscontactnumber_array">
+        <item></item>
+        <item>स्वत:चा</item>
+        <item>कुटुंब सदस्याचा</item>
+        <item>इतर</item>
+    </string-array>
+    <string-array name="genderID_array">
+        <item>F</item>
+        <item>M</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="gender_array">
+        <item>स्री</item>
+        <item>पुरुष</item>
+    </string-array>
+    <string-array name="collection_mode_array">
+        <item>रोख रक्कम</item>
+        <item>UPI</item>
+        <item>नेट बँकिंग</item>
+        <item>बँक चेक</item>
+    </string-array>
+    <string-array name="KYC_DOC2_array">
+        <item></item>
+        <item>Ration Card</item>
+        <item>PAN Card</item>
+        <item>Voter ID</item>
+    </string-array>
+
+    <string-array name="paymentoptions_array">
+        <item>चालू हप्ता</item>
+        <item>जास्तीचे हप्ते</item>
+        <item>मुदतपूर्व खाते बंद</item>
+    </string-array>
+<!--    <string-array name="PrePaymentReasons_Within3Months_array">-->
+<!--        <item></item>-->
+<!--        <item>सभासदाला पुढील कर्ज घ्यायचे आहे.</item>-->
+<!--        <item>सभासद गावी जायचे असल्याने हप्त्याला हजर राहू शकत नाही.</item>-->
+<!--        <item>सभासदाला जास्तीचे पैसे मिळाले आहेत.</item>-->
+<!--        <item>स्वतः सभासदाला कर्ज नको, गटाला कर्ज हवे आहे.</item>-->
+<!--    </string-array>-->
+<!--    <string-array name="PrePaymentReasons_Within3Months_array_Shivaji01">-->
+<!--        <item></item>-->
+<!--        <item>saBaasadalaa puZIla kja- Gyaayacao Aaho.</item>-->
+<!--        <item>saBaasad gaavaI jaayacao Asalyaanaoo hF%yaalaa hjar rahU Sakt naahI.</item>-->
+<!--        <item>saBaasadalaa jaastIcao pOsaoo imaLalao Aahot.</item>-->
+<!--        <item>svat: saBaasadalaa kja- nakao¸ gaTalaa kja- hvao Aaho.</item>-->
+<!--    </string-array>-->
+    <string-array name="PrePaymentCollect_Within3Months_array">
+        <item></item>
+        <item>JLG,ADHP,RD</item>
+        <item>JLG,OADHP,RD</item>
+        <item>JLG,OADHP,RD</item>
+        <item>JLG,OADHP,RD</item>
+    </string-array>
+    <string-array name="PreClosureCollect_Within3Months_array">
+        <item></item>
+        <item>JLG,ADHP,RD</item>
+        <item>OADHP,ORD</item>
+        <item>OADHP,ORD</item>
+        <item>OADHP,ORD</item>
+    </string-array>
+<!--    <string-array name="PrePaymentReasons_Morethan3Months_array">-->
+<!--        <item></item>-->
+<!--        <item>सभासद कायमस्वरूपी गावी जाणार आहेत, स्वेच्छेने कर्ज निल करणार आहेत.</item>-->
+<!--        <item>सभासद कायमस्वरूपी घर सोडून निघून जात आहेत.</item>-->
+<!--        <item>सभासदाला स्वेच्छेने पुढील कर्ज घ्यायचे नाही.</item>-->
+<!--        <item>सभासद हप्त्याला त्रास देतात.</item>-->
+<!--        <item>सभासदाला इतर ठिकाणाहून पैसे मिळाले आहेत.</item>-->
+<!--        <item>पूर्ण गटाला पुढील कर्ज एकत्र घ्यायचे आहे.</item>-->
+<!--    </string-array>-->
+<!--    <string-array name="PrePaymentReasons_Morethan3Months_array_Shivaji01">-->
+<!--        <item></item>-->
+<!--        <item>saBaasad kayamasva$pI gaavaI jaaNaar Aahot  svaocCoNao kja- inala krNaar Aahot.</item>-->
+<!--        <item>saBaasad kayamasva$pI Gar saaoDUna inaGaUna jaat Aahoot.</item>-->
+<!--        <item>saBaasadalaa sva[cConao puZIla kja- Gyaayacao naahI.</item>-->
+<!--        <item>saBaasad hF%yaalaa ~asa dotat.</item>-->
+<!--        <item>saBaasadalaa [tr izkaNaahUna pOsao imaLalao Aahot.</item>-->
+<!--        <item>pUNa- gaTalaa puZIla kja- ek~ Gyaayacao Aaho.</item>-->
+<!--    </string-array>-->
+    <string-array name="PrePaymentCollect_Morethan3Months_array">
+        <item></item>
+        <item>JLG,OADHP,RD</item>
+        <item>JLG,OADHP,RD</item>
+        <item>JLG,OADHP,RD</item>
+        <item>JLG,RD</item>
+        <item>JLG,ADHP,RD</item>
+        <item>JLG,ADHP,RD</item>
+    </string-array>
+    <string-array name="PreClosureCollect_Morethan3Months_array">
+        <item></item>
+        <item>OADHP,ORD</item>
+        <item>OADHP,ORD</item>
+        <item>OADHP,ORD</item>
+        <item>OADHP,ORD</item>
+        <item>JLG,ADHP,RD</item>
+        <item>JLG,ADHP,RD</item>
+    </string-array>
+
+<!--    <string name="Receipt_OrgName">अन्नपूर्णा महिला मल्टिस्टेट को. ऑप. क्रेडिट सोसा. मर्यादित</string>&ndash;&gt;-->
+<!--    <string name="Receipt_OrgName">अन्नपूर्णा महिला कोऑपरेटिव्ह क्रेडिट सोसायटी लि.(मल्टिस्टेट)</string>-->
+    <string name="Receipt_OrgName">अन्नपूर्णा महिला कोऑपरेटिव्ह क्रेडिट सोसायटी लि. \'AMCCSL\'</string>
+    <string name="Receipt_OrgRegNo">रजि.नं.:एमएससीएस / सीआर /६८/९७</string>
+    <string name="Receipt_HdrLine">--------------------------------------------------------</string>
+    <string name="Receipt_Writeoff">राइट-ऑफची पावती</string>
+    <string name="Receipt_EMI">हप्त्याची पावती</string>
+    <string name="Receipt_ExtraEMI">अतिरिक्त हप्त्याची पावती</string>
+    <string name="EMIReceiptNote_Line1">* विम्याचा दावा चालू महिन्यात मंजूर झाला असेल व त्यातून काही रक्कम हप्त्यांमध्ये</string>
+    <string name="EMIReceiptNote_Line2">वळवून घ्यायला परवानगी दिली असेल तर पावतीवरील मुद्दल, व्याज, बचतीचे</string>
+    <string name="EMIReceiptNote_Line3">प्रमाण बदलू शकते.</string>
+    <string name="EMIReceiptNote2_Line1">* हप्त्याची पूर्ण रक्कम (हप्ता कार्डवर छापलेली) भरली नाही तर व्याज वाढते व</string>
+    <string name="EMIReceiptNote2_Line2">मुद्दल, व्याज व बचतीचे प्रमाण बदलू शकते.</string>
+<!--    <string name="EMIReceiptNote3_Line1">* कर्ज रक्कम रु. 3,60,000/- पेक्षा जास्त रकमेच्या कर्जासाठी:</string>-->
+<!--    <string name="EMIReceiptNote3_Line2">कर्जाच्या वेळी एचएमएफ, एफएलएमएफ, ऍसेट लॉस ची वर्गणी एक वर्षासाठीच भरून</string>-->
+<!--    <string name="EMIReceiptNote3_Line3">घेतली होती. पुढील वर्षाच्या नूतनीकरणासाठी लागणारी रक्कम दरमहा हप्त्यासोबत</string>-->
+<!--    <string name="EMIReceiptNote3_Line4">जेएलजी बचतीच्या खात्यात घेतली जाणार आहे.</string>-->
+    <string name="EMIReceiptNote3_Line1">* कर्जाच्या वेळी एचएमएफ, एफएलएमएफ, हॉस्पीवेज, ऍसेट लॉस ची वर्गणी एक</string>
+    <string name="EMIReceiptNote3_Line2">वर्षासाठीच भरून घेतली होती. पुढील वर्षाच्या नूतनीकरणासाठी लागणारी रक्कम</string>
+    <string name="EMIReceiptNote3_Line3">दरमहा हप्त्यासोबत जेएलजी बचतीच्या खात्यात घेतली जाणार आहे.</string>
+
+<!--&lt;!&ndash;    <string name="EMIReceiptNote4_Line1">* एकत्रित कलेक्शन केले असताना, यापूर्वी ऑनलाईनद्वारे रक्कम भरलेली असेल; परंतु संबंधित ऑनलाईन व्यवहार रद्द झाला किंवा त्यामध्ये काही बदल झाले, तर कॅशद्वारे भरलेल्या पावतीवरील व्याजाच्या कॅल्क्युलेशन बदल होऊ शकतो.</string>&ndash;&gt;-->
+<!--    <string name="EMIReceiptNote4_Line1">* एकत्रित कलेक्शन केले असताना, यापूर्वी ऑनलाईनद्वारे रक्कम भरलेली असेल;</string>-->
+<!--    <string name="EMIReceiptNote4_Line2">परंतु संबंधित ऑनलाईन व्यवहार रद्द झाला किंवा त्यामध्ये काही बदल झाले, तर</string>-->
+<!--    <string name="EMIReceiptNote4_Line3">कॅशद्वारे भरलेल्या पावतीवरील व्याजाच्या कॅल्क्युलेशन बदल होऊ शकतो.</string>-->
+
+<!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line1">* आपला हप्ता ऑनलाइन पद्धतीने भरलेला आहे. सदर रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च हप्ता लोन खात्यास ग्राह्य धरला जाईल, याची कृपया नोंद घ्यावी.</string>&ndash;&gt;-->
+<!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line1">* आपला हप्ता ऑनलाइन पद्धतीने भरलेला आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>&ndash;&gt;-->
+<!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च हप्ता लोन खात्यास</string>&ndash;&gt;-->
+<!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line3">ग्राह्य धरला जाईल, याची कृपया नोंद घ्यावी.</string>&ndash;&gt;-->
+<!--    <string name="EMIReceiptNote5_Line1">* वरील रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल, त्याच तारखेला</string>-->
+<!--    <string name="EMIReceiptNote5_Line2">सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>-->
+
+<!--    <string name="EMIReceiptNote6_Line1">* ऑनलाईन पावतीमध्ये तुमची रक्कम कलेक्शनच्या तारखेला़ 15 जून रोजी यशस्वीरीत्या जमा झाली असल्यास़ त्याच कलेक्शन तारखेनुसार कर्ज खात्यात हप्त्याची नोंद केली जाईल, मात्र कलेक्शन तारखेनंतर अन्नपूर्णाच्या बँक खात्यात रक्कम जमा झाल्यास़ प्रत्यक्ष जमा झालेल्या तारखेनुसार हप्ता ग्राह्य धरला जाईल व त्यानुसार व्याजाचे कॅल्क्युलेशन केले जाईल.</string>-->
+<!--    <string name="EMIReceiptNote6_Line1">* ऑनलाईन पावतीमध्ये तुमची रक्कम कलेक्शनच्या तारखेला़ यशस्वीरीत्या जमा झाली</string>-->
+<!--    <string name="EMIReceiptNote6_Line2">असल्यास़ त्याच कलेक्शन तारखेनुसार कर्ज खात्यात हप्त्याची नोंद केली जाईल, मात्र</string>-->
+<!--    <string name="EMIReceiptNote6_Line3">कलेक्शन तारखेनंतर अन्नपूर्णाच्या बँकखात्यात रक्कम जमा झाल्यास़ प्रत्यक्ष जमा झालेल्या</string>-->
+<!--    <string name="EMIReceiptNote6_Line4">तारखेनुसार हप्ता ग्राह्य धरला जाईल व त्यानुसार व्याजाचे कॅल्क्युलेशन केले जाईल.</string>-->
+<!--    <string name="EMIReceiptNote6_Line1">* सभासदाचे कलेक्शन आलेल्या तारखेनुसार मुद्दल व व्याजाचे प्रमाण बदलू शकते.</string>-->
+<!--    <string name="EMIReceiptNote7_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>-->
+
+    <string name="EMIReceiptCashNote4_Line1">* एकत्रित कलेक्शन केले असताना, यापूर्वी ऑनलाईनद्वारे रक्कम भरलेली असेल;</string>
+    <string name="EMIReceiptCashNote4_Line2">परंतु संबंधित ऑनलाईन व्यवहार रद्द झाला किंवा त्यामध्ये काही बदल झाले, तर</string>
+    <string name="EMIReceiptCashNote4_Line3">कॅशद्वारे भरलेल्या पावतीवरील व्याजाच्या कॅल्क्युलेशन मध्ये बदल होऊ शकतो.</string>
+
+    <string name="EMIReceiptOnlineNote4_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>
+<!--    <string name="EMIReceiptOnlineNote5_Line1">* पावती वरील रक्कम ही तुमच्या ऑनलाईन पेमेंटच्या स्क्रिनशॉटनुसार भरलेली आहे,हे</string>-->
+<!--    <string name="EMIReceiptOnlineNote5_Line2">पैसे AMCCSL च्या बँक खात्यात जमा झाल्याचा ताळा झाल्यानंतरच ग्राह्य धरले जातील.</string>-->
+    <string name="EMIReceiptOnlineNote5_Line1">* पावती वरील रक्कम तुमच्या ऑनलाईन पेमेंटच्या स्क्रिनशॉटनुसार भरलेली आहे, हे</string>
+    <string name="EMIReceiptOnlineNote5_Line2">पैसे AMCCSL च्या बँक खात्यात जमा झाल्याचा ताळा झाल्यानंतरच ग्राह्य धरले जातील.</string>
+    <string name="EMIReceiptOnlineNote6_Line1">* पावती वरील रक्कम AMCCSL च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल,</string>
+    <string name="EMIReceiptOnlineNote6_Line2">त्याच तारखेला सभासदाचे खात्यात जमा होतील.</string>
+    <string name="EMIReceiptOnlineNote7_Line1">* पावती वरील रक्कमेपैकी AMCCSL च्या बँक खात्यात कमी किंवा जास्त रक्कम जमा</string>
+    <string name="EMIReceiptOnlineNote7_Line2">झालेली असल्यास, कर्ज, आधारपूर्णा आरडी (RD) किंवा एफडी (FD) यापैकी</string>
+    <string name="EMIReceiptOnlineNote7_Line3">सभासदाच्या खात्यात प्रत्यक्ष जमा झालेली रक्कमच भरली जाईल.</string>
+    <string name="EMIReceiptOnlineNote8_Line1">* सभासदाचे प्रत्यक्ष पैसे जमा झालेल्या तारखेनुसार व्याज बदलू शकते, त्यामुळे उर्वरित</string>
+    <string name="EMIReceiptOnlineNote8_Line2">रक्कम मुद्दल, बचत यामध्ये जमा होते याची नोंद घ्यावी.</string>
+    <string name="EMIReceiptOnlineNote9_Line1">* जर तुम्ही ऑनलाईन कलेक्शन भरले असेल आणि कलेक्शन रद्द झाले असेल, तर</string>
+    <string name="EMIReceiptOnlineNote9_Line2">त्याची जबाबदारी AMCCSL कडे राहणार नाही.</string>
+
+<!--    <string name="Receipt_ADHP">आधारपूर्णा पावती</string>-->
+    <string name="Receipt_ADHP">आधारपूर्णा निवृत्ती आर्थिक परतावा पावती</string>
+<!--    <string name="ADHPReceiptNote1_Line1">* आधारपूर्णाची वर्गणी नियमित भरा व भरलेल्या रकमेची पावती हप्त्याच्या ताईकडून मागून घ्या.</string>-->
+    <string name="ADHPReceiptNote1_Line1">* आधारपूर्णाची वर्गणी नियमित भरा व पावती LSO ताईकडून मागून घ्या.</string>
+    <string name="ADHPReceiptNote2_Line1">* तुम्ही भरलेल्या रकमेचीच पावती मिळाली आहे का? याची खात्री करून घ्यावी.</string>
+<!--    <string name="ADHPReceiptNote3_Line1">* आधारपूर्णा खात्यात 65व्या वर्षी 45000/- मुद्दल रक्कम जमा होणे आवश्यक आहे.</string>&ndash;&gt;-->
+    <string name="ADHPReceiptNote3_Line1">* आधारपूर्णा खात्यात वयाच्या 65व्या वर्षी किमान 45000/- मुद्दल रक्कम जमा होणे</string>
+    <string name="ADHPReceiptNote3_Line2">  आवश्यक आहे.</string>
+    <string name="ADHPReceiptNote4_Line1">* तुम्हाला शक्य असेल तेवढी जास्तीत जास्त वर्गणी भरा म्हणजे जास्त परतावा मिळेल.</string>
+
+<!--    <string name="ADHPReceiptNote5_Line1">* आपली वर्गणी ऑनलाइन पद्धतीने भरलेली आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>-->
+<!--    <string name="ADHPReceiptNote5_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च वर्गणी आधारपूर्णा</string>-->
+<!--    <string name="ADHPReceiptNote5_Line3">खात्यास ग्राह्य धरली जाईल, याची कृपया नोंद घ्यावी.</string>-->
+    <string name="ADHPReceiptNote5_Line1">* वरील रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल, त्याच तारखेला</string>
+    <string name="ADHPReceiptNote5_Line2">सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>
+    <string name="ADHPReceiptNote6_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>
+    <string name="ADHPReceiptNote7_Line1">* जर तुम्ही ऑनलाईन कलेक्शन भरले असेल आणि कलेक्शन रद्द झाले असेल, तर</string>
+    <string name="ADHPReceiptNote7_Line2">त्याची जबाबदारी AMCCSL कडे राहणार नाही.</string>
+
+    <string name="Receipt_RD">RD पावती</string>
+<!--    <string name="RDReceiptNote1_Line1">* आपले कलेक्शन ऑनलाइन पद्धतीने भरलेले आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>-->
+<!--    <string name="RDReceiptNote1_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च कलेक्शन RD</string>-->
+<!--    <string name="RDReceiptNote1_Line3">खात्यास ग्राह्य धरले जाईल, याची कृपया नोंद घ्यावी.</string>-->
+    <string name="RDReceiptNote1_Line1">* वरील रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल, त्याच तारखेला</string>
+    <string name="RDReceiptNote1_Line2">सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>
+    <string name="RDReceiptNote2_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>
+    <string name="RDReceiptNote3_Line1">* जर तुम्ही ऑनलाईन कलेक्शन भरले असेल आणि कलेक्शन रद्द झाले असेल, तर</string>
+    <string name="RDReceiptNote3_Line2">त्याची जबाबदारी AMCCSL कडे राहणार नाही.</string>
+
+<!--    <string name="Receipt_Extra">मॅन्युअल पावती</string>-->
+    <string name="Receipt_Extra">अतिरिक्त कलेक्शन पावती</string>
+<!--    <string name="ExtraReceiptNote1_Line1">* आपले कलेक्शन ऑनलाइन पद्धतीने भरलेले आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>-->
+<!--    <string name="ExtraReceiptNote1_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च कलेक्शन</string>-->
+<!--    <string name="ExtraReceiptNote1_Line3">खात्यास ग्राह्य धरले जाईल, याची कृपया नोंद घ्यावी.</string>-->
+<!--    <string name="ExtraReceiptNote1_Line1">* वरील रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल, त्याच तारखेला</string>-->
+<!--    <string name="ExtraReceiptNote1_Line2">सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>-->
+<!--    <string name="ExtraReceiptNote2_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>-->
+    <string name="ExtraReceiptOnlineNote1_Line1">* वरील रक्कम AMCCSL च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल,</string>
+    <string name="ExtraReceiptOnlineNote1_Line2">त्याच तारखेला सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>
+    <string name="ExtraReceiptOnlineNote2_Line1">* सभासदाचे कलेक्शन आलेल्या तारखेनुसार मुद्दल, व्याज व बचतीच्या रक्कमेचे प्रमाण</string>
+    <string name="ExtraReceiptOnlineNote2_Line2">बदलू शकते.</string>
+    <string name="ExtraReceiptOnlineNote3_Line1">* जर तुम्ही ऑनलाईन कलेक्शन भरले असेल आणि कलेक्शन रद्द झाले असेल, तर</string>
+    <string name="ExtraReceiptOnlineNote3_Line2">त्याची जबाबदारी AMCCSL कडे राहणार नाही.</string>
+    <string name="ExtraReceiptOnlineNote4_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>
+
+
+    <string name="Receipt_MemberCopy">सभासद कॉपी</string>
+    <string name="Receipt_DCS">DCS पावती</string>
+
+<!--    Given you're looking for a simple formula, this is probably the simplest way to do it,
+<!-     assuming that the Earth is a sphere with a circumference of 40075 km.&ndash;&gt;-->
+<!--    Length in km of 1° of latitude = always 111.32 km-->
+<!--    Length in km of 1° of longitude = 40075 km * cos( latitude ) / 360-->
+
+<!--    <string-array name="OnlinePaymentApp_array">-->
+<!--        <item></item>-->
+<!--        <item>PhonePe</item>-->
+<!--        <item>GPay</item>-->
+<!--        <item>Paytm</item>-->
+<!--        <item>BHIM</item>-->
+<!--        <item>Other</item>-->
+<!--    </string-array>-->
+
+</resources>
