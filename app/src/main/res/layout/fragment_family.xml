@@ -15,12 +15,12 @@
         android:orientation="horizontal"
         android:padding="10dp">
 
-<!--        <ImageButton-->
-<!--            android:id="@+id/imageButtonPrev"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:src="@android:drawable/ic_media_previous" />-->
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/imageButtonPrev"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:src="@android:drawable/ic_media_previous" />-->
 
         <Button
             android:id="@+id/buttonPreviousFamilyMember"
@@ -33,12 +33,12 @@
             android:textSize="30sp"
             android:textStyle="bold" />
 
-<!--        <ImageButton-->
-<!--            android:id="@+id/imageButtonNext"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:src="@android:drawable/ic_media_next" />-->
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/imageButtonNext"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:src="@android:drawable/ic_media_next" />-->
 
         <Button
             android:id="@+id/buttonNextFamilyMember"
@@ -324,6 +324,7 @@
                     android:textStyle="bold" />
 
                 <Spinner
+                    android:gravity="center"
                     android:id="@+id/spinnerReligion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -350,6 +351,7 @@
                     android:textStyle="bold" />
 
                 <Spinner
+                    android:gravity="center"
                     android:id="@+id/spinnerCaste"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -369,12 +371,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:text="@string/Field4_Family"
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
                 <Spinner
+                    android:gravity="center"
                     android:id="@+id/spinnerQualification"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -393,12 +396,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:text="@string/Field5_Family"
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
                 <Spinner
+                    android:gravity="center"
                     android:id="@+id/spinnerRelation0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -416,6 +420,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:text="@string/Field6_Family"
                     android:textSize="30sp"
@@ -423,6 +428,7 @@
 
                 <EditText
                     android:id="@+id/editTextAge"
+                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -452,6 +458,7 @@
                     android:textStyle="bold" />
 
                 <Spinner
+                    android:gravity="center"
                     android:id="@+id/spinnerGender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -463,20 +470,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/customborder"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:padding="10dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
                     android:text="@string/Field8_Family"
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
                 <Spinner
+                    android:gravity="center"
                     android:id="@+id/spinnerOccupation"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -489,6 +501,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:text="@string/Field9_Family"
                     android:textSize="30sp"
@@ -496,6 +509,7 @@
 
                 <EditText
                     android:id="@+id/editTextMonthlyIncome"
+                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -525,6 +539,7 @@
                     android:textStyle="bold" />
 
                 <Spinner
+                    android:gravity="center"
                     android:id="@+id/spinnerMaritalStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -538,34 +553,59 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="@string/Field11_Family"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
 
-                <Spinner
-                    android:id="@+id/spinnerWhosContactNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/whoscontactnumber_array" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="मोबाईल नंबर"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/editTextMobileNumber"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="(आधारलिंक मोबाईल नंबर)"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:digits="0123456789"
-                    android:ems="10"
-                    android:imeOptions="actionDone"
-                    android:inputType="phone"
-                    android:maxLength="10"
-                    android:maxLines="1"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+
+                    <Spinner
+                        android:gravity="center"
+                        android:id="@+id/spinnerWhosContactNumber"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:entries="@array/whoscontactnumber_array" />
+
+                    <EditText
+                        android:id="@+id/editTextMobileNumber"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:digits="0123456789"
+                        android:ems="10"
+                        android:imeOptions="actionDone"
+                        android:inputType="phone"
+                        android:maxLength="10"
+                        android:maxLines="1"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -575,18 +615,34 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="@string/Field12_Family"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="व्यसन"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="(काही व्यसन असल्यास विचारून लिहीणे)"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <Spinner
+                    android:gravity="center"
                     android:id="@+id/spinnerAddiction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1" />
             </LinearLayout>
 
@@ -597,18 +653,34 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="@string/Field13_Family"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="आजार"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="(काही आजार असल्यास विचारून लिहीणे)"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <Spinner
+                    android:gravity="center"
                     android:id="@+id/spinnerIllness"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1" />
             </LinearLayout>
 
@@ -630,7 +702,7 @@
                 <RadioGroup
                     android:id="@+id/radioGroupHMF"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:orientation="horizontal">
@@ -662,18 +734,32 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="@string/Field15_Family"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="वारसदार"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="(कुटुंबातील ह्या सदस्याला वारसदार म्हणुन सभासदाला ठेवायचे आहे का)"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <RadioGroup
                     android:id="@+id/radioGroupHeir"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:orientation="horizontal">
@@ -698,51 +784,51 @@
                 </RadioGroup>
 
             </LinearLayout>
-<!--//bmp 26-Mar-24-->
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@drawable/customborder"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:padding="10dp">-->
+            <!--//bmp 26-Mar-24-->
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:background="@drawable/customborder"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:padding="10dp">-->
 
-<!--                <TextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:text="@string/Field16_Family"-->
-<!--                    android:textSize="30sp"-->
-<!--                    android:textStyle="bold" />-->
+            <!--                <TextView-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:text="@string/Field16_Family"-->
+            <!--                    android:textSize="30sp"-->
+            <!--                    android:textStyle="bold" />-->
 
-<!--                <RadioGroup-->
-<!--                    android:id="@+id/radioGroupGuarantor"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_gravity="center_vertical"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:orientation="horizontal">-->
+            <!--                <RadioGroup-->
+            <!--                    android:id="@+id/radioGroupGuarantor"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:layout_gravity="center_vertical"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:orientation="horizontal">-->
 
-<!--                    <RadioButton-->
-<!--                        android:id="@+id/radioButtonGuarantorYes"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:text="@string/Field_Yes"-->
-<!--                        android:textSize="30sp"-->
-<!--                        android:textStyle="bold" />-->
+            <!--                    <RadioButton-->
+            <!--                        android:id="@+id/radioButtonGuarantorYes"-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_weight="1"-->
+            <!--                        android:text="@string/Field_Yes"-->
+            <!--                        android:textSize="30sp"-->
+            <!--                        android:textStyle="bold" />-->
 
-<!--                    <RadioButton-->
-<!--                        android:id="@+id/radioButtonGuarantorNo"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:text="@string/Field_No"-->
-<!--                        android:textSize="30sp"-->
-<!--                        android:textStyle="bold" />-->
-<!--                </RadioGroup>-->
+            <!--                    <RadioButton-->
+            <!--                        android:id="@+id/radioButtonGuarantorNo"-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_weight="1"-->
+            <!--                        android:text="@string/Field_No"-->
+            <!--                        android:textSize="30sp"-->
+            <!--                        android:textStyle="bold" />-->
+            <!--                </RadioGroup>-->
 
-<!--            </LinearLayout>-->
-<!--//bmp 26-Mar-24-->
+            <!--            </LinearLayout>-->
+            <!--//bmp 26-Mar-24-->
 
         </LinearLayout>
     </ScrollView>

@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+    import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
+    import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -43,6 +45,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+    import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -57,6 +60,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+    import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -722,11 +726,20 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                                 oldFile.delete();
                             }
                         }
-                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            /*Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                         Uri outuri = FileProvider.getUriForFile(mainActivity.getApplicationContext(), mainActivity.getApplicationContext().getPackageName() + ".provider", outFile);
 //                        cameraIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         cameraIntent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                         cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, outuri);
+                            startActivityIntent.launch(cameraIntent);*/
+
+                            //RK
+                            Intent cameraIntent = new Intent();
+                            cameraIntent.setClassName(
+                                    "com.example.cameraapp",
+                                    "com.example.cameraapp.DocumentScannerActivity"
+                            );
+
                         startActivityIntent.launch(cameraIntent);
                     }
                 });
@@ -1166,6 +1179,153 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                 tvVisitDetails.setText("पुनर्भेट रिमार्क: ");
 //bmp 19-Jun-25
 
+                    //RK
+                    TableRow trCreditCheck = new TableRow(mainActivity.getBaseContext());
+
+                    trCreditCheck.setLayoutParams(new TableRow.LayoutParams(
+                            TableRow.LayoutParams.MATCH_PARENT,
+                            TableRow.LayoutParams.WRAP_CONTENT
+                    ));
+                    trCreditCheck.setGravity(Gravity.CENTER_VERTICAL);
+
+
+    // CREDIT CHECK
+                    TextView tvCreditCheck = new TextView(mainActivity.getBaseContext());
+
+                    tvCreditCheck.setTextSize(24);
+                    tvCreditCheck.setText("क्रेडिट चेक :बाकी");
+                    tvCreditCheck.setBackgroundColor(Color.argb(255, 255, 191, 0));
+                    tvCreditCheck.setTextColor(tvref.getTextColors());
+                    tvCreditCheck.setTypeface(Typeface.DEFAULT_BOLD);
+                    tvCreditCheck.setGravity(Gravity.CENTER_VERTICAL);
+
+                    TableRow.LayoutParams creditCheckParams = new TableRow.LayoutParams(
+                            TableRow.LayoutParams.WRAP_CONTENT,
+                            TableRow.LayoutParams.WRAP_CONTENT);
+                    creditCheckParams.gravity = Gravity.CENTER_VERTICAL;
+                    tvCreditCheck.setLayoutParams(creditCheckParams);
+
+                   /* if(member.CreditCheck == -1) {
+                        tvCreditCheck.setBackgroundColor(Color.argb(255, 255, 191, 0));
+                        tvCreditCheck.setText("क्रेडिट चेक: बाकी");
+                    } else if(member.CreditCheck == 0) {
+                        tvCreditCheck.setBackgroundColor(Color.RED);
+                        tvCreditCheck.setText("क्रेडिट चेक:रिजेक्ट");
+                    } else if(member.CreditCheck == 1) {
+                        tvCreditCheck.setBackgroundColor(Color.GREEN);
+                        tvCreditCheck.setText("क्रेडिट चेक: ओके");
+                    }*/
+    // Keep your existing ID pattern
+                    //tvCreditCheck.setId(3 + iIDindex);
+
+    // CB DETAIL BUTTON
+                    Button btCBDetail = new Button(mainActivity.getBaseContext());
+
+                    btCBDetail.setText("CB DETAIL");
+                    btCBDetail.setTextSize(16);
+                    btCBDetail.setTypeface(Typeface.DEFAULT_BOLD);
+                    btCBDetail.setGravity(Gravity.CENTER);
+
+                    TableRow.LayoutParams cbDetailParams = new TableRow.LayoutParams(
+                            TableRow.LayoutParams.WRAP_CONTENT,
+                            TableRow.LayoutParams.WRAP_CONTENT
+                    );
+                    cbDetailParams.gravity = Gravity.CENTER_VERTICAL;
+
+                    btCBDetail.setLayoutParams(cbDetailParams);
+
+    // FAMILY MEMBERS BUTTON
+                    Button btFamilyMembers = new Button(mainActivity.getBaseContext());
+
+                    btFamilyMembers.setText("Loan Eligibility");
+                    btFamilyMembers.setTextSize(16);
+                    btFamilyMembers.setTypeface(Typeface.DEFAULT_BOLD);
+                    btFamilyMembers.setGravity(Gravity.CENTER);
+                    TableRow.LayoutParams familyMembersParams = new TableRow.LayoutParams(
+                            TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+                    familyMembersParams.gravity = Gravity.CENTER_VERTICAL;
+                    btFamilyMembers.setLayoutParams(familyMembersParams);
+
+    // CLICK
+                    // btFamilyMembers.setOnClickListener
+                    final long revisitMemberId = mainActivity.RevisitMemberList.get(i).MemberID;
+
+                    btFamilyMembers.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            FamilyIncomeFragment familyIncomeFragment = new FamilyIncomeFragment();
+
+                            Bundle args = new Bundle();
+                            args.putLong(FamilyIncomeFragment.ARG_MEMBER_ID, revisitMemberId);
+                            familyIncomeFragment.setArguments(args);
+
+                            mainActivity.getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .hide(RevisitFragment.this)                          // Revisit नष्ट होत नाही, फक्त लपते
+                                    .add(R.id.fragment_container, familyIncomeFragment)  // replace ऐवजी add
+                                    .addToBackStack(null)
+                                    .commit();
+                        }
+                    });
+                    Button btCBCheck = new Button(mainActivity.getBaseContext());
+                    btCBCheck.setText("CB Check");
+                    btCBCheck.setTextSize(16);
+                    btCBCheck.setTypeface(Typeface.DEFAULT_BOLD);
+                    btCBCheck.setGravity(Gravity.CENTER);
+
+                    TableRow.LayoutParams cbCheckParams = new TableRow.LayoutParams(
+                            TableRow.LayoutParams.WRAP_CONTENT,
+                            TableRow.LayoutParams.WRAP_CONTENT);
+                    cbCheckParams.gravity = Gravity.CENTER_VERTICAL;
+                    btCBCheck.setLayoutParams(cbCheckParams);
+    // New ID
+                    //   btCBDetail.setId(5 + iIDindex);
+
+
+    // PREVIEW BUTTON
+                    Button btPreviewCBCheck = new Button(mainActivity.getBaseContext());
+
+                    btPreviewCBCheck.setText("PREVIEW");
+                    btPreviewCBCheck.setTextSize(16);
+                    btPreviewCBCheck.setTypeface(Typeface.DEFAULT_BOLD);
+                    btPreviewCBCheck.setGravity(Gravity.CENTER);
+
+                    TableRow.LayoutParams previewParams = new TableRow.LayoutParams(
+                            TableRow.LayoutParams.WRAP_CONTENT,
+                            TableRow.LayoutParams.WRAP_CONTENT
+                    );
+                    previewParams.gravity = Gravity.CENTER_VERTICAL;
+                    btPreviewCBCheck.setLayoutParams(previewParams);
+                    // btPreviewCBCheck.setId(6 + iIDindex);
+
+
+    // PRINT BUTTON
+                    Button btPrintCBCheck = new Button(mainActivity.getBaseContext());
+                    btPrintCBCheck.setText("PRINT");
+                    btPrintCBCheck.setTextSize(16);
+                    btPrintCBCheck.setTypeface(Typeface.DEFAULT_BOLD);
+                    btPrintCBCheck.setGravity(Gravity.CENTER);
+
+                    TableRow.LayoutParams printParams = new TableRow.LayoutParams(
+                            TableRow.LayoutParams.WRAP_CONTENT,
+                            TableRow.LayoutParams.WRAP_CONTENT
+                    );
+                    printParams.gravity = Gravity.CENTER_VERTICAL;
+                    btPrintCBCheck.setLayoutParams(printParams);
+
+                    //  btPrintCBCheck.setId(7 + iIDindex);
+
+                    trCreditCheck.addView(tvCreditCheck);
+                    trCreditCheck.addView(btCBCheck);
+                    trCreditCheck.addView(btCBDetail);
+                    trCreditCheck.addView(btPreviewCBCheck);
+                    trCreditCheck.addView(btPrintCBCheck);
+                    trCreditCheck.addView(btFamilyMembers);
+
+                    //----
+
+
                 llh1.addView(tvCenterGroup);
                 llh1.addView(tvGroupType);
                 llh1.addView(tvContactNumber);
@@ -1198,6 +1358,8 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                 llv.addView(llh4);
                 llv.addView(llh5);
                 llv.addView(llh6);
+                    //RK
+                    llv.addView(trCreditCheck);
 //bmp 29-Sep-25
                 //Additional Amount to be collected from Member to be Eligible for Next Loan
 //bmp 26-Mar-26
@@ -1305,7 +1467,7 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
         }
     }
 ////bmp 07-Jul-25
-    ActivityResultLauncher<Intent> startActivityIntent = registerForActivityResult(
+        /*ActivityResultLauncher<Intent> startActivityIntent = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -1336,7 +1498,135 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                         ShowdlgAlertonActivityResult("CAMERA REQUEST CANCELED!");
                     }
                 }
-            });
+                });*/
+
+    //Rk
+        ActivityResultLauncher<Intent> startActivityIntent = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+
+                            // Get image URI returned by Camera App
+                            Intent data = result.getData();
+
+                            if (data == null) {
+                                ShowdlgAlertonActivityResult(
+                                        "Image data not received!"
+                                );
+                                return;
+                            }
+
+                            Uri imageUri = data.getData();
+
+                            if (imageUri == null) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    imageUri = data.getParcelableExtra(
+                                            Intent.EXTRA_STREAM,
+                                            Uri.class
+                                    );
+                                } else {
+                                    imageUri = data.getParcelableExtra(
+                                            Intent.EXTRA_STREAM
+                                    );
+                                }
+                            }
+
+                            if (imageUri == null) {
+                                ShowdlgAlertonActivityResult(
+                                        "Image URI not received!"
+                                );
+                                return;
+                            }
+
+                            // -------------------------------------------------
+                            // Copy image returned from Camera App
+                            // to existing Finance App path
+                            // -------------------------------------------------
+
+                            File outFile = new File(
+                                    strFilepath + strFilename
+                            );
+
+                            try {
+
+                                InputStream inputStream =
+                                        mainActivity
+                                                .getContentResolver()
+                                                .openInputStream(imageUri);
+
+                                if (inputStream == null) {
+                                    throw new Exception(
+                                            "Unable to open image URI"
+                                    );
+                                }
+
+                                FileOutputStream outputStream =
+                                        new FileOutputStream(outFile);
+
+                                byte[] buffer = new byte[8192];
+                                int length;
+
+                                while ((length = inputStream.read(buffer)) != -1) {
+                                    outputStream.write(buffer, 0, length);
+                                }
+
+                                outputStream.flush();
+
+                                outputStream.close();
+                                inputStream.close();
+
+                            } catch (Exception e) {
+
+                                e.printStackTrace();
+
+                                ShowdlgAlertonActivityResult(
+                                        "Unable to save scanned image!"
+                                );
+
+                                return;
+                            }
+
+                            // -------------------------------------------------
+                            // Your OLD logic - kept same
+                            // -------------------------------------------------
+
+                            if (outFile.exists()) {
+
+                                if (outFile.length() >= MAX_PHOTO_FILESIZE) {
+
+                                    String currentPhotoPath =
+                                            strFilepath + strFilename;
+
+                                    mainActivity.AdjustImageFileSize(
+                                            currentPhotoPath
+                                    );
+
+                                    mainActivity.RevisitMemberList
+                                            .get(IDRequest)
+                                            .strRevisitProof = strFilename;
+
+                                } else {
+
+                                    mainActivity.RevisitMemberList
+                                            .get(IDRequest)
+                                            .strRevisitProof = strFilename;
+                                }
+                            }
+
+                        } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
+
+                            // Camera App / Scanner cancelled
+                            ShowdlgAlertonActivityResult(
+                                    "CAMERA REQUEST CANCELED!"
+                            );
+                        }
+                    }
+                }
+        );
     void ShowdlgAlertonActivityResult(String strMessage) {
 //        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(mainActivity.getApplicationContext());
         AlertDialog.Builder dlgAlert = new AlertDialog.Builder(getContext());

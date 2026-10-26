@@ -63,7 +63,7 @@ public class FamilyFragment extends Fragment {
     boolean viewStatus = true;
 ////bmp 26-Dec-24
 //    boolean IsMemberGuarantor = false;
-////bmp 26-Dec-24
+    ////bmp 26-Dec-24
     public FamilyFragment() {
 // Required empty public constructor
     }
@@ -363,7 +363,7 @@ public class FamilyFragment extends Fragment {
 
         WhosContactNumberMaster = getResources().getStringArray(R.array.whoscontactnumber_array);
         ArrayAdapter<String> adapterWhosContactNumber = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                R.layout.simple_spinner_item, WhosContactNumberMaster);
+                R.layout.simple_spinner_item_center, WhosContactNumberMaster);
         adapterWhosContactNumber.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner sp = (Spinner) rootView.findViewById(R.id.spinnerWhosContactNumber);
         sp.setAdapter(adapterWhosContactNumber);
@@ -463,7 +463,7 @@ public class FamilyFragment extends Fragment {
 //        });
 //bmp 26-Mar-24
         ArrayAdapter<String> adapterReligion = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                R.layout.simple_spinner_item, ReligionMarathiDescriptionMaster);
+                R.layout.simple_spinner_item_center, ReligionMarathiDescriptionMaster);
         adapterReligion.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         sp = (Spinner) rootView.findViewById(R.id.spinnerReligion);
         sp.setAdapter(adapterReligion);
@@ -497,7 +497,7 @@ public class FamilyFragment extends Fragment {
                     }
                 }
                 ArrayAdapter<String> adapterCaste = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                        R.layout.simple_spinner_item, CasteForReligionMarathiDescription);
+                        R.layout.simple_spinner_item_center, CasteForReligionMarathiDescription);
                 adapterCaste.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
                 Spinner sp1 = (Spinner) rootView.findViewById(R.id.spinnerCaste);
                 sp1.setAdapter(adapterCaste);
@@ -529,7 +529,7 @@ public class FamilyFragment extends Fragment {
             }
         });
         ArrayAdapter<String> adapterRelation = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                R.layout.simple_spinner_item, RelationMarathiDescriptionMaster);
+                R.layout.simple_spinner_item_center, RelationMarathiDescriptionMaster);
         adapterRelation.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner sp2 = (Spinner) rootView.findViewById(R.id.spinnerRelation0);
         sp2.setAdapter(adapterRelation);
@@ -554,7 +554,7 @@ public class FamilyFragment extends Fragment {
             }
         });
         ArrayAdapter<String> adapterQualification = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                R.layout.simple_spinner_item, QualificationMarathiDescriptionMaster);
+                R.layout.simple_spinner_item_center, QualificationMarathiDescriptionMaster);
         adapterQualification.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner sp3 = (Spinner) rootView.findViewById(R.id.spinnerQualification);
         sp3.setAdapter(adapterQualification);
@@ -575,7 +575,7 @@ public class FamilyFragment extends Fragment {
             }
         });
         ArrayAdapter<String> adapterMaritalStatus = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                R.layout.simple_spinner_item, MaritalStatusMarathiDescriptionMaster);
+                R.layout.simple_spinner_item_center, MaritalStatusMarathiDescriptionMaster);
         adapterMaritalStatus.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner sp4 = (Spinner) rootView.findViewById(R.id.spinnerMaritalStatus);
         sp4.setAdapter(adapterMaritalStatus);
@@ -596,7 +596,7 @@ public class FamilyFragment extends Fragment {
             }
         });
         ArrayAdapter<String> adapterHealthProblem = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                R.layout.simple_spinner_item, HealthProblemMarathiDescriptionMaster);
+                R.layout.simple_spinner_item_center, HealthProblemMarathiDescriptionMaster);
         adapterHealthProblem.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner sp5 = (Spinner) rootView.findViewById(R.id.spinnerIllness);
         sp5.setAdapter(adapterHealthProblem);
@@ -617,7 +617,7 @@ public class FamilyFragment extends Fragment {
             }
         });
         ArrayAdapter<String> adapterHabbitAddiction = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                R.layout.simple_spinner_item, HabbitAddictionMarathiDescriptionMaster);
+                R.layout.simple_spinner_item_center, HabbitAddictionMarathiDescriptionMaster);
         adapterHabbitAddiction.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner sp6 = (Spinner) rootView.findViewById(R.id.spinnerAddiction);
         sp6.setAdapter(adapterHabbitAddiction);
@@ -638,7 +638,7 @@ public class FamilyFragment extends Fragment {
             }
         });
         ArrayAdapter<String> adapterBusiness = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                R.layout.simple_spinner_item, BusinessMarathiDescriptionMaster);
+                R.layout.simple_spinner_item_center, BusinessMarathiDescriptionMaster);
         adapterBusiness.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner sp7 = (Spinner) rootView.findViewById(R.id.spinnerOccupation);
         sp7.setAdapter(adapterBusiness);
@@ -662,7 +662,7 @@ public class FamilyFragment extends Fragment {
         GenderMarathiDescriptionMaster = getResources().getStringArray(R.array.gender_array);
 
         ArrayAdapter<String> adapterGender = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                R.layout.simple_spinner_item, GenderMarathiDescriptionMaster);
+                R.layout.simple_spinner_item_center, GenderMarathiDescriptionMaster);
         adapterGender.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner sp8 = (Spinner) rootView.findViewById(R.id.spinnerGender);
         sp8.setAdapter(adapterGender);
@@ -749,7 +749,7 @@ public class FamilyFragment extends Fragment {
         tv.setText("");
         for(int i=0; i<mainActivity.MemberDocRcvd.size(); i++) {
             if( (mainActivity.MemberDocRcvd.get(i).MemberDocumentsID == mainActivity.DocumentIDs.MEMBER_DOC_ID_AADHAARCARD) &&
-                (mainActivity.MemberDocRcvd.get(i).MemberID == mainActivity.Member.get(mainActivity.currentMemberIndex).MemberID) ) {
+                    (mainActivity.MemberDocRcvd.get(i).MemberID == mainActivity.Member.get(mainActivity.currentMemberIndex).MemberID) ) {
                 tv.setText(mainActivity.MemberDocRcvd.get(i).DocumentNo);
                 break;
             }
@@ -802,7 +802,7 @@ public class FamilyFragment extends Fragment {
 
         tv = (TextView) rootView.findViewById(R.id.editTextMonthlyIncome);
         if( (mainActivity.PersonalImpactInfo.get(mainActivity.currentMemberIndex).MonthlyIncome > 0) &&
-            (mainActivity.Member.get(mainActivity.currentMemberIndex).IsActive == 1) ) {
+                (mainActivity.Member.get(mainActivity.currentMemberIndex).IsActive == 1) ) {
             tv.setText(String.valueOf(mainActivity.PersonalImpactInfo.get(mainActivity.currentMemberIndex).MonthlyIncome));
         } else {
             tv.setText("");
@@ -939,7 +939,7 @@ public class FamilyFragment extends Fragment {
             }
         }
         ArrayAdapter<String> adapterCaste = new ArrayAdapter<String>(getActivity().getBaseContext(),
-                R.layout.simple_spinner_item, CasteForReligionMarathiDescription);
+                R.layout.simple_spinner_item_center, CasteForReligionMarathiDescription);
         adapterCaste.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         sp = (Spinner) rootView.findViewById(R.id.spinnerCaste);
         sp.setAdapter(adapterCaste);

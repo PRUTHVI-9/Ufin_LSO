@@ -4,7 +4,7 @@
     <string name="app_folder">ufin_lso</string>
 
     <string name="OrgID1TestServerIP1">123.201.117.218</string>
-<!--    <string name="OrgID1TestServerIP2">117.217.120.129</string>-->
+    <!--    <string name="OrgID1TestServerIP2">117.217.120.129</string>-->
     <string name="OrgID1TestServerIP2">117.247.92.99</string>
     <string name="OrgID1TestServerPort">8080</string>
 
@@ -31,18 +31,18 @@
     <string name="Field2_Family">मधले नाव</string>
     <string name="Field3_Family">आडनाव</string>
     <string name="Field4_Family">शिक्षण</string>
-    <string name="Field5_Family">नाते</string>
+    <string name="Field5_Family">नाते (सभासदासोबत)</string> // Edied by PY 21 oct 2026
 
     <string name="Field6_Family">वय</string>
     <string name="Field7_Family">लिंग</string>
     <string name="Field8_Family">व्यवसाय</string>
     <string name="Field9_Family">मासिक उत्पन्न</string>
     <string name="Field10_Family">वैवाहिक स्थिती</string>
-    <string name="Field11_Family">मोबाईल नंबर</string>
-    <string name="Field12_Family">व्यसन</string>
-    <string name="Field13_Family">आजार</string>
+    <string name="Field11_Family">मोबाईल नंबर&#10;(आधारलिंक मोबाईल नंबर)</string>
+    <string name="Field12_Family">व्यसन&#10;(काही व्यसन असल्यास विचारून लिहीणे)</string>
+    <string name="Field13_Family">आजार&#10;(काही आजार असल्यास विचारून लिहीणे)</string>
     <string name="Field14_Family">HMF</string>
-    <string name="Field15_Family">वारसदार</string>
+    <string name="Field15_Family">वारसदार&#10;(कुटुंबातील ह्या सदस्याला वारसदार म्हणुन सभासदाला ठेवायचे आहे का)</string>
     <string name="Field16_Family">जामीनदार</string>
     <string name="Field17_Family">सदस्य:</string>
     <string name="Field18_Family">आधारकार्ड क्र.</string>
@@ -266,9 +266,9 @@
         <item>कर्ज कालावधी चुकीचा भरला आहे.</item>
         <item>लोन प्रॉडक्ट चुकीचे आहे.</item>
         <item>सॉफ्टवेअर चूक.</item>
-<!--//bmp 06-Jun-24-->
+        <!--//bmp 06-Jun-24-->
         <item>केवायसी कागदपत्रे अपूर्ण आहेत</item>
-<!--//bmp 06-Jun-24-->
+        <!--//bmp 06-Jun-24-->
     </string-array>
 
     <string-array name="WIP_ReasonToRemove_array_Shivaji01">
@@ -281,9 +281,9 @@
         <item>kja- kalaavaQaI caukIcaa Barlaa Aaho.</item>
         <item>laÜna p`a^D@T caukIcao Aaho.</item>
         <item>saa^FTvaoAr caUk.</item>
-<!--//bmp 06-Jun-24-->
+        <!--//bmp 06-Jun-24-->
         <item>kovaayasaI kagadp~o ApUNa- Aahot</item>
-<!--//bmp 06-Jun-24-->
+        <!--//bmp 06-Jun-24-->
     </string-array>
     <string-array name="PIF_Screen_array">
         <item>सभासद</item>
@@ -336,20 +336,20 @@
         <item>जास्तीचे हप्ते</item>
         <item>मुदतपूर्व खाते बंद</item>
     </string-array>
-<!--    <string-array name="PrePaymentReasons_Within3Months_array">-->
-<!--        <item></item>-->
-<!--        <item>सभासदाला पुढील कर्ज घ्यायचे आहे.</item>-->
-<!--        <item>सभासद गावी जायचे असल्याने हप्त्याला हजर राहू शकत नाही.</item>-->
-<!--        <item>सभासदाला जास्तीचे पैसे मिळाले आहेत.</item>-->
-<!--        <item>स्वतः सभासदाला कर्ज नको, गटाला कर्ज हवे आहे.</item>-->
-<!--    </string-array>-->
-<!--    <string-array name="PrePaymentReasons_Within3Months_array_Shivaji01">-->
-<!--        <item></item>-->
-<!--        <item>saBaasadalaa puZIla kja- Gyaayacao Aaho.</item>-->
-<!--        <item>saBaasad gaavaI jaayacao Asalyaanaoo hF%yaalaa hjar rahU Sakt naahI.</item>-->
-<!--        <item>saBaasadalaa jaastIcao pOsaoo imaLalao Aahot.</item>-->
-<!--        <item>svat: saBaasadalaa kja- nakao¸ gaTalaa kja- hvao Aaho.</item>-->
-<!--    </string-array>-->
+    <!--    <string-array name="PrePaymentReasons_Within3Months_array">-->
+    <!--        <item></item>-->
+    <!--        <item>सभासदाला पुढील कर्ज घ्यायचे आहे.</item>-->
+    <!--        <item>सभासद गावी जायचे असल्याने हप्त्याला हजर राहू शकत नाही.</item>-->
+    <!--        <item>सभासदाला जास्तीचे पैसे मिळाले आहेत.</item>-->
+    <!--        <item>स्वतः सभासदाला कर्ज नको, गटाला कर्ज हवे आहे.</item>-->
+    <!--    </string-array>-->
+    <!--    <string-array name="PrePaymentReasons_Within3Months_array_Shivaji01">-->
+    <!--        <item></item>-->
+    <!--        <item>saBaasadalaa puZIla kja- Gyaayacao Aaho.</item>-->
+    <!--        <item>saBaasad gaavaI jaayacao Asalyaanaoo hF%yaalaa hjar rahU Sakt naahI.</item>-->
+    <!--        <item>saBaasadalaa jaastIcao pOsaoo imaLalao Aahot.</item>-->
+    <!--        <item>svat: saBaasadalaa kja- nakao¸ gaTalaa kja- hvao Aaho.</item>-->
+    <!--    </string-array>-->
     <string-array name="PrePaymentCollect_Within3Months_array">
         <item></item>
         <item>JLG,ADHP,RD</item>
@@ -364,24 +364,24 @@
         <item>OADHP,ORD</item>
         <item>OADHP,ORD</item>
     </string-array>
-<!--    <string-array name="PrePaymentReasons_Morethan3Months_array">-->
-<!--        <item></item>-->
-<!--        <item>सभासद कायमस्वरूपी गावी जाणार आहेत, स्वेच्छेने कर्ज निल करणार आहेत.</item>-->
-<!--        <item>सभासद कायमस्वरूपी घर सोडून निघून जात आहेत.</item>-->
-<!--        <item>सभासदाला स्वेच्छेने पुढील कर्ज घ्यायचे नाही.</item>-->
-<!--        <item>सभासद हप्त्याला त्रास देतात.</item>-->
-<!--        <item>सभासदाला इतर ठिकाणाहून पैसे मिळाले आहेत.</item>-->
-<!--        <item>पूर्ण गटाला पुढील कर्ज एकत्र घ्यायचे आहे.</item>-->
-<!--    </string-array>-->
-<!--    <string-array name="PrePaymentReasons_Morethan3Months_array_Shivaji01">-->
-<!--        <item></item>-->
-<!--        <item>saBaasad kayamasva$pI gaavaI jaaNaar Aahot  svaocCoNao kja- inala krNaar Aahot.</item>-->
-<!--        <item>saBaasad kayamasva$pI Gar saaoDUna inaGaUna jaat Aahoot.</item>-->
-<!--        <item>saBaasadalaa sva[cConao puZIla kja- Gyaayacao naahI.</item>-->
-<!--        <item>saBaasad hF%yaalaa ~asa dotat.</item>-->
-<!--        <item>saBaasadalaa [tr izkaNaahUna pOsao imaLalao Aahot.</item>-->
-<!--        <item>pUNa- gaTalaa puZIla kja- ek~ Gyaayacao Aaho.</item>-->
-<!--    </string-array>-->
+    <!--    <string-array name="PrePaymentReasons_Morethan3Months_array">-->
+    <!--        <item></item>-->
+    <!--        <item>सभासद कायमस्वरूपी गावी जाणार आहेत, स्वेच्छेने कर्ज निल करणार आहेत.</item>-->
+    <!--        <item>सभासद कायमस्वरूपी घर सोडून निघून जात आहेत.</item>-->
+    <!--        <item>सभासदाला स्वेच्छेने पुढील कर्ज घ्यायचे नाही.</item>-->
+    <!--        <item>सभासद हप्त्याला त्रास देतात.</item>-->
+    <!--        <item>सभासदाला इतर ठिकाणाहून पैसे मिळाले आहेत.</item>-->
+    <!--        <item>पूर्ण गटाला पुढील कर्ज एकत्र घ्यायचे आहे.</item>-->
+    <!--    </string-array>-->
+    <!--    <string-array name="PrePaymentReasons_Morethan3Months_array_Shivaji01">-->
+    <!--        <item></item>-->
+    <!--        <item>saBaasad kayamasva$pI gaavaI jaaNaar Aahot  svaocCoNao kja- inala krNaar Aahot.</item>-->
+    <!--        <item>saBaasad kayamasva$pI Gar saaoDUna inaGaUna jaat Aahoot.</item>-->
+    <!--        <item>saBaasadalaa sva[cConao puZIla kja- Gyaayacao naahI.</item>-->
+    <!--        <item>saBaasad hF%yaalaa ~asa dotat.</item>-->
+    <!--        <item>saBaasadalaa [tr izkaNaahUna pOsao imaLalao Aahot.</item>-->
+    <!--        <item>pUNa- gaTalaa puZIla kja- ek~ Gyaayacao Aaho.</item>-->
+    <!--    </string-array>-->
     <string-array name="PrePaymentCollect_Morethan3Months_array">
         <item></item>
         <item>JLG,OADHP,RD</item>
@@ -401,8 +401,8 @@
         <item>JLG,ADHP,RD</item>
     </string-array>
 
-<!--    <string name="Receipt_OrgName">अन्नपूर्णा महिला मल्टिस्टेट को. ऑप. क्रेडिट सोसा. मर्यादित</string>&ndash;&gt;-->
-<!--    <string name="Receipt_OrgName">अन्नपूर्णा महिला कोऑपरेटिव्ह क्रेडिट सोसायटी लि.(मल्टिस्टेट)</string>-->
+    <!--    <string name="Receipt_OrgName">अन्नपूर्णा महिला मल्टिस्टेट को. ऑप. क्रेडिट सोसा. मर्यादित</string>&ndash;&gt;-->
+    <!--    <string name="Receipt_OrgName">अन्नपूर्णा महिला कोऑपरेटिव्ह क्रेडिट सोसायटी लि.(मल्टिस्टेट)</string>-->
     <string name="Receipt_OrgName">अन्नपूर्णा महिला कोऑपरेटिव्ह क्रेडिट सोसायटी लि. \'AMCCSL\'</string>
     <string name="Receipt_OrgRegNo">रजि.नं.:एमएससीएस / सीआर /६८/९७</string>
     <string name="Receipt_HdrLine">--------------------------------------------------------</string>
@@ -414,41 +414,41 @@
     <string name="EMIReceiptNote_Line3">प्रमाण बदलू शकते.</string>
     <string name="EMIReceiptNote2_Line1">* हप्त्याची पूर्ण रक्कम (हप्ता कार्डवर छापलेली) भरली नाही तर व्याज वाढते व</string>
     <string name="EMIReceiptNote2_Line2">मुद्दल, व्याज व बचतीचे प्रमाण बदलू शकते.</string>
-<!--    <string name="EMIReceiptNote3_Line1">* कर्ज रक्कम रु. 3,60,000/- पेक्षा जास्त रकमेच्या कर्जासाठी:</string>-->
-<!--    <string name="EMIReceiptNote3_Line2">कर्जाच्या वेळी एचएमएफ, एफएलएमएफ, ऍसेट लॉस ची वर्गणी एक वर्षासाठीच भरून</string>-->
-<!--    <string name="EMIReceiptNote3_Line3">घेतली होती. पुढील वर्षाच्या नूतनीकरणासाठी लागणारी रक्कम दरमहा हप्त्यासोबत</string>-->
-<!--    <string name="EMIReceiptNote3_Line4">जेएलजी बचतीच्या खात्यात घेतली जाणार आहे.</string>-->
+    <!--    <string name="EMIReceiptNote3_Line1">* कर्ज रक्कम रु. 3,60,000/- पेक्षा जास्त रकमेच्या कर्जासाठी:</string>-->
+    <!--    <string name="EMIReceiptNote3_Line2">कर्जाच्या वेळी एचएमएफ, एफएलएमएफ, ऍसेट लॉस ची वर्गणी एक वर्षासाठीच भरून</string>-->
+    <!--    <string name="EMIReceiptNote3_Line3">घेतली होती. पुढील वर्षाच्या नूतनीकरणासाठी लागणारी रक्कम दरमहा हप्त्यासोबत</string>-->
+    <!--    <string name="EMIReceiptNote3_Line4">जेएलजी बचतीच्या खात्यात घेतली जाणार आहे.</string>-->
     <string name="EMIReceiptNote3_Line1">* कर्जाच्या वेळी एचएमएफ, एफएलएमएफ, हॉस्पीवेज, ऍसेट लॉस ची वर्गणी एक</string>
     <string name="EMIReceiptNote3_Line2">वर्षासाठीच भरून घेतली होती. पुढील वर्षाच्या नूतनीकरणासाठी लागणारी रक्कम</string>
     <string name="EMIReceiptNote3_Line3">दरमहा हप्त्यासोबत जेएलजी बचतीच्या खात्यात घेतली जाणार आहे.</string>
 
-<!--&lt;!&ndash;    <string name="EMIReceiptNote4_Line1">* एकत्रित कलेक्शन केले असताना, यापूर्वी ऑनलाईनद्वारे रक्कम भरलेली असेल; परंतु संबंधित ऑनलाईन व्यवहार रद्द झाला किंवा त्यामध्ये काही बदल झाले, तर कॅशद्वारे भरलेल्या पावतीवरील व्याजाच्या कॅल्क्युलेशन बदल होऊ शकतो.</string>&ndash;&gt;-->
-<!--    <string name="EMIReceiptNote4_Line1">* एकत्रित कलेक्शन केले असताना, यापूर्वी ऑनलाईनद्वारे रक्कम भरलेली असेल;</string>-->
-<!--    <string name="EMIReceiptNote4_Line2">परंतु संबंधित ऑनलाईन व्यवहार रद्द झाला किंवा त्यामध्ये काही बदल झाले, तर</string>-->
-<!--    <string name="EMIReceiptNote4_Line3">कॅशद्वारे भरलेल्या पावतीवरील व्याजाच्या कॅल्क्युलेशन बदल होऊ शकतो.</string>-->
+    <!--&lt;!&ndash;    <string name="EMIReceiptNote4_Line1">* एकत्रित कलेक्शन केले असताना, यापूर्वी ऑनलाईनद्वारे रक्कम भरलेली असेल; परंतु संबंधित ऑनलाईन व्यवहार रद्द झाला किंवा त्यामध्ये काही बदल झाले, तर कॅशद्वारे भरलेल्या पावतीवरील व्याजाच्या कॅल्क्युलेशन बदल होऊ शकतो.</string>&ndash;&gt;-->
+    <!--    <string name="EMIReceiptNote4_Line1">* एकत्रित कलेक्शन केले असताना, यापूर्वी ऑनलाईनद्वारे रक्कम भरलेली असेल;</string>-->
+    <!--    <string name="EMIReceiptNote4_Line2">परंतु संबंधित ऑनलाईन व्यवहार रद्द झाला किंवा त्यामध्ये काही बदल झाले, तर</string>-->
+    <!--    <string name="EMIReceiptNote4_Line3">कॅशद्वारे भरलेल्या पावतीवरील व्याजाच्या कॅल्क्युलेशन बदल होऊ शकतो.</string>-->
 
-<!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line1">* आपला हप्ता ऑनलाइन पद्धतीने भरलेला आहे. सदर रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च हप्ता लोन खात्यास ग्राह्य धरला जाईल, याची कृपया नोंद घ्यावी.</string>&ndash;&gt;-->
-<!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line1">* आपला हप्ता ऑनलाइन पद्धतीने भरलेला आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>&ndash;&gt;-->
-<!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च हप्ता लोन खात्यास</string>&ndash;&gt;-->
-<!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line3">ग्राह्य धरला जाईल, याची कृपया नोंद घ्यावी.</string>&ndash;&gt;-->
-<!--    <string name="EMIReceiptNote5_Line1">* वरील रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल, त्याच तारखेला</string>-->
-<!--    <string name="EMIReceiptNote5_Line2">सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>-->
+    <!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line1">* आपला हप्ता ऑनलाइन पद्धतीने भरलेला आहे. सदर रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च हप्ता लोन खात्यास ग्राह्य धरला जाईल, याची कृपया नोंद घ्यावी.</string>&ndash;&gt;-->
+    <!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line1">* आपला हप्ता ऑनलाइन पद्धतीने भरलेला आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>&ndash;&gt;-->
+    <!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च हप्ता लोन खात्यास</string>&ndash;&gt;-->
+    <!--&lt;!&ndash;    <string name="EMIReceiptNote5_Line3">ग्राह्य धरला जाईल, याची कृपया नोंद घ्यावी.</string>&ndash;&gt;-->
+    <!--    <string name="EMIReceiptNote5_Line1">* वरील रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल, त्याच तारखेला</string>-->
+    <!--    <string name="EMIReceiptNote5_Line2">सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>-->
 
-<!--    <string name="EMIReceiptNote6_Line1">* ऑनलाईन पावतीमध्ये तुमची रक्कम कलेक्शनच्या तारखेला़ 15 जून रोजी यशस्वीरीत्या जमा झाली असल्यास़ त्याच कलेक्शन तारखेनुसार कर्ज खात्यात हप्त्याची नोंद केली जाईल, मात्र कलेक्शन तारखेनंतर अन्नपूर्णाच्या बँक खात्यात रक्कम जमा झाल्यास़ प्रत्यक्ष जमा झालेल्या तारखेनुसार हप्ता ग्राह्य धरला जाईल व त्यानुसार व्याजाचे कॅल्क्युलेशन केले जाईल.</string>-->
-<!--    <string name="EMIReceiptNote6_Line1">* ऑनलाईन पावतीमध्ये तुमची रक्कम कलेक्शनच्या तारखेला़ यशस्वीरीत्या जमा झाली</string>-->
-<!--    <string name="EMIReceiptNote6_Line2">असल्यास़ त्याच कलेक्शन तारखेनुसार कर्ज खात्यात हप्त्याची नोंद केली जाईल, मात्र</string>-->
-<!--    <string name="EMIReceiptNote6_Line3">कलेक्शन तारखेनंतर अन्नपूर्णाच्या बँकखात्यात रक्कम जमा झाल्यास़ प्रत्यक्ष जमा झालेल्या</string>-->
-<!--    <string name="EMIReceiptNote6_Line4">तारखेनुसार हप्ता ग्राह्य धरला जाईल व त्यानुसार व्याजाचे कॅल्क्युलेशन केले जाईल.</string>-->
-<!--    <string name="EMIReceiptNote6_Line1">* सभासदाचे कलेक्शन आलेल्या तारखेनुसार मुद्दल व व्याजाचे प्रमाण बदलू शकते.</string>-->
-<!--    <string name="EMIReceiptNote7_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>-->
+    <!--    <string name="EMIReceiptNote6_Line1">* ऑनलाईन पावतीमध्ये तुमची रक्कम कलेक्शनच्या तारखेला़ 15 जून रोजी यशस्वीरीत्या जमा झाली असल्यास़ त्याच कलेक्शन तारखेनुसार कर्ज खात्यात हप्त्याची नोंद केली जाईल, मात्र कलेक्शन तारखेनंतर अन्नपूर्णाच्या बँक खात्यात रक्कम जमा झाल्यास़ प्रत्यक्ष जमा झालेल्या तारखेनुसार हप्ता ग्राह्य धरला जाईल व त्यानुसार व्याजाचे कॅल्क्युलेशन केले जाईल.</string>-->
+    <!--    <string name="EMIReceiptNote6_Line1">* ऑनलाईन पावतीमध्ये तुमची रक्कम कलेक्शनच्या तारखेला़ यशस्वीरीत्या जमा झाली</string>-->
+    <!--    <string name="EMIReceiptNote6_Line2">असल्यास़ त्याच कलेक्शन तारखेनुसार कर्ज खात्यात हप्त्याची नोंद केली जाईल, मात्र</string>-->
+    <!--    <string name="EMIReceiptNote6_Line3">कलेक्शन तारखेनंतर अन्नपूर्णाच्या बँकखात्यात रक्कम जमा झाल्यास़ प्रत्यक्ष जमा झालेल्या</string>-->
+    <!--    <string name="EMIReceiptNote6_Line4">तारखेनुसार हप्ता ग्राह्य धरला जाईल व त्यानुसार व्याजाचे कॅल्क्युलेशन केले जाईल.</string>-->
+    <!--    <string name="EMIReceiptNote6_Line1">* सभासदाचे कलेक्शन आलेल्या तारखेनुसार मुद्दल व व्याजाचे प्रमाण बदलू शकते.</string>-->
+    <!--    <string name="EMIReceiptNote7_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>-->
 
     <string name="EMIReceiptCashNote4_Line1">* एकत्रित कलेक्शन केले असताना, यापूर्वी ऑनलाईनद्वारे रक्कम भरलेली असेल;</string>
     <string name="EMIReceiptCashNote4_Line2">परंतु संबंधित ऑनलाईन व्यवहार रद्द झाला किंवा त्यामध्ये काही बदल झाले, तर</string>
     <string name="EMIReceiptCashNote4_Line3">कॅशद्वारे भरलेल्या पावतीवरील व्याजाच्या कॅल्क्युलेशन मध्ये बदल होऊ शकतो.</string>
 
     <string name="EMIReceiptOnlineNote4_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>
-<!--    <string name="EMIReceiptOnlineNote5_Line1">* पावती वरील रक्कम ही तुमच्या ऑनलाईन पेमेंटच्या स्क्रिनशॉटनुसार भरलेली आहे,हे</string>-->
-<!--    <string name="EMIReceiptOnlineNote5_Line2">पैसे AMCCSL च्या बँक खात्यात जमा झाल्याचा ताळा झाल्यानंतरच ग्राह्य धरले जातील.</string>-->
+    <!--    <string name="EMIReceiptOnlineNote5_Line1">* पावती वरील रक्कम ही तुमच्या ऑनलाईन पेमेंटच्या स्क्रिनशॉटनुसार भरलेली आहे,हे</string>-->
+    <!--    <string name="EMIReceiptOnlineNote5_Line2">पैसे AMCCSL च्या बँक खात्यात जमा झाल्याचा ताळा झाल्यानंतरच ग्राह्य धरले जातील.</string>-->
     <string name="EMIReceiptOnlineNote5_Line1">* पावती वरील रक्कम तुमच्या ऑनलाईन पेमेंटच्या स्क्रिनशॉटनुसार भरलेली आहे, हे</string>
     <string name="EMIReceiptOnlineNote5_Line2">पैसे AMCCSL च्या बँक खात्यात जमा झाल्याचा ताळा झाल्यानंतरच ग्राह्य धरले जातील.</string>
     <string name="EMIReceiptOnlineNote6_Line1">* पावती वरील रक्कम AMCCSL च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल,</string>
@@ -461,19 +461,19 @@
     <string name="EMIReceiptOnlineNote9_Line1">* जर तुम्ही ऑनलाईन कलेक्शन भरले असेल आणि कलेक्शन रद्द झाले असेल, तर</string>
     <string name="EMIReceiptOnlineNote9_Line2">त्याची जबाबदारी AMCCSL कडे राहणार नाही.</string>
 
-<!--    <string name="Receipt_ADHP">आधारपूर्णा पावती</string>-->
+    <!--    <string name="Receipt_ADHP">आधारपूर्णा पावती</string>-->
     <string name="Receipt_ADHP">आधारपूर्णा निवृत्ती आर्थिक परतावा पावती</string>
-<!--    <string name="ADHPReceiptNote1_Line1">* आधारपूर्णाची वर्गणी नियमित भरा व भरलेल्या रकमेची पावती हप्त्याच्या ताईकडून मागून घ्या.</string>-->
+    <!--    <string name="ADHPReceiptNote1_Line1">* आधारपूर्णाची वर्गणी नियमित भरा व भरलेल्या रकमेची पावती हप्त्याच्या ताईकडून मागून घ्या.</string>-->
     <string name="ADHPReceiptNote1_Line1">* आधारपूर्णाची वर्गणी नियमित भरा व पावती LSO ताईकडून मागून घ्या.</string>
     <string name="ADHPReceiptNote2_Line1">* तुम्ही भरलेल्या रकमेचीच पावती मिळाली आहे का? याची खात्री करून घ्यावी.</string>
-<!--    <string name="ADHPReceiptNote3_Line1">* आधारपूर्णा खात्यात 65व्या वर्षी 45000/- मुद्दल रक्कम जमा होणे आवश्यक आहे.</string>&ndash;&gt;-->
+    <!--    <string name="ADHPReceiptNote3_Line1">* आधारपूर्णा खात्यात 65व्या वर्षी 45000/- मुद्दल रक्कम जमा होणे आवश्यक आहे.</string>&ndash;&gt;-->
     <string name="ADHPReceiptNote3_Line1">* आधारपूर्णा खात्यात वयाच्या 65व्या वर्षी किमान 45000/- मुद्दल रक्कम जमा होणे</string>
     <string name="ADHPReceiptNote3_Line2">  आवश्यक आहे.</string>
     <string name="ADHPReceiptNote4_Line1">* तुम्हाला शक्य असेल तेवढी जास्तीत जास्त वर्गणी भरा म्हणजे जास्त परतावा मिळेल.</string>
 
-<!--    <string name="ADHPReceiptNote5_Line1">* आपली वर्गणी ऑनलाइन पद्धतीने भरलेली आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>-->
-<!--    <string name="ADHPReceiptNote5_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च वर्गणी आधारपूर्णा</string>-->
-<!--    <string name="ADHPReceiptNote5_Line3">खात्यास ग्राह्य धरली जाईल, याची कृपया नोंद घ्यावी.</string>-->
+    <!--    <string name="ADHPReceiptNote5_Line1">* आपली वर्गणी ऑनलाइन पद्धतीने भरलेली आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>-->
+    <!--    <string name="ADHPReceiptNote5_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च वर्गणी आधारपूर्णा</string>-->
+    <!--    <string name="ADHPReceiptNote5_Line3">खात्यास ग्राह्य धरली जाईल, याची कृपया नोंद घ्यावी.</string>-->
     <string name="ADHPReceiptNote5_Line1">* वरील रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल, त्याच तारखेला</string>
     <string name="ADHPReceiptNote5_Line2">सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>
     <string name="ADHPReceiptNote6_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>
@@ -481,23 +481,23 @@
     <string name="ADHPReceiptNote7_Line2">त्याची जबाबदारी AMCCSL कडे राहणार नाही.</string>
 
     <string name="Receipt_RD">RD पावती</string>
-<!--    <string name="RDReceiptNote1_Line1">* आपले कलेक्शन ऑनलाइन पद्धतीने भरलेले आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>-->
-<!--    <string name="RDReceiptNote1_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च कलेक्शन RD</string>-->
-<!--    <string name="RDReceiptNote1_Line3">खात्यास ग्राह्य धरले जाईल, याची कृपया नोंद घ्यावी.</string>-->
+    <!--    <string name="RDReceiptNote1_Line1">* आपले कलेक्शन ऑनलाइन पद्धतीने भरलेले आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>-->
+    <!--    <string name="RDReceiptNote1_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च कलेक्शन RD</string>-->
+    <!--    <string name="RDReceiptNote1_Line3">खात्यास ग्राह्य धरले जाईल, याची कृपया नोंद घ्यावी.</string>-->
     <string name="RDReceiptNote1_Line1">* वरील रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल, त्याच तारखेला</string>
     <string name="RDReceiptNote1_Line2">सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>
     <string name="RDReceiptNote2_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>
     <string name="RDReceiptNote3_Line1">* जर तुम्ही ऑनलाईन कलेक्शन भरले असेल आणि कलेक्शन रद्द झाले असेल, तर</string>
     <string name="RDReceiptNote3_Line2">त्याची जबाबदारी AMCCSL कडे राहणार नाही.</string>
 
-<!--    <string name="Receipt_Extra">मॅन्युअल पावती</string>-->
+    <!--    <string name="Receipt_Extra">मॅन्युअल पावती</string>-->
     <string name="Receipt_Extra">अतिरिक्त कलेक्शन पावती</string>
-<!--    <string name="ExtraReceiptNote1_Line1">* आपले कलेक्शन ऑनलाइन पद्धतीने भरलेले आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>-->
-<!--    <string name="ExtraReceiptNote1_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च कलेक्शन</string>-->
-<!--    <string name="ExtraReceiptNote1_Line3">खात्यास ग्राह्य धरले जाईल, याची कृपया नोंद घ्यावी.</string>-->
-<!--    <string name="ExtraReceiptNote1_Line1">* वरील रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल, त्याच तारखेला</string>-->
-<!--    <string name="ExtraReceiptNote1_Line2">सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>-->
-<!--    <string name="ExtraReceiptNote2_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>-->
+    <!--    <string name="ExtraReceiptNote1_Line1">* आपले कलेक्शन ऑनलाइन पद्धतीने भरलेले आहे. सदर रक्कम अन्नपूर्णा च्या बँक</string>-->
+    <!--    <string name="ExtraReceiptNote1_Line2">खात्यामध्ये जमा झाल्यानंतर (Bank Credit Date नुसार)च कलेक्शन</string>-->
+    <!--    <string name="ExtraReceiptNote1_Line3">खात्यास ग्राह्य धरले जाईल, याची कृपया नोंद घ्यावी.</string>-->
+    <!--    <string name="ExtraReceiptNote1_Line1">* वरील रक्कम अन्नपूर्णा च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल, त्याच तारखेला</string>-->
+    <!--    <string name="ExtraReceiptNote1_Line2">सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>-->
+    <!--    <string name="ExtraReceiptNote2_Line1">* कृपया व्यवहाराची पावती/स्क्रीनशॉट जतन करून ठेवा.</string>-->
     <string name="ExtraReceiptOnlineNote1_Line1">* वरील रक्कम AMCCSL च्या बँक खात्यामध्ये ज्या तारखेला जमा होईल,</string>
     <string name="ExtraReceiptOnlineNote1_Line2">त्याच तारखेला सभासदाचे कलेक्शन आले हे ग्राह्य धरले जाईल.</string>
     <string name="ExtraReceiptOnlineNote2_Line1">* सभासदाचे कलेक्शन आलेल्या तारखेनुसार मुद्दल, व्याज व बचतीच्या रक्कमेचे प्रमाण</string>
@@ -510,18 +510,18 @@
     <string name="Receipt_MemberCopy">सभासद कॉपी</string>
     <string name="Receipt_DCS">DCS पावती</string>
 
-<!--    Given you're looking for a simple formula, this is probably the simplest way to do it,
-<!-     assuming that the Earth is a sphere with a circumference of 40075 km.&ndash;&gt;-->
-<!--    Length in km of 1° of latitude = always 111.32 km-->
-<!--    Length in km of 1° of longitude = 40075 km * cos( latitude ) / 360-->
+    <!--    Given you're looking for a simple formula, this is probably the simplest way to do it,
+    <!-     assuming that the Earth is a sphere with a circumference of 40075 km.&ndash;&gt;-->
+    <!--    Length in km of 1° of latitude = always 111.32 km-->
+    <!--    Length in km of 1° of longitude = 40075 km * cos( latitude ) / 360-->
 
-<!--    <string-array name="OnlinePaymentApp_array">-->
-<!--        <item></item>-->
-<!--        <item>PhonePe</item>-->
-<!--        <item>GPay</item>-->
-<!--        <item>Paytm</item>-->
-<!--        <item>BHIM</item>-->
-<!--        <item>Other</item>-->
-<!--    </string-array>-->
+    <!--    <string-array name="OnlinePaymentApp_array">-->
+    <!--        <item></item>-->
+    <!--        <item>PhonePe</item>-->
+    <!--        <item>GPay</item>-->
+    <!--        <item>Paytm</item>-->
+    <!--        <item>BHIM</item>-->
+    <!--        <item>Other</item>-->
+    <!--    </string-array>-->
 
 </resources>
