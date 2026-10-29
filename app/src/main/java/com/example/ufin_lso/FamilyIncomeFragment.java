@@ -13,34 +13,27 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
+import android.view.WindowManager;
+import android.widget.ScrollView;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Family income table.
- *
- * Member name, relation, income source and monthly income are loaded automatically, the same way as in IncomeFragment/FamilyFragment,
- * from mainActivity.Member and mainActivity.PersonalImpactInfo.
- *
- * The caller must pass "MemberID" (long) in the arguments Bundle (RevisitFragment passes the revisit member's ID).
- */
 public class FamilyIncomeFragment extends Fragment {
 
     public static final String ARG_MEMBER_ID = "MemberID";
@@ -62,9 +55,13 @@ public class FamilyIncomeFragment extends Fragment {
     private EditText etTotalMonthly;      // A) auto-calculated
     private EditText etAnnualFarm;        // B) yearly (farm) income
     private EditText etEffectiveMonthly;  // B) divided by 12, auto-calculated
-    private EditText etRent;              // C)
-    private EditText etOtherIncome;       // D)
+    private EditText etRent;              // C) amount typed by the user
+    private EditText etOtherIncome;       // D) amount typed by the user
+    private EditText etRentMonthly;       // C) monthly amount (calculated)
+    private EditText etOtherMonthly;      // D) monthly amount (calculated)
+    private Spinner spFreqRent, spFreqOther;   // frequency dropdowns of C and D (B is always Annual)
     private EditText etFamilyTotal;       // grand total, auto-calculated
+    private EditText etPerCapita;         // family total / number of members, auto-calculated
 
     /** One member row as loaded from the DB (used to build the table). */
     private static class MemberRow {
@@ -109,6 +106,13 @@ public class FamilyIncomeFragment extends Fragment {
         etRent = rootView.findViewById(R.id.editTextRent);
         etOtherIncome = rootView.findViewById(R.id.editTextOtherIncome);
         etFamilyTotal = rootView.findViewById(R.id.editTextFamilyTotal);
+        etPerCapita = rootView.findViewById(R.id.editTextPerCapitaIncome);
+        etRentMonthly = rootView.findViewById(R.id.editTextRentMonthly);
+        etOtherMonthly = rootView.findViewById(R.id.editTextOtherMonthly);
+        spFreqRent = rootView.findViewById(R.id.spinnerFreqRent);
+        spFreqOther = rootView.findViewById(R.id.spinnerFreqOther);
+        setupFreqSpinner(spFreqRent, FREQ_MONTHLY);
+        setupFreqSpinner(spFreqOther, FREQ_MONTHLY);
 
         // 1) Load the data
         long memberId = 0;
@@ -157,9 +161,7 @@ public class FamilyIncomeFragment extends Fragment {
         return rootView;
     }
 
-    // ------------------------------------------------------------------
     // Loading data (same approach as ArchivedListFragment / GetMemberInfo)
-    // ------------------------------------------------------------------
     private void loadFamilyData(long memberId) {
 
         rows.clear();
@@ -298,7 +300,6 @@ public class FamilyIncomeFragment extends Fragment {
         }
     }
 
-    /** Adds the member's relation/source to the list even if it is inactive now, so it still shows in the dropdown. */
     private void ensureInList(ArrayList<Integer> ids, ArrayList<String> names, long id, String text) {
         if (id == 0 || ids.contains((int) id)) {
             return;
@@ -338,14 +339,34 @@ public class FamilyIncomeFragment extends Fragment {
         return "";
     }
 
-    // ------------------------------------------------------------------
     // Filling the screen
-    // ------------------------------------------------------------------
-    // One font size for the whole screen
-    private static final int TEXT_SP = 18;
+    // Font size of the table cells (7 columns have to fit on the screen)
+    private static final int TEXT_SP = 16;
+    private static final int NUM_SP = 15;   // number cells (narrow columns)
 
-    // Table column weights: serial | name | relation | source | monthly income
-    private static final float[] COL_WEIGHT = {1f, 3f, 2f, 3f, 2f};
+    // Table column weights: serial | name | relation | source | frequency | rupees | monthly income
+    // (the same numbers are used in fragment_family_income.xml for rows B, C, D so the columns line up)
+    private static final float[] COL_WEIGHT = {22f, 66f, 72f, 82f, 68f, 54f, 54f};
+
+    // Frequency dropdown (Daily / Weekly / Monthly / Annual)
+    private static final String[] FREQ = {"Daily", "Weekly", "Monthly", "Annual"};
+    private static final int FREQ_MONTHLY = 2, FREQ_ANNUAL = 3;
+    // Weeks counted in one month for the "Weekly" option (change here if the business rule differs)
+    private static final double WEEKS_PER_MONTH = 4;
+
+    /** Multiplier that converts the entered amount into a monthly amount. */
+    private static double factor(int freqPos) {
+        switch (freqPos) {
+            case 0: return 30;               // Daily
+            case 1: return WEEKS_PER_MONTH;  // Weekly
+            case 3: return 1 / 12.0;         // Annual
+            default: return 1;               // Monthly
+        }
+    }
+
+    private int monthlyOf(Spinner sp, EditText amt) {
+        return (int) Math.round(toInt(amt) * factor(sp.getSelectedItemPosition()));
+    }
 
     /** One editable table row. */
     private static class RowHolder {
@@ -354,12 +375,16 @@ public class FamilyIncomeFragment extends Fragment {
         EditText etName;
         Spinner spRelation;
         Spinner spSource;
-        EditText etIncome;
+        Spinner spFreq;          // Daily / Weekly / Monthly / Annual
+        EditText etIncome;       // rupees typed by the user (per frequency)
+        TextView tvMonthly;      // monthly income (calculated)
         clsMemberData member;            // null = new (not yet saved) row
         clsPersonalImpactInfo info;
     }
 
     private final ArrayList<RowHolder> holders = new ArrayList<>();
+    // Rows of members that exist in the DB and were deleted from the table; they are deactivated on Save
+    private final ArrayList<RowHolder> removedHolders = new ArrayList<>();
     private boolean rebalancePending = false;
 
     private final TextWatcher rowWatcher = new TextWatcher() {
@@ -379,7 +404,8 @@ public class FamilyIncomeFragment extends Fragment {
         // Header row (index 0)
         llMembers.addView(makeHeaderRow(
                 new String[]{"अनु क्र.", "कुटुंबातील सदस्यांची नावे", "नाते",
-                        "सभासदाच्या उत्पन्नाचे साधन - नोकरी/व्यवसाय", "मासिक उत्पन्न"}));
+                        "सभासदाच्या उत्पन्नाचे साधन - नोकरी/व्यवसाय",
+                        "उत्पन्न\n(Daily, Weekly, Monthly, Annual)", "रूपये", "मासिक उत्पन्न"}));
 
         // Members from the DB
         for (int i = 0; i < rows.size(); i++) {
@@ -413,6 +439,18 @@ public class FamilyIncomeFragment extends Fragment {
                 && !text(h.etIncome).isEmpty();
     }
 
+    /** A new (unsaved) row: its dropdowns appear and are enabled only after a name has been typed. */
+    private void applyRowState(RowHolder h) {
+        boolean on = (h.member != null) || !text(h.etName).isEmpty();
+        int vis = on ? View.VISIBLE : View.INVISIBLE;
+        h.spRelation.setVisibility(vis);
+        h.spSource.setVisibility(vis);
+        h.spFreq.setVisibility(vis);
+        h.spRelation.setEnabled(on);
+        h.spSource.setEnabled(on);
+        h.spFreq.setEnabled(on);
+    }
+
     private String text(EditText e) {
         return e.getText().toString().trim();
     }
@@ -434,11 +472,15 @@ public class FamilyIncomeFragment extends Fragment {
     private void rebalance() {
 
         // 1) Remove completely empty rows except the last one
+        //    (the main member's row is never removed: the main member cannot be deactivated)
+        RowHolder mainHolder = firstSavedHolder();
         for (int i = holders.size() - 2; i >= 0; i--) {
             RowHolder h = holders.get(i);
-            if (isRowEmpty(h)) {
+            if (isRowEmpty(h) && h != mainHolder) {
                 llMembers.removeView(h.line);
                 holders.remove(i);
+                // A member that is already in the DB must also be deactivated in the DB on Save
+                if (h.member != null && !removedHolders.contains(h)) removedHolders.add(h);
             }
         }
 
@@ -451,6 +493,8 @@ public class FamilyIncomeFragment extends Fragment {
                 addRow("", 0, 0, "");
             }
         }
+
+        for (RowHolder h : holders) applyRowState(h);
 
         // 3) Renumber the serial numbers
         // A blank row has no serial number; it gets one as soon as something is filled in
@@ -467,9 +511,7 @@ public class FamilyIncomeFragment extends Fragment {
         calculate();
     }
 
-    // ------------------------------------------------------------------
     // Building the table rows
-    // ------------------------------------------------------------------
     private LinearLayout makeHeaderRow(String[] titles) {
 
         LinearLayout line = newRowLayout();
@@ -479,6 +521,7 @@ public class FamilyIncomeFragment extends Fragment {
             styleCell(tv, c);
             tv.setGravity(Gravity.CENTER);
             tv.setTypeface(null, Typeface.BOLD);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);   // table headings
             tv.setText(titles[c]);
             line.addView(tv);
         }
@@ -498,27 +541,110 @@ public class FamilyIncomeFragment extends Fragment {
         h.etName = makeEditCell(1, name, false);
         h.spRelation = makeSpinnerCell(2, relationNames, relationIds, relationId);
         h.spSource = makeSpinnerCell(3, businessNames, businessIds, businessId);
-        h.etIncome = makeEditCell(4, income, true);
+        h.spFreq = makeFreqCell(4);
+        h.etIncome = makeEditCell(5, income, true);
+        h.tvMonthly = new TextView(requireContext());
+        styleCell(h.tvMonthly, 6);
+        h.tvMonthly.setGravity(Gravity.CENTER);
+        h.tvMonthly.setTypeface(null, Typeface.BOLD);
+        h.tvMonthly.setTextSize(TypedValue.COMPLEX_UNIT_SP, NUM_SP);
+        h.tvMonthly.setText(income);
 
         h.line.addView(h.etName);
-        h.line.addView(h.spRelation);
-        h.line.addView(h.spSource);
+        h.line.addView(boxed(h.spRelation, 2));
+        h.line.addView(boxed(h.spSource, 3));
+        h.line.addView(boxed(h.spFreq, 4));
         h.line.addView(h.etIncome);
+        h.line.addView(h.tvMonthly);
 
         llMembers.addView(h.line);   // after the header, at the end
         holders.add(h);
+        applyRowState(h);
         return h;
+    }
+
+    /** Bordered table cell that holds a Spinner; the Spinner keeps its default style, so the dropdown arrow is visible. */
+    private View boxed(Spinner sp, int col) {
+        FrameLayout box = new FrameLayout(requireContext());
+        box.setBackgroundResource(R.drawable.customborder);
+        box.setMinimumHeight(dp(44));
+        box.setLayoutParams(new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT, COL_WEIGHT[col]));
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER_VERTICAL);
+        lp.setMargins(dp(6), dp(4), 0, dp(4));   // keep the text away from the left border
+        box.addView(sp, lp);
+        return box;
+    }
+
+    /** Frequency dropdown for a table row (default Monthly). */
+    private Spinner makeFreqCell(int col) {
+        Spinner sp = new Spinner(requireContext());
+        sp.setAdapter(new FreqAdapter());
+        sp.setSelection(FREQ_MONTHLY, false);
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                calculate();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+        return sp;
+    }
+
+    /** Frequency dropdown of the B, C, D rows (defined in the XML). */
+    private void setupFreqSpinner(Spinner sp, int selection) {
+        sp.setAdapter(new FreqAdapter());
+        sp.setSelection(selection, false);
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                calculate();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+    }
+
+    /** Adapter of the frequency dropdown: black, bold, centred text. */
+    private class FreqAdapter extends ArrayAdapter<String> {
+
+        FreqAdapter() {
+            super(requireContext(), android.R.layout.simple_spinner_item, FREQ);
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        }
+
+        private View style(View v, int sp) {
+            TextView tv = (TextView) v;
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
+            tv.setTextColor(Color.BLACK);
+            tv.setTypeface(null, Typeface.BOLD);
+            tv.setGravity(Gravity.CENTER);
+            tv.setSingleLine(false);
+            tv.setPadding(0, 0, 0, 0);
+            return tv;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return style(super.getView(position, convertView, parent), 15);
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            View v = style(super.getDropDownView(position, convertView, parent), 20);
+            v.setPadding(dp(12), dp(12), dp(12), dp(12));
+            return v;
+        }
     }
 
     /** Dropdown cell for relation / income source. */
     private Spinner makeSpinnerCell(int col, List<String> names, List<Integer> ids, long selectedId) {
 
         Spinner sp = new Spinner(requireContext());
-        sp.setLayoutParams(new LinearLayout.LayoutParams(
-                0, ViewGroup.LayoutParams.MATCH_PARENT, COL_WEIGHT[col]));
-        sp.setBackgroundResource(R.drawable.customborder);   // no arrow icon; tapping the cell opens the list directly
-        sp.setPadding(dp(6), dp(8), dp(6), dp(8));
-        sp.setMinimumHeight(dp(44));
         sp.setAdapter(new CellAdapter(names));
 
         int pos = ids.indexOf((int) selectedId);
@@ -552,7 +678,7 @@ public class FamilyIncomeFragment extends Fragment {
             tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, TEXT_SP);
             tv.setTextColor(Color.BLACK);
             tv.setSingleLine(false);
-            tv.setMaxLines(3);
+            tv.setMaxLines(8);      // long names are shown fully; the row gets taller
             tv.setEllipsize(null);
             tv.setPadding(0, 0, 0, 0);
             return tv;
@@ -582,6 +708,7 @@ public class FamilyIncomeFragment extends Fragment {
             et.setMaxLines(1);
             et.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(6)});
             et.setGravity(Gravity.CENTER);
+            et.setTextSize(TypedValue.COMPLEX_UNIT_SP, NUM_SP);
         } else {
             et.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
             et.setHorizontallyScrolling(false);
@@ -634,7 +761,7 @@ public class FamilyIncomeFragment extends Fragment {
         tv.setLayoutParams(new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.MATCH_PARENT, COL_WEIGHT[col]));
         tv.setBackgroundResource(R.drawable.customborder);
-        tv.setPadding(dp(6), dp(8), dp(6), dp(8));
+        tv.setPadding(dp(4), dp(8), dp(4), dp(8));
         tv.setMinHeight(dp(44));
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, TEXT_SP);
         tv.setTextColor(Color.BLACK);
@@ -822,13 +949,15 @@ public class FamilyIncomeFragment extends Fragment {
             int busPos = h.spSource.getSelectedItemPosition();
             it.relationId = (relPos > 0) ? relationIds.get(relPos) : 0;
             it.businessId = (busPos > 0) ? businessIds.get(busPos) : 0;
-            it.income = toInt(h.etIncome);
+            it.income = monthlyOf(h.spFreq, h.etIncome);   // monthly amount
             it.complete = isRowComplete(h);
             it.isMainMember = (h == first);
             items.add(it);
         }
-        final int yearly = toInt(etAnnualFarm);
-        final int other = toInt(etRent) + toInt(etOtherIncome);
+        // B) is stored as a yearly amount, C + D as monthly amounts
+        final ArrayList<RowHolder> toDeactivate = new ArrayList<>(removedHolders);
+        final int yearly = toInt(etAnnualFarm);   // B) is always a yearly amount
+        final int other = monthlyOf(spFreqRent, etRent) + monthlyOf(spFreqOther, etOtherIncome);
 
         // Main member's info needed for new members (Branch, Group, Address, MainMemberID)
         final clsMemberData mainMember =
@@ -837,7 +966,7 @@ public class FamilyIncomeFragment extends Fragment {
         saveExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                final String msg = doSave(items, yearly, other, mainMember);
+                final String msg = doSave(items, toDeactivate, yearly, other, mainMember);
                 final FragmentActivity act = getActivity();
                 if (act == null) {
                     saving = false;
@@ -879,6 +1008,11 @@ public class FamilyIncomeFragment extends Fragment {
                             }
                         }
 
+                        // Deleted members that were deactivated in the DB are no longer pending
+                        for (RowHolder d : toDeactivate) {
+                            if (d.member != null && d.member.IsActive == 0) removedHolders.remove(d);
+                        }
+
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
                         // do not close the page; it closes only when Close is pressed
                     }
@@ -904,11 +1038,13 @@ public class FamilyIncomeFragment extends Fragment {
     }
 
     /** Background thread: DB work only. Returns the message to show. */
-    private String doSave(ArrayList<SaveItem> items, int yearly, int other, clsMemberData mainMember) {
+    private String doSave(ArrayList<SaveItem> items, ArrayList<RowHolder> toDeactivate,
+                          int yearly, int other, clsMemberData mainMember) {
 
         int memberUpdated = 0;
         int incomeUpdated = 0;
         int memberCreated = 0;
+        int memberRemoved = 0;
         boolean error = false;
         StringBuilder incomplete = new StringBuilder();
 
@@ -1036,6 +1172,32 @@ public class FamilyIncomeFragment extends Fragment {
                     }
                 }
             }
+
+            // ---------- Members deleted from the table: deactivate them in the DB ----------
+            String today = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ENGLISH)
+                    .format(java.util.Calendar.getInstance().getTime());
+            for (RowHolder d : toDeactivate) {
+                clsMemberData m = d.member;
+                if (m == null || m.IsActive == 0) continue;
+                m.IsActive = 0;
+                m.DeactivateDate = today;
+                m.DeletionReasonID = 22;      // 22 = Other (same as MemberFragment)
+                t += 1000;
+                if (mainActivity.SQLite_saveMember(m, t, true)) {
+                    memberRemoved++;
+                } else {
+                    m.IsActive = 1;           // not saved; will be tried again on the next Save
+                    m.DeactivateDate = "NA";
+                    m.DeletionReasonID = 0;
+                    error = true;
+                    continue;
+                }
+                if (d.info != null) {
+                    d.info.IsActive = 0;
+                    t += 1000;
+                    if (!mainActivity.SQLite_savePersonalImpactInfo(d.info, t, true)) error = true;
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             error = true;
@@ -1046,12 +1208,15 @@ public class FamilyIncomeFragment extends Fragment {
         String msg;
         if (error) {
             msg = "सेव्ह करताना अडचण आली.";
-        } else if (memberCreated + memberUpdated + incomeUpdated == 0 && incomplete.length() == 0) {
+        } else if (memberCreated + memberUpdated + incomeUpdated + memberRemoved == 0 && incomplete.length() == 0) {
             msg = "काही बदल नाही.";
         } else {
             msg = "सेव्ह झाले.";
             if (memberCreated > 0) {
                 msg += " नवीन सदस्य: " + memberCreated + ".";
+            }
+            if (memberRemoved > 0) {
+                msg += " काढलेले सदस्य: " + memberRemoved + ".";
             }
         }
         if (incomplete.length() > 0) {
@@ -1086,30 +1251,43 @@ public class FamilyIncomeFragment extends Fragment {
                 ? String.valueOf(first.OtherMonthlyIncome) : "");
 
         etRent.setText("");
+        spFreqRent.setSelection(FREQ_MONTHLY);
+        spFreqOther.setSelection(FREQ_MONTHLY);   // DB value is a monthly amount
     }
 
     /**
      * A     = sum of the monthly income of all members
-     * B     = yearly farm income / 12
-     * total = A + B (monthly) + C + D
+     * B, C, D = amount x frequency factor (monthly amount)
+     * total = A + B + C + D (all monthly)
      */
     private void calculate() {
+        if (etFamilyTotal == null || etPerCapita == null || spFreqRent == null || spFreqOther == null) return;
 
         // A) = sum of the monthly income of all table rows (updates immediately when edited)
         totalMonthly = 0;
         for (RowHolder h : holders) {
-            totalMonthly += toInt(h.etIncome);
+            int m = monthlyOf(h.spFreq, h.etIncome);
+            totalMonthly += m;
+            h.tvMonthly.setText(text(h.etIncome).isEmpty() ? "" : String.valueOf(m));
         }
 
-        int effectiveMonthly = toInt(etAnnualFarm) / 12;
-        int familyTotal = totalMonthly
-                + effectiveMonthly
-                + toInt(etRent)
-                + toInt(etOtherIncome);
+        int effectiveMonthly = (int) Math.round(toInt(etAnnualFarm) / 12.0);   // B) yearly / 12
+        int rentMonthly = monthlyOf(spFreqRent, etRent);
+        int otherMonthly = monthlyOf(spFreqOther, etOtherIncome);
+        int familyTotal = totalMonthly + effectiveMonthly + rentMonthly + otherMonthly;
 
         etTotalMonthly.setText(String.valueOf(totalMonthly));
         etEffectiveMonthly.setText(String.valueOf(effectiveMonthly));
+        etRentMonthly.setText(String.valueOf(rentMonthly));
+        etOtherMonthly.setText(String.valueOf(otherMonthly));
         etFamilyTotal.setText(String.valueOf(familyTotal));
+
+        // Per capita income = family total / number of members listed in the table (same rule as the old IncomeFragment)
+        int members = 0;
+        for (RowHolder h : holders) {
+            if (!isRowEmpty(h)) members++;
+        }
+        etPerCapita.setText(String.valueOf(members > 0 ? familyTotal / members : 0));
         updateSaveEnabled();
     }
 
@@ -1123,10 +1301,12 @@ public class FamilyIncomeFragment extends Fragment {
             sb.append(text(h.etName)).append('|')
                     .append(h.spRelation.getSelectedItemPosition()).append('|')
                     .append(h.spSource.getSelectedItemPosition()).append('|')
+                    .append(h.spFreq.getSelectedItemPosition()).append('|')
                     .append(text(h.etIncome)).append(';');
         }
-        sb.append(text(etAnnualFarm)).append('|').append(text(etRent)).append('|')
-                .append(text(etOtherIncome));
+        sb.append(text(etAnnualFarm)).append('|')
+                .append(text(etRent)).append(':').append(spFreqRent.getSelectedItemPosition()).append('|')
+                .append(text(etOtherIncome)).append(':').append(spFreqOther.getSelectedItemPosition());
         return sb.toString();
     }
 
@@ -1135,9 +1315,7 @@ public class FamilyIncomeFragment extends Fragment {
         btSave.setEnabled(!signature().equals(baseline));
     }
 
-    // ------------------------------------------------------------------
     // Small helpers
-    // ------------------------------------------------------------------
     private int toInt(EditText e) {
         String s = e.getText().toString().trim();
         if (s.isEmpty()) return 0;
@@ -1161,7 +1339,6 @@ public class FamilyIncomeFragment extends Fragment {
         return sb.toString();
     }
 
-    /** Family total income (for other screens if needed). */
     public int getFamilyTotal() {
         return toInt(etFamilyTotal);
     }

@@ -49,18 +49,20 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
+                <!-- A) total of the monthly column -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/customborder"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="3"
+                        android:layout_height="match_parent"
+                        android:layout_weight="364"
+                        android:background="@drawable/customborder"
+                        android:gravity="center_vertical"
+                        android:padding="6dp"
                         android:text="A) एकूण मासिक उत्पन्न (सर्व सभासदांच्या उत्पन्ना ची टोटल)"
                         android:textColor="#000000"
                         android:textSize="18sp"
@@ -68,162 +70,265 @@
 
                     <EditText
                         android:id="@+id/editTextTotalMonthly"
-                        android:focusable="false"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:ems="10"
-                        android:editable="false"
+                        android:layout_height="match_parent"
+                        android:layout_weight="54"
+                        android:background="@drawable/customborder"
+                        android:focusable="false"
                         android:inputType="none"
-                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
-                <!-- B) वार्षिक उत्पन्न (शेती) : वार्षिक रक्कम | दरमहा (÷12) -->
+                <!-- B, C, D: frequency | rupees | monthly (same column grid as the table) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/customborder"
-                    android:orientation="vertical"
-                    android:padding="10dp">
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="B) वार्षिक उत्पन्न (गावाकडील शेतीचे)&#10;(महिना विभागून रक्कम भरावी)"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="242"
+                        android:background="@drawable/customborder"
+                        android:gravity="center_vertical"
+                        android:padding="6dp"
+                        android:text="B) वार्षिक उत्पन्न (गावाकडील शेतीचे)"
                         android:textColor="#000000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="68"
+                        android:background="@drawable/customborder"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="Annual"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/editTextAnnualFarm"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="54"
+                        android:background="@drawable/customborder"
+                        android:inputType="number"
+                        android:maxLength="6"
+                        android:maxLines="1"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/editTextAnnualFarm"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:ems="10"
-                            android:inputType="number"
-                            android:maxLength="6"
-                            android:maxLines="1"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="2"
-                            android:gravity="right"
-                            android:text="दरमहा"
-                            android:textColor="#000000"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <EditText
-                            android:id="@+id/editTextEffectiveMonthly"
-                            android:focusable="false"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:editable="false"
-                            android:ems="10"
-                            android:inputType="none"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                    <EditText
+                        android:id="@+id/editTextEffectiveMonthly"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="54"
+                        android:background="@drawable/customborder"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/customborder"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="3"
+                        android:layout_height="match_parent"
+                        android:layout_weight="242"
+                        android:background="@drawable/customborder"
+                        android:gravity="center_vertical"
+                        android:padding="6dp"
                         android:text="C) घरभाडे (घर भाड्याने दिले असेल तर)"
                         android:textColor="#000000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="68"
+                        android:background="@drawable/customborder"
+                        android:minHeight="44dp">
+
+                        <Spinner
+                            android:id="@+id/spinnerFreqRent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical" />
+                    </FrameLayout>
 
                     <EditText
                         android:id="@+id/editTextRent"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:ems="10"
+                        android:layout_height="match_parent"
+                        android:layout_weight="54"
+                        android:background="@drawable/customborder"
                         android:inputType="number"
                         android:maxLength="6"
                         android:maxLines="1"
-                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextRentMonthly"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="54"
+                        android:background="@drawable/customborder"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/customborder"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="3"
+                        android:layout_height="match_parent"
+                        android:layout_weight="242"
+                        android:background="@drawable/customborder"
+                        android:gravity="center_vertical"
+                        android:padding="6dp"
                         android:text="D) इतर उत्पन्न असल्यास (पेन्शन इ.)"
                         android:textColor="#000000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="68"
+                        android:background="@drawable/customborder"
+                        android:minHeight="44dp">
+
+                        <Spinner
+                            android:id="@+id/spinnerFreqOther"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical" />
+                    </FrameLayout>
 
                     <EditText
                         android:id="@+id/editTextOtherIncome"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:ems="10"
+                        android:layout_height="match_parent"
+                        android:layout_weight="54"
+                        android:background="@drawable/customborder"
                         android:inputType="number"
                         android:maxLength="6"
                         android:maxLines="1"
-                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextOtherMonthly"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="54"
+                        android:background="@drawable/customborder"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/customborder"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="3"
-                        android:text="कुटुंबाचे एकूण उत्पन्न"
+                        android:layout_height="match_parent"
+                        android:layout_weight="364"
+                        android:background="@drawable/customborder"
+                        android:gravity="center_vertical"
+                        android:padding="6dp"
+                        android:text="कुटुंबाचे एकूण मासिक उत्पन्न"
                         android:textColor="#000000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/editTextFamilyTotal"
-                        android:focusable="false"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:ems="10"
-                        android:editable="false"
+                        android:layout_height="match_parent"
+                        android:layout_weight="54"
+                        android:background="@drawable/customborder"
+                        android:focusable="false"
                         android:inputType="none"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Per capita income = family total / number of members in the table -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="364"
+                        android:background="@drawable/customborder"
+                        android:gravity="center_vertical"
+                        android:padding="6dp"
+                        android:text="दरडोई उत्पन्न"
+                        android:textColor="#000000"
                         android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextPerCapitaIncome"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="54"
+                        android:background="@drawable/customborder"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
