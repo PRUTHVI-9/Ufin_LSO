@@ -49,6 +49,33 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
+                <!-- Edit: shows check boxes in the serial number column; Remove: deletes the checked rows -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/customborder"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <Button
+                        android:id="@+id/buttonEditRows"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Edit"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/buttonRemoveRows"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Remove"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
                 <!-- A) total of the monthly column -->
                 <LinearLayout
                     android:layout_width="match_parent"

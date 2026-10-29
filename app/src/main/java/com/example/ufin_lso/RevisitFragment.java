@@ -1237,7 +1237,7 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
     // FAMILY MEMBERS BUTTON
                     Button btFamilyMembers = new Button(mainActivity.getBaseContext());
 
-                    btFamilyMembers.setText("Loan Eligibility");
+                    btFamilyMembers.setText("Income/Expense");
                     btFamilyMembers.setTextSize(16);
                     btFamilyMembers.setTypeface(Typeface.DEFAULT_BOLD);
                     btFamilyMembers.setGravity(Gravity.CENTER);
@@ -1262,8 +1262,8 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
 
                             mainActivity.getSupportFragmentManager()
                                     .beginTransaction()
-                                    .hide(RevisitFragment.this)                          // Revisit नष्ट होत नाही, फक्त लपते
-                                    .add(R.id.fragment_container, familyIncomeFragment)  // replace ऐवजी add
+                                    .hide(RevisitFragment.this)
+                                    .add(R.id.fragment_container, familyIncomeFragment)
                                     .addToBackStack(null)
                                     .commit();
                         }

@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Toast;
 import android.view.WindowManager;
 import android.widget.ScrollView;
@@ -47,6 +48,9 @@ public class FamilyIncomeFragment extends Fragment {
     private Button btClose;
     private Button btPrevious;
     private Button btNext;
+    private Button btEditRows;     // shows / hides the check boxes in the serial number column
+    private Button btRemoveRows;   // deletes the checked rows
+    private boolean editMode = false;
     private long currentMemberId = 0;
     private ScrollView scrollView;
     private volatile boolean saving = false;
@@ -371,7 +375,9 @@ public class FamilyIncomeFragment extends Fragment {
     /** One editable table row. */
     private static class RowHolder {
         LinearLayout line;
+        FrameLayout serialBox;   // serial number cell: holds the serial number and the check box
         TextView tvSerial;
+        CheckBox cbSelect;       // visible only in edit mode
         EditText etName;
         Spinner spRelation;
         Spinner spSource;
@@ -437,6 +443,53 @@ public class FamilyIncomeFragment extends Fragment {
                 && h.spRelation.getSelectedItemPosition() > 0
                 && h.spSource.getSelectedItemPosition() > 0
                 && !text(h.etIncome).isEmpty();
+    }
+
+    // Edit / Remove (check boxes in the serial number column)
+
+    /** Edit button: shows the check boxes; pressed again it hides them. */
+    private void setEditMode(boolean on) {
+        editMode = on;
+        refreshSelectUi();
+    }
+
+    /** Check boxes are shown only in edit mode, on filled rows, and never on the main member's row. */
+    private void refreshSelectUi() {
+        RowHolder main = firstSavedHolder();
+        for (RowHolder h : holders) {
+            boolean show = editMode && !isRowEmpty(h) && h != main;
+            h.cbSelect.setVisibility(show ? View.VISIBLE : View.GONE);
+            h.tvSerial.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+            if (!show) h.cbSelect.setChecked(false);
+        }
+        updateRemoveEnabled();
+    }
+
+    private void updateRemoveEnabled() {
+        if (btRemoveRows == null) return;
+        boolean any = false;
+        for (RowHolder h : holders) {
+            if (h.cbSelect.getVisibility() == View.VISIBLE && h.cbSelect.isChecked()) {
+                any = true;
+                break;
+            }
+        }
+        btRemoveRows.setEnabled(editMode && any && !saving);
+    }
+
+    /** Remove button: deletes every checked row. Members already in the DB are deactivated on Save. */
+    private void removeCheckedRows() {
+        if (saving) return;
+        for (int i = holders.size() - 1; i >= 0; i--) {
+            RowHolder h = holders.get(i);
+            if (h.cbSelect.getVisibility() == View.VISIBLE && h.cbSelect.isChecked()) {
+                llMembers.removeView(h.line);
+                holders.remove(i);
+                if (h.member != null && !removedHolders.contains(h)) removedHolders.add(h);
+            }
+        }
+        editMode = false;   // leave edit mode; rebalance() re-numbers, keeps one blank row and updates Save
+        rebalance();
     }
 
     /** A new (unsaved) row: its dropdowns appear and are enabled only after a name has been typed. */
@@ -508,6 +561,7 @@ public class FamilyIncomeFragment extends Fragment {
             }
         }
 
+        refreshSelectUi();
         calculate();
     }
 
@@ -533,10 +587,42 @@ public class FamilyIncomeFragment extends Fragment {
         RowHolder h = new RowHolder();
         h.line = newRowLayout();
 
+        // Serial number cell: the number, and a check box that replaces it in edit mode
+        h.serialBox = new FrameLayout(requireContext());
+        h.serialBox.setBackgroundResource(R.drawable.customborder);
+        h.serialBox.setMinimumHeight(dp(44));
+        h.serialBox.setLayoutParams(new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT, COL_WEIGHT[0]));
+
         h.tvSerial = new TextView(requireContext());
-        styleCell(h.tvSerial, 0);
         h.tvSerial.setGravity(Gravity.CENTER);
-        h.line.addView(h.tvSerial);
+        h.tvSerial.setTextSize(TypedValue.COMPLEX_UNIT_SP, TEXT_SP);
+        h.tvSerial.setTextColor(Color.BLACK);
+        h.serialBox.addView(h.tvSerial, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        final CheckBox cb = new CheckBox(requireContext());
+        cb.setPadding(0, 0, 0, 0);
+        cb.setMinWidth(0);
+        cb.setMinimumWidth(0);
+        cb.setScaleX(0.7f);          // the serial column is narrow
+        cb.setScaleY(0.7f);
+        cb.setClickable(false);      // the whole cell is the touch target (see below)
+        cb.setFocusable(false);
+        cb.setVisibility(View.GONE);
+        h.cbSelect = cb;
+        h.serialBox.addView(cb, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+        h.serialBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cb.getVisibility() == View.VISIBLE) {
+                    cb.toggle();
+                    updateRemoveEnabled();
+                }
+            }
+        });
+        h.line.addView(h.serialBox);
 
         h.etName = makeEditCell(1, name, false);
         h.spRelation = makeSpinnerCell(2, relationNames, relationIds, relationId);
@@ -822,6 +908,22 @@ public class FamilyIncomeFragment extends Fragment {
         btPrevious = rootView.findViewById(R.id.buttonPrevious);
         btNext = rootView.findViewById(R.id.buttonNext);
         scrollView = rootView.findViewById(R.id.scrollFamilyIncome);
+        btEditRows = rootView.findViewById(R.id.buttonEditRows);
+        btRemoveRows = rootView.findViewById(R.id.buttonRemoveRows);
+        btRemoveRows.setEnabled(false);
+        btEditRows.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (saving) return;
+                setEditMode(!editMode);   // click = show check boxes, click again = hide them
+            }
+        });
+        btRemoveRows.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeCheckedRows();
+            }
+        });
 
         // First screen: nothing before it, Next is available
         btPrevious.setEnabled(false);
@@ -921,6 +1023,8 @@ public class FamilyIncomeFragment extends Fragment {
         btSave.setEnabled(false);
         btClose.setEnabled(false);
         btNext.setEnabled(false);
+        btEditRows.setEnabled(false);
+        btRemoveRows.setEnabled(false);
         btSave.setText("...");
 
         // close the keyboard and clear focus from any field
@@ -979,6 +1083,8 @@ public class FamilyIncomeFragment extends Fragment {
                         if (!isAdded()) return;
                         btClose.setEnabled(true);
                         btNext.setEnabled(true);
+                        btEditRows.setEnabled(true);
+                        updateRemoveEnabled();
                         btSave.setText("Save");
                         baseline = signature();
                         updateSaveEnabled();
