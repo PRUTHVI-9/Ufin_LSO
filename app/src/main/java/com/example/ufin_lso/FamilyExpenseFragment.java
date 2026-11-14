@@ -1,5 +1,7 @@
 package com.example.ufin_lso;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -28,6 +30,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,27 +41,30 @@ public class FamilyExpenseFragment extends Fragment {
     private static final int TEXT_SP = 18;
     private static final int SMALL_SP = 16;
     private static final int HEAD_SP = 15;   // column headings of the tables
-
     private static final String[] EXPENSE_LABELS = {
             "१) प्रॉपर्टी टॅक्स",
             "२) घरभाडे (घर भाड्याचे असेल तर)",
             "३) लाईटबिल",
             "४) पाणीपट्टी",
-            "घरखर्च (किराणा)",
-            "५) शिक्षणाचा खर्च",
-            "६) आजारपणाचा खर्च",
-            "७) इतर खर्च :\n अ) सण-समारंभ\n ब) पाहुणचार\n क) पुजा-अर्चा",
-            "८) महिन्याला भरण्याची बचत रक्कम\n अ) भिशी\n ब) फंड\n क) बचत गट",
-            "९) इन्शुरन्स /एलआयसी साठी भरणारी रक्कम\n (त्रैमासीक,सहामाही,वार्षिक)\n (महिना विभागून रक्कम भरावी)",
-            "१०) दरमहा अन्नपूर्णा बचतीसाठी भरणारी रक्कम (अन्नपूर्णा आर. डी., आधारपूर्णा)"};
+            "५) घरखर्च (किराणा)",
+            "६) शिक्षणाचा खर्च",
+            "७) आजारपणाचा खर्च",
+            "८) इतर खर्च :\n अ) सण-समारंभ\n ब) पाहुणचार\n क) पुजा-अर्चा",
+            "९) उधारी बाकी असणे. (किराणा, इतर देणी)",
+            "१०) महिन्याला भरण्याची बचत रक्कम\n अ) भिशी\n ब) फंड\n क) बचत गट",
+            "११) इन्शुरन्स /एलआयसी साठी भरणारी रक्कम\n (त्रैमासीक,सहामाही,वार्षिक)\n (महिना विभागून रक्कम भरावी)",
+            "१२) दरमहा अन्नपूर्णा बचतीसाठी भरणारी रक्कम\n (अन्नपूर्णा आर. डी., आधारपूर्णा)\n (ऍटोमॅटिक सॉफ्टवेअर मधुन यावा)"};
     private static final int I_TAX = 0, I_RENT = 1, I_LIGHT = 2, I_WATER = 3, I_FOOD = 4, I_EDU = 5,
-            I_MED = 6, I_OTHER = 7, I_BHISHI = 8, I_INS = 9, I_SAV = 10;
+            I_MED = 6, I_OTHER = 7, I_CREDIT = 8, I_BHISHI = 9, I_INS = 10, I_SAV = 11;
 
     // Frequency options of the dropdown (item 9 also allows quarterly / half-yearly, as in the Excel label)
     private static final String[] FREQ = {"Daily", "Weekly", "Monthly", "Annual"};
     private static final String[] FREQ_INS = {"Daily", "Weekly", "Monthly", "Quarterly", "Half-yearly", "Annual"};
     // Weeks counted in one month for the "Weekly" option (change here if the business rule differs)
     private static final double WEEKS_PER_MONTH = 4;
+
+    // The loan must end before the member turns this age (same rule as the Repay screen)
+    private static final int MAX_AGE_AT_LOAN_END = 65;
 
     // Column weights of the expense table: label | frequency | rupees | monthly rupees
     private static final float W_LABEL = 2.4f, W_FREQ = 1.7f, W_AMT = 1.1f, W_MON = 1.2f;
@@ -91,6 +98,24 @@ public class FamilyExpenseFragment extends Fragment {
     private EditText etChartScore1, etChartScore2, etChartLoan1, etChartLoan2,
             etChartScoreTotal, etChartLoanTotal, etTargetLoan;
     private Button btSave, btClose, btPrevious, btNext;
+
+    // Largest loan that fits the installment balance (same products and rules as the Repay screen)
+    // Loan product dropdown (same products and rules as the Repay screen). Index 0 = blank entry.
+    private Spinner spLoan;
+    private final ArrayList<Integer> loanDetailsIds = new ArrayList<>();     // rows shown in the dropdown
+    private final ArrayList<Integer> loanProductIds = new ArrayList<>();
+    private final ArrayList<String> loanPrincipals = new ArrayList<>();
+    private final ArrayList<String> loanPeriods = new ArrayList<>();
+    private final ArrayList<String> loanInstallments = new ArrayList<>();
+    private final ArrayList<String> loanTexts = new ArrayList<>();
+    private long loanShownInst = Long.MIN_VALUE, loanShownCap = Long.MIN_VALUE;
+    private int loanShownPos = 0;
+    private final ArrayList<Integer> allDetailsIds = new ArrayList<>();      // every valid product detail
+    private final ArrayList<Integer> allProductIds = new ArrayList<>();
+    private final ArrayList<String> allPrincipals = new ArrayList<>();
+    private final ArrayList<String> allPeriods = new ArrayList<>();
+    private final ArrayList<String> allInstallments = new ArrayList<>();
+    private final HashMap<Integer, Boolean> productJointRequired = new HashMap<>();
     private boolean saving = false;
     private String baseline = null;
     private final ExecutorService saveExecutor = Executors.newSingleThreadExecutor();
@@ -117,6 +142,7 @@ public class FamilyExpenseFragment extends Fragment {
         btNext = rootView.findViewById(R.id.buttonNext);
 
         loadExpenseData();
+        loadLoanMaster();
         buildScreen();
         prefill();
         recalc();
@@ -426,6 +452,40 @@ public class FamilyExpenseFragment extends Fragment {
                 1f, Gravity.CENTER, true, true, SMALL_SP);
         etTargetLoan = numCell(r, 1f, true, TEXT_SP);
 
+        // Last field: loan product dropdown, same as on the Repay screen
+        // (only products that fit the installment balance and the eligible loan amount are listed)
+        LinearLayout loanBox = new LinearLayout(requireContext());
+        loanBox.setOrientation(LinearLayout.VERTICAL);
+        loanBox.setBackgroundResource(R.drawable.customborder);
+        loanBox.setPadding(dp(10), dp(10), dp(10), dp(10));
+        loanBox.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        TextView loanLabel = new TextView(requireContext());
+        loanLabel.setText(R.string.Field5_Repay);
+        loanLabel.setTextColor(Color.BLACK);
+        loanLabel.setTextSize(20);
+        loanLabel.setTypeface(null, Typeface.BOLD);
+        loanBox.addView(loanLabel, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        spLoan = new Spinner(requireContext());
+        LinearLayout.LayoutParams spLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        spLp.rightMargin = dp(20);
+        loanBox.addView(spLoan, spLp);
+        ll.addView(loanBox);
+        loanShownInst = Long.MIN_VALUE;   // force the first fill
+        spLoan.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position <= 0 || position == loanShownPos || position >= loanDetailsIds.size()) return;
+                loanShownPos = position;
+                applyLoanSelection(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
         // Bottom spacer only while the keyboard is visible; no blank space otherwise
         bottomSpacer = new View(requireContext());
         bottomSpacer.setLayoutParams(new LinearLayout.LayoutParams(1, 0));
@@ -584,17 +644,267 @@ public class FamilyExpenseFragment extends Fragment {
         etBalInst.setText(String.valueOf(half - mfi));
         etIncreaseTotal.setText(String.valueOf(inc));
         etScoreTotal.setText(String.valueOf(score));
-        etNextLoan.setText(String.valueOf(val(etFitted) + inc));
+        long nextLoan = val(etFitted) + inc;
+        etNextLoan.setText(String.valueOf(nextLoan));
         // Score chart: row 1 score = total of the internal scores above
         etChartScore1.setText(String.valueOf(score));
         etChartScoreTotal.setText(String.valueOf(score + val(etChartScore2)));
         etChartLoanTotal.setText(String.valueOf(val(etChartLoan1) + val(etChartLoan2)));
+        // Installment balance = 50% of income - other MFI installment (the "हप्त्यासाठी शिल्लक रक्कम" box)
+        refreshLoanOptions(half - mfi);
         // Used by other screens (RepayFragment: Monthly_Surplus); same formula as the old Expense screen
         try {
             mainActivity.ExpenseTotal = (int) (mon(I_RENT) + mon(I_FOOD) + mon(I_EDU) + mon(I_MED)
                     + mon(I_OTHER) + mon(I_BHISHI) + mfi);
         } catch (Exception ignored) { }
         updateSaveEnabled();
+    }
+
+    // ------------------------------------------------------------ loan product dropdown
+    private void loadLoanMaster() {
+        allDetailsIds.clear();
+        allProductIds.clear();
+        allPrincipals.clear();
+        allPeriods.clear();
+        allInstallments.clear();
+        productJointRequired.clear();
+        SQLiteDatabase db = null;
+        Cursor c = null;
+        try {
+            ufinDbHelper helper = new ufinDbHelper(mainActivity.getBaseContext());
+            db = helper.getReadableDatabase();
+            String reason = "";
+            try {
+                if (mainActivity.AdditionalDetails.strLoanReason != null)
+                    reason = mainActivity.AdditionalDetails.strLoanReason;
+            } catch (Exception ignored) { }
+            boolean home = reason.equalsIgnoreCase("Home");
+
+            // Member birth date + 65 years: a loan that ends after this date is not allowed
+            Calendar ageLimit = null;
+            try {
+                String bd = mainActivity.Member.get(0).BirthDate;
+                if (bd.length() > 10) bd = bd.substring(0, 10);
+                String[] bs = bd.split("-");
+                ageLimit = Calendar.getInstance();
+                ageLimit.set(Calendar.YEAR, Integer.parseInt(bs[0]));
+                ageLimit.set(Calendar.MONTH, Integer.parseInt(bs[1]) - 1);
+                ageLimit.set(Calendar.DATE, Integer.parseInt(bs[2]));
+                ageLimit.add(Calendar.YEAR, MAX_AGE_AT_LOAN_END);
+            } catch (Exception ignored) {
+                ageLimit = null;   // birth date not available: no age filter
+            }
+
+            // Products valid on the loan date (group test date + 50 days).
+            // In the Revisit flow the group test date can be missing: today is used then.
+            Calendar cal = Calendar.getInstance();
+            try {
+                String[] sp = mainActivity.newGroup.GroupTestDate.substring(0, 10).split("-");
+                cal.set(Calendar.YEAR, Integer.parseInt(sp[0]));
+                cal.set(Calendar.MONTH, Integer.parseInt(sp[1]) - 1);
+                cal.set(Calendar.DATE, Integer.parseInt(sp[2]));
+            } catch (Exception ignored) {
+                cal = Calendar.getInstance();
+            }
+            long loanDate = cal.getTimeInMillis() + 1000L * 60L * 60L * 24L * 50L;
+
+            c = db.query(ufinDbContract.LoanProductsMaster.TABLE_NAME,
+                    new String[]{
+                            ufinDbContract.LoanProductsMaster.COLUMN_NAME_LoanProductID,
+                            ufinDbContract.LoanProductsMaster.COLUMN_NAME_ProductName,
+                            ufinDbContract.LoanProductsMaster.COLUMN_NAME_ProductStartDate,
+                            ufinDbContract.LoanProductsMaster.COLUMN_NAME_ProductEndDate,
+                            ufinDbContract.LoanProductsMaster.COLUMN_NAME_JointAccountHolderRequired},
+                    ufinDbContract.LoanProductsMaster.COLUMN_NAME_IsActive + "='1'",
+                    null, null, null,
+                    ufinDbContract.LoanProductsMaster.COLUMN_NAME_LoanProductID + " ASC");
+            while (c != null && c.moveToNext()) {
+                try {
+                    String name = c.getString(c.getColumnIndexOrThrow(ufinDbContract.LoanProductsMaster.COLUMN_NAME_ProductName));
+                    if (name == null || name.trim().isEmpty()) continue;
+                    name = name.trim();
+                    if (home) {
+                        if (!name.startsWith("Home")) continue;
+                    } else if (name.contains("Home")) continue;
+                    String start = c.getString(c.getColumnIndexOrThrow(ufinDbContract.LoanProductsMaster.COLUMN_NAME_ProductStartDate));
+                    if (start == null || start.isEmpty()) continue;
+                    String[] s2 = start.substring(0, 10).split("-");
+                    cal.set(Calendar.YEAR, Integer.parseInt(s2[0]));
+                    cal.set(Calendar.MONTH, Integer.parseInt(s2[1]) - 1);
+                    cal.set(Calendar.DATE, Integer.parseInt(s2[2]));
+                    if (loanDate < cal.getTimeInMillis()) continue;
+                    String end = c.getString(c.getColumnIndexOrThrow(ufinDbContract.LoanProductsMaster.COLUMN_NAME_ProductEndDate));
+                    if (end != null && !end.isEmpty()) {
+                        String[] s3 = end.substring(0, 10).split("-");
+                        cal.set(Calendar.YEAR, Integer.parseInt(s3[0]));
+                        cal.set(Calendar.MONTH, Integer.parseInt(s3[1]) - 1);
+                        cal.set(Calendar.DATE, Integer.parseInt(s3[2]));
+                        if (loanDate > cal.getTimeInMillis()) continue;
+                    }
+                    int pid = Integer.parseInt(c.getString(c.getColumnIndexOrThrow(ufinDbContract.LoanProductsMaster.COLUMN_NAME_LoanProductID)));
+                    boolean joint = false;
+                    try {
+                        joint = Integer.parseInt(c.getString(c.getColumnIndexOrThrow(
+                                ufinDbContract.LoanProductsMaster.COLUMN_NAME_JointAccountHolderRequired))) == 1;
+                    } catch (Exception ignored) { }
+                    productJointRequired.put(pid, joint);
+                } catch (Exception ignored) { }
+            }
+            if (c != null) c.close();
+
+            c = db.query(ufinDbContract.LoanProductDetailsMaster.TABLE_NAME,
+                    new String[]{
+                            ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_LoanProductDetailsID,
+                            ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_LoanProductID,
+                            ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_PrincipalAmt,
+                            ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_LoanPeriodInMonths,
+                            ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_TotalMonthlyInstallmentAmt},
+                    ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_IsActive + "='1'",
+                    null, null, null,
+                    ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_PrincipalAmt + " DESC");
+            while (c != null && c.moveToNext()) {
+                try {
+                    int pid = Integer.parseInt(c.getString(c.getColumnIndexOrThrow(ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_LoanProductID)));
+                    if (!productJointRequired.containsKey(pid)) continue;   // product not valid for this loan
+                    int did = Integer.parseInt(c.getString(c.getColumnIndexOrThrow(ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_LoanProductDetailsID)));
+                    String pr = c.getString(c.getColumnIndexOrThrow(ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_PrincipalAmt));
+                    String pe = c.getString(c.getColumnIndexOrThrow(ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_LoanPeriodInMonths));
+                    String in = c.getString(c.getColumnIndexOrThrow(ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_TotalMonthlyInstallmentAmt));
+                    Integer.parseInt(pr);
+                    int months = Integer.parseInt(pe);
+                    Integer.parseInt(in);
+                    // Age limit: the loan must end before the member turns 65 (same as the Repay screen)
+                    if (ageLimit != null) {
+                        Calendar loanEnd = Calendar.getInstance();
+                        loanEnd.add(Calendar.MONTH, months);
+                        if (loanEnd.getTimeInMillis() > ageLimit.getTimeInMillis()) {
+                            continue;
+                        }
+                    }
+                    allDetailsIds.add(did);
+                    allProductIds.add(pid);
+                    allPrincipals.add(pr);
+                    allPeriods.add(pe);
+                    allInstallments.add(in);
+                } catch (Exception ignored) { }
+            }
+        } catch (Exception ignored) {
+        } finally {
+            try { if (c != null) c.close(); } catch (Exception ignored) { }
+            try { if (db != null) db.close(); } catch (Exception ignored) { }
+        }
+    }
+
+    private void refreshLoanOptions(long instBalance) {
+        if (spLoan == null || !isAdded()) return;
+        boolean home = false;
+        long cap = 0;
+        try {
+            home = "Home".equalsIgnoreCase(mainActivity.AdditionalDetails.strLoanReason);
+            cap = home ? mainActivity.AdditionalDetails.HomeLoanAmount
+                    : mainActivity.AdditionalDetails.NextLoanOfferAmount;
+        } catch (Exception ignored) { }
+        if (cap <= 0) cap = Long.MAX_VALUE;   // limit not known: only the installment balance limits the list
+        if (instBalance == loanShownInst && cap == loanShownCap) return;   // nothing changed
+        loanShownInst = instBalance;
+        loanShownCap = cap;
+
+        loanDetailsIds.clear();
+        loanProductIds.clear();
+        loanPrincipals.clear();
+        loanPeriods.clear();
+        loanInstallments.clear();
+        loanTexts.clear();
+        loanDetailsIds.add(0);
+        loanProductIds.add(0);
+        loanPrincipals.add("");
+        loanPeriods.add("");
+        loanInstallments.add("");
+        loanTexts.add("");
+        for (int i = 0; i < allDetailsIds.size(); i++) {
+            long principal = Long.parseLong(allPrincipals.get(i));
+            long inst = Long.parseLong(allInstallments.get(i));
+            if (inst > instBalance || principal > cap) continue;
+            loanDetailsIds.add(allDetailsIds.get(i));
+            loanProductIds.add(allProductIds.get(i));
+            loanPrincipals.add(allPrincipals.get(i));
+            loanPeriods.add(allPeriods.get(i));
+            loanInstallments.add(allInstallments.get(i));
+            String text = "रु. " + allPrincipals.get(i) + "/- " + allPeriods.get(i) + "  महिने"
+                    + "  हप्ता रु. " + allInstallments.get(i) + "/-";
+            if (Boolean.TRUE.equals(productJointRequired.get(allProductIds.get(i)))) text += " *";
+            loanTexts.add(text);
+        }
+
+        // keep the loan chosen earlier (also on the Repay screen) when it is still in the list
+        int pos = 0;
+        try {
+            long cur = mainActivity.AdditionalDetails.LoanProductDetailsID;
+            for (int i = 1; i < loanDetailsIds.size(); i++) {
+                if (loanDetailsIds.get(i) == cur) {
+                    pos = i;
+                    break;
+                }
+            }
+        } catch (Exception ignored) { }
+
+        ArrayAdapter<String> ad = new ArrayAdapter<>(mainActivity.getBaseContext(),
+                R.layout.simple_spinner_item_small, loanTexts);
+        ad.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_small);
+        loanShownPos = pos;
+        spLoan.setAdapter(ad);
+        spLoan.setSelection(pos);
+    }
+
+    private void applyLoanSelection(int pos) {
+        try {
+            int principal = Integer.parseInt(loanPrincipals.get(pos));
+            int months = Integer.parseInt(loanPeriods.get(pos));
+            int detailsId = loanDetailsIds.get(pos);
+            int productId = loanProductIds.get(pos);
+
+            mainActivity.AdditionalDetails.LoanAmount = principal;
+            mainActivity.AdditionalDetails.LoanDuration = months;
+            try {
+                for (int i = 0; i < mainActivity.newGroup.arrGroupMember.size(); i++) {
+                    if (mainActivity.Member.get(0).MemberID == mainActivity.newGroup.arrGroupMember.get(i).MemberID) {
+                        mainActivity.newGroup.arrGroupMember.get(i).LoanAmount = principal;
+                        mainActivity.newGroup.arrGroupMember.get(i).LoanDuration = months;
+                        break;
+                    }
+                }
+            } catch (Exception ignored) { }
+
+            mainActivity.JointAccountHolderRequired = Boolean.TRUE.equals(productJointRequired.get(productId));
+            if (!mainActivity.JointAccountHolderRequired)
+                mainActivity.AdditionalDetails.JointLoaneeID = -1;
+
+            // With full community-meeting attendance incentive
+            mainActivity.AdditionalDetails.LoanProductDetailsID = detailsId;
+            mainActivity.AdditionalDetails.LoanProductDetailsID1 = detailsId;
+            mainActivity.AdditionalDetails.LoanProductDetailsID2 = 0;
+            mainActivity.AdditionalDetails.LoanProductDetailsID3 = 0;
+
+            // Half attendance: smaller loan of the same period
+            int half = principal - mainActivity.AdditionalDetails.incentiveCommunityMeetingPartAttendance;
+            for (int k = 1; k < loanDetailsIds.size(); k++) {
+                if (Integer.parseInt(loanPrincipals.get(k)) == half
+                        && months == Integer.parseInt(loanPeriods.get(k))) {
+                    mainActivity.AdditionalDetails.LoanProductDetailsID2 = loanDetailsIds.get(k);
+                    mainActivity.AdditionalDetails.LoanProductDetailsID3 = loanDetailsIds.get(k);
+                    break;
+                }
+            }
+            // No attendance
+            int none = principal - mainActivity.AdditionalDetails.incentiveCommunityMeetingFullAttendance;
+            for (int k = 1; k < loanDetailsIds.size(); k++) {
+                if (Integer.parseInt(loanPrincipals.get(k)) == none
+                        && months == Integer.parseInt(loanPeriods.get(k))) {
+                    mainActivity.AdditionalDetails.LoanProductDetailsID3 = loanDetailsIds.get(k);
+                    break;
+                }
+            }
+        } catch (Exception ignored) { }
     }
 
     private String signature() {

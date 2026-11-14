@@ -37,6 +37,10 @@ import java.util.List;
 
 public class FamilyIncomeFragment extends Fragment {
 
+    // DeletionReasonID written when a member is deactivated from this screen:
+    //  22 = row deleted completely (same as MemberFragment 'Other'), 23 = row greyed out (can be restored)
+    private static final int REASON_DELETED = 22, REASON_GREYED = 23;
+
     public static final String ARG_MEMBER_ID = "MemberID";
     public static final String ARG_TOTAL_INCOME = "FamilyTotalIncome";
 
@@ -49,7 +53,8 @@ public class FamilyIncomeFragment extends Fragment {
     private Button btPrevious;
     private Button btNext;
     private Button btEditRows;     // shows / hides the check boxes in the serial number column
-    private Button btRemoveRows;   // deletes the checked rows
+    private Button btRemoveRows;   // new rows: deleted; existing rows: greyed out
+    private Button btRestoreRows;  // brings greyed-out (removed) existing rows back
     private boolean editMode = false;
     private long currentMemberId = 0;
     private ScrollView scrollView;
@@ -75,6 +80,7 @@ public class FamilyIncomeFragment extends Fragment {
         long relationId;
         long businessId;
         int monthlyIncome;
+        boolean removed;                 // deactivated with Remove on this screen earlier: shown greyed out
         clsMemberData member;            // member from DB
         clsPersonalImpactInfo info;      // income record from DB (can be null)
     }
@@ -207,7 +213,10 @@ public class FamilyIncomeFragment extends Fragment {
         for (int i = 0; i < mainActivity.Member.size(); i++) {
 
             clsMemberData member = mainActivity.Member.get(i);
-            if (member.IsActive != 1) {
+            // Active members, plus members removed earlier with this screen's Remove button
+            // (IsActive = 0, DeletionReasonID = 23): they are shown greyed out and can be restored.
+            boolean removedEarlier = (member.IsActive == 0 && member.DeletionReasonID == REASON_GREYED);
+            if (member.IsActive != 1 && !removedEarlier) {
                 continue;
             }
 
@@ -217,6 +226,7 @@ public class FamilyIncomeFragment extends Fragment {
             row.name = buildName(member);
             row.member = member;
             row.info = info;
+            row.removed = removedEarlier;
             row.relation = lookupMarathi(
                     ufinDbContract.RelationMaster.TABLE_NAME,
                     ufinDbContract.RelationMaster.COLUMN_NAME_RelationID,
@@ -241,7 +251,7 @@ public class FamilyIncomeFragment extends Fragment {
                 row.monthlyIncome = 0;
             }
 
-            totalMonthly += row.monthlyIncome;
+            if (!row.removed) totalMonthly += row.monthlyIncome;
             rows.add(row);
         }
     }
@@ -384,6 +394,8 @@ public class FamilyIncomeFragment extends Fragment {
         Spinner spFreq;          // Daily / Weekly / Monthly / Annual
         EditText etIncome;       // rupees typed by the user (per frequency)
         TextView tvMonthly;      // monthly income (calculated)
+        boolean original;                // loaded from the DB when the screen opened (Remove only greys it out)
+        boolean removed;                 // existing member greyed out by Remove (not counted in totals)
         clsMemberData member;            // null = new (not yet saved) row
         clsPersonalImpactInfo info;
     }
@@ -419,6 +431,8 @@ public class FamilyIncomeFragment extends Fragment {
             RowHolder h = addRow(r.name, r.relationId, r.businessId, String.valueOf(r.monthlyIncome));
             h.member = r.member;
             h.info = r.info;
+            h.original = true;
+            if (r.removed) setRowRemoved(h, true);
         }
 
         // Always keep one blank row at the end and fix the serial numbers
@@ -466,23 +480,31 @@ public class FamilyIncomeFragment extends Fragment {
     }
 
     private void updateRemoveEnabled() {
-        if (btRemoveRows == null) return;
-        boolean any = false;
+        if (btRemoveRows == null || btRestoreRows == null) return;
+        boolean anyActive = false, anyRemoved = false;
         for (RowHolder h : holders) {
             if (h.cbSelect.getVisibility() == View.VISIBLE && h.cbSelect.isChecked()) {
-                any = true;
-                break;
+                if (h.removed) anyRemoved = true; else anyActive = true;
             }
         }
-        btRemoveRows.setEnabled(editMode && any && !saving);
+        btRemoveRows.setEnabled(editMode && anyActive && !saving);
+        btRestoreRows.setEnabled(editMode && anyRemoved && !saving);   // only when a greyed row is checked
     }
 
-    /** Remove button: deletes every checked row. Members already in the DB are deactivated on Save. */
+    /**
+     * Remove button: a row that was added now (not in the DB yet) is deleted completely;
+     * a row of an existing member is greyed out, excluded from the totals and deactivated on Save.
+     */
     private void removeCheckedRows() {
         if (saving) return;
         for (int i = holders.size() - 1; i >= 0; i--) {
             RowHolder h = holders.get(i);
-            if (h.cbSelect.getVisibility() == View.VISIBLE && h.cbSelect.isChecked()) {
+            if (h.removed || h.cbSelect.getVisibility() != View.VISIBLE || !h.cbSelect.isChecked()) continue;
+            if (h.original) {
+                setRowRemoved(h, true);          // member that was there when the screen opened: grey out
+            } else {
+                // Row added on this screen (even if it was already saved): delete it completely;
+                // if it is in the DB it is deactivated on the next Save
                 llMembers.removeView(h.line);
                 holders.remove(i);
                 if (h.member != null && !removedHolders.contains(h)) removedHolders.add(h);
@@ -492,6 +514,32 @@ public class FamilyIncomeFragment extends Fragment {
         rebalance();
     }
 
+    /** Restore button: brings the checked greyed-out rows back. */
+    private void restoreCheckedRows() {
+        if (saving) return;
+        for (RowHolder h : holders) {
+            if (h.removed && h.cbSelect.getVisibility() == View.VISIBLE && h.cbSelect.isChecked()) {
+                setRowRemoved(h, false);
+            }
+        }
+        editMode = false;
+        rebalance();
+    }
+
+    /** Greys out (removed) or re-enables (restored) a row of an existing member. */
+    private void setRowRemoved(RowHolder h, boolean removed) {
+        h.removed = removed;
+        h.line.setBackgroundColor(removed ? 0xFFBDBDBD : Color.TRANSPARENT);
+        for (int i = 0; i < h.line.getChildCount(); i++) {
+            View c = h.line.getChildAt(i);
+            if (c == h.serialBox) continue;      // the check box stays fully visible
+            c.setAlpha(removed ? 0.45f : 1f);
+        }
+        h.etName.setEnabled(!removed);
+        h.etIncome.setEnabled(!removed);
+        applyRowState(h);
+    }
+
     /** A new (unsaved) row: its dropdowns appear and are enabled only after a name has been typed. */
     private void applyRowState(RowHolder h) {
         boolean on = (h.member != null) || !text(h.etName).isEmpty();
@@ -499,9 +547,10 @@ public class FamilyIncomeFragment extends Fragment {
         h.spRelation.setVisibility(vis);
         h.spSource.setVisibility(vis);
         h.spFreq.setVisibility(vis);
-        h.spRelation.setEnabled(on);
-        h.spSource.setEnabled(on);
-        h.spFreq.setEnabled(on);
+        boolean enabled = on && !h.removed;
+        h.spRelation.setEnabled(enabled);
+        h.spSource.setEnabled(enabled);
+        h.spFreq.setEnabled(enabled);
     }
 
     private String text(EditText e) {
@@ -911,6 +960,14 @@ public class FamilyIncomeFragment extends Fragment {
         btEditRows = rootView.findViewById(R.id.buttonEditRows);
         btRemoveRows = rootView.findViewById(R.id.buttonRemoveRows);
         btRemoveRows.setEnabled(false);
+        btRestoreRows = rootView.findViewById(R.id.buttonRestoreRows);
+        btRestoreRows.setEnabled(false);
+        btRestoreRows.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                restoreCheckedRows();
+            }
+        });
         btEditRows.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1025,6 +1082,7 @@ public class FamilyIncomeFragment extends Fragment {
         btNext.setEnabled(false);
         btEditRows.setEnabled(false);
         btRemoveRows.setEnabled(false);
+        btRestoreRows.setEnabled(false);
         btSave.setText("...");
 
         // close the keyboard and clear focus from any field
@@ -1041,7 +1099,7 @@ public class FamilyIncomeFragment extends Fragment {
         final ArrayList<SaveItem> items = new ArrayList<>();
         RowHolder first = firstSavedHolder();
         for (RowHolder h : holders) {
-            if (isRowEmpty(h)) continue;
+            if (isRowEmpty(h) || h.removed) continue;   // greyed-out rows are not updated
             SaveItem it = new SaveItem();
             it.holder = h;
             it.member = h.member;
@@ -1060,6 +1118,12 @@ public class FamilyIncomeFragment extends Fragment {
         }
         // B) is stored as a yearly amount, C + D as monthly amounts
         final ArrayList<RowHolder> toDeactivate = new ArrayList<>(removedHolders);
+        final ArrayList<RowHolder> toReactivate = new ArrayList<>();
+        for (RowHolder h : holders) {
+            if (h.member == null) continue;
+            if (h.removed && h.member.IsActive == 1 && !toDeactivate.contains(h)) toDeactivate.add(h);   // greyed out
+            if (!h.removed && h.member.IsActive == 0) toReactivate.add(h);   // restored after it was saved as removed
+        }
         final int yearly = toInt(etAnnualFarm);   // B) is always a yearly amount
         final int other = monthlyOf(spFreqRent, etRent) + monthlyOf(spFreqOther, etOtherIncome);
 
@@ -1070,7 +1134,7 @@ public class FamilyIncomeFragment extends Fragment {
         saveExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                final String msg = doSave(items, toDeactivate, yearly, other, mainMember);
+                final String msg = doSave(items, toDeactivate, toReactivate, yearly, other, mainMember);
                 final FragmentActivity act = getActivity();
                 if (act == null) {
                     saving = false;
@@ -1145,12 +1209,14 @@ public class FamilyIncomeFragment extends Fragment {
 
     /** Background thread: DB work only. Returns the message to show. */
     private String doSave(ArrayList<SaveItem> items, ArrayList<RowHolder> toDeactivate,
+                          ArrayList<RowHolder> toReactivate,
                           int yearly, int other, clsMemberData mainMember) {
 
         int memberUpdated = 0;
         int incomeUpdated = 0;
         int memberCreated = 0;
         int memberRemoved = 0;
+        int memberRestored = 0;
         boolean error = false;
         StringBuilder incomplete = new StringBuilder();
 
@@ -1159,6 +1225,29 @@ public class FamilyIncomeFragment extends Fragment {
         long t = Math.max(mainActivity.LastTimeInMillis, System.currentTimeMillis());
 
         try {
+            // ---------- Members restored after they had been removed: activate them again ----------
+            for (RowHolder d : toReactivate) {
+                clsMemberData m = d.member;
+                m.IsActive = 1;
+                m.DeactivateDate = "NA";
+                m.DeletionReasonID = 0;
+                t += 1000;
+                if (!mainActivity.SQLite_saveMember(m, t, true)) {
+                    m.IsActive = 0;
+                    m.DeactivateDate = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ENGLISH)
+                            .format(java.util.Calendar.getInstance().getTime());
+                    m.DeletionReasonID = REASON_GREYED;
+                    error = true;
+                    continue;
+                }
+                memberRestored++;
+                if (d.info != null) {
+                    d.info.IsActive = 1;
+                    t += 1000;
+                    if (!mainActivity.SQLite_savePersonalImpactInfo(d.info, t, true)) error = true;
+                }
+            }
+
             for (SaveItem it : items) {
 
                 // ---------- New row: create a new member in the DB ----------
@@ -1287,7 +1376,7 @@ public class FamilyIncomeFragment extends Fragment {
                 if (m == null || m.IsActive == 0) continue;
                 m.IsActive = 0;
                 m.DeactivateDate = today;
-                m.DeletionReasonID = 22;      // 22 = Other (same as MemberFragment)
+                m.DeletionReasonID = d.removed ? REASON_GREYED : REASON_DELETED;
                 t += 1000;
                 if (mainActivity.SQLite_saveMember(m, t, true)) {
                     memberRemoved++;
@@ -1314,7 +1403,7 @@ public class FamilyIncomeFragment extends Fragment {
         String msg;
         if (error) {
             msg = "सेव्ह करताना अडचण आली.";
-        } else if (memberCreated + memberUpdated + incomeUpdated + memberRemoved == 0 && incomplete.length() == 0) {
+        } else if (memberCreated + memberUpdated + incomeUpdated + memberRemoved + memberRestored == 0 && incomplete.length() == 0) {
             msg = "काही बदल नाही.";
         } else {
             msg = "सेव्ह झाले.";
@@ -1323,6 +1412,9 @@ public class FamilyIncomeFragment extends Fragment {
             }
             if (memberRemoved > 0) {
                 msg += " काढलेले सदस्य: " + memberRemoved + ".";
+            }
+            if (memberRestored > 0) {
+                msg += " पुन्हा चालू केलेले सदस्य: " + memberRestored + ".";
             }
         }
         if (incomplete.length() > 0) {
@@ -1373,7 +1465,7 @@ public class FamilyIncomeFragment extends Fragment {
         totalMonthly = 0;
         for (RowHolder h : holders) {
             int m = monthlyOf(h.spFreq, h.etIncome);
-            totalMonthly += m;
+            if (!h.removed) totalMonthly += m;   // greyed-out (removed) rows are not counted
             h.tvMonthly.setText(text(h.etIncome).isEmpty() ? "" : String.valueOf(m));
         }
 
@@ -1391,7 +1483,7 @@ public class FamilyIncomeFragment extends Fragment {
         // Per capita income = family total / number of members listed in the table (same rule as the old IncomeFragment)
         int members = 0;
         for (RowHolder h : holders) {
-            if (!isRowEmpty(h)) members++;
+            if (!isRowEmpty(h) && !h.removed) members++;
         }
         etPerCapita.setText(String.valueOf(members > 0 ? familyTotal / members : 0));
         updateSaveEnabled();
@@ -1408,7 +1500,7 @@ public class FamilyIncomeFragment extends Fragment {
                     .append(h.spRelation.getSelectedItemPosition()).append('|')
                     .append(h.spSource.getSelectedItemPosition()).append('|')
                     .append(h.spFreq.getSelectedItemPosition()).append('|')
-                    .append(text(h.etIncome)).append(';');
+                    .append(text(h.etIncome)).append(h.removed ? "|R" : "|A").append(';');
         }
         sb.append(text(etAnnualFarm)).append('|')
                 .append(text(etRent)).append(':').append(spFreqRent.getSelectedItemPosition()).append('|')

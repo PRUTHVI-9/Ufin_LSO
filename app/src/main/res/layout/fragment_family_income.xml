@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
-                <!-- Edit: shows check boxes in the serial number column; Remove: deletes the checked rows -->
+                <!-- Edit: shows check boxes in the serial number column; Remove: deletes new rows / greys out existing rows; Restore: brings greyed rows back -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -72,6 +72,15 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Remove"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/buttonRestoreRows"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Restore"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
