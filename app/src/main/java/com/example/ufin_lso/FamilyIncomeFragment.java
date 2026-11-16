@@ -62,13 +62,13 @@ public class FamilyIncomeFragment extends Fragment {
     private final ExecutorService saveExecutor = Executors.newSingleThreadExecutor();
     private int oldSoftInputMode = -1;
     private EditText etTotalMonthly;      // A) auto-calculated
-    private EditText etAnnualFarm;        // B) yearly (farm) income
-    private EditText etEffectiveMonthly;  // B) divided by 12, auto-calculated
-    private EditText etRent;              // C) amount typed by the user
-    private EditText etOtherIncome;       // D) amount typed by the user
-    private EditText etRentMonthly;       // C) monthly amount (calculated)
-    private EditText etOtherMonthly;      // D) monthly amount (calculated)
-    private Spinner spFreqRent, spFreqOther;   // frequency dropdowns of C and D (B is always Annual)
+    private EditText etAnnualFarm;        // B1) farm income (rupees, per the selected frequency; default Yearly)
+    private EditText etEffectiveMonthly;  // B1) farm income as monthly amount, auto-calculated
+    private EditText etRent;              // B2) house rent: amount typed by the user
+    private EditText etOtherIncome;       // B3) pension etc.: amount typed by the user
+    private EditText etRentMonthly;       // B2) monthly amount (calculated)
+    private EditText etOtherMonthly;      // B3) monthly amount (calculated)
+    private Spinner spFreqFarm, spFreqRent, spFreqOther;   // frequency dropdowns of B1 (farm), B2 (house rent), B3 (pension etc.)
     private EditText etFamilyTotal;       // grand total, auto-calculated
     private EditText etPerCapita;         // family total / number of members, auto-calculated
 
@@ -119,8 +119,10 @@ public class FamilyIncomeFragment extends Fragment {
         etPerCapita = rootView.findViewById(R.id.editTextPerCapitaIncome);
         etRentMonthly = rootView.findViewById(R.id.editTextRentMonthly);
         etOtherMonthly = rootView.findViewById(R.id.editTextOtherMonthly);
+        spFreqFarm = rootView.findViewById(R.id.spinnerFreqFarm);
         spFreqRent = rootView.findViewById(R.id.spinnerFreqRent);
         spFreqOther = rootView.findViewById(R.id.spinnerFreqOther);
+        setupFreqSpinner(spFreqFarm, FREQ_ANNUAL);
         setupFreqSpinner(spFreqRent, FREQ_MONTHLY);
         setupFreqSpinner(spFreqOther, FREQ_MONTHLY);
 
@@ -359,11 +361,11 @@ public class FamilyIncomeFragment extends Fragment {
     private static final int NUM_SP = 15;   // number cells (narrow columns)
 
     // Table column weights: serial | name | relation | source | frequency | rupees | monthly income
-    // (the same numbers are used in fragment_family_income.xml for rows B, C, D so the columns line up)
+    // (the same numbers are used in fragment_family_income.xml for rows B1, B2, B3 so the columns line up)
     private static final float[] COL_WEIGHT = {22f, 66f, 72f, 82f, 68f, 54f, 54f};
 
-    // Frequency dropdown (Daily / Weekly / Monthly / Annual)
-    private static final String[] FREQ = {"Daily", "Weekly", "Monthly", "Annual"};
+    // Frequency dropdown (Daily / Weekly / Monthly / Yearly)
+    private static final String[] FREQ = {"Daily", "Weekly", "Monthly", "Yearly"};
     private static final int FREQ_MONTHLY = 2, FREQ_ANNUAL = 3;
     // Weeks counted in one month for the "Weekly" option (change here if the business rule differs)
     private static final double WEEKS_PER_MONTH = 4;
@@ -373,7 +375,7 @@ public class FamilyIncomeFragment extends Fragment {
         switch (freqPos) {
             case 0: return 30;               // Daily
             case 1: return WEEKS_PER_MONTH;  // Weekly
-            case 3: return 1 / 12.0;         // Annual
+            case 3: return 1 / 12.0;         // Yearly
             default: return 1;               // Monthly
         }
     }
@@ -391,7 +393,7 @@ public class FamilyIncomeFragment extends Fragment {
         EditText etName;
         Spinner spRelation;
         Spinner spSource;
-        Spinner spFreq;          // Daily / Weekly / Monthly / Annual
+        Spinner spFreq;          // Daily / Weekly / Monthly / Yearly
         EditText etIncome;       // rupees typed by the user (per frequency)
         TextView tvMonthly;      // monthly income (calculated)
         boolean original;                // loaded from the DB when the screen opened (Remove only greys it out)
@@ -423,7 +425,7 @@ public class FamilyIncomeFragment extends Fragment {
         llMembers.addView(makeHeaderRow(
                 new String[]{"अनु क्र.", "कुटुंबातील सदस्यांची नावे", "नाते",
                         "सभासदाच्या उत्पन्नाचे साधन - नोकरी/व्यवसाय",
-                        "उत्पन्न\n(Daily, Weekly, Monthly, Annual)", "रूपये", "मासिक उत्पन्न"}));
+                        "उत्पन्न\n(Daily, Weekly, Monthly, Yearly)", "रूपये", "मासिक उत्पन्न"}));
 
         // Members from the DB
         for (int i = 0; i < rows.size(); i++) {
@@ -432,6 +434,8 @@ public class FamilyIncomeFragment extends Fragment {
             h.member = r.member;
             h.info = r.info;
             h.original = true;
+            h.etName.setEnabled(false);   // name and relation of existing members cannot be edited
+            applyRowState(h);
             if (r.removed) setRowRemoved(h, true);
         }
 
@@ -535,7 +539,7 @@ public class FamilyIncomeFragment extends Fragment {
             if (c == h.serialBox) continue;      // the check box stays fully visible
             c.setAlpha(removed ? 0.45f : 1f);
         }
-        h.etName.setEnabled(!removed);
+        h.etName.setEnabled(!removed && !h.original);   // name of a member already in the DB is fixed
         h.etIncome.setEnabled(!removed);
         applyRowState(h);
     }
@@ -548,7 +552,7 @@ public class FamilyIncomeFragment extends Fragment {
         h.spSource.setVisibility(vis);
         h.spFreq.setVisibility(vis);
         boolean enabled = on && !h.removed;
-        h.spRelation.setEnabled(enabled);
+        h.spRelation.setEnabled(enabled && !h.original);   // relation of a member already in the DB is fixed
         h.spSource.setEnabled(enabled);
         h.spFreq.setEnabled(enabled);
     }
@@ -729,7 +733,7 @@ public class FamilyIncomeFragment extends Fragment {
         return sp;
     }
 
-    /** Frequency dropdown of the B, C, D rows (defined in the XML). */
+    /** Frequency dropdown of the B1, B2, B3 rows (defined in the XML). */
     private void setupFreqSpinner(Spinner sp, int selection) {
         sp.setAdapter(new FreqAdapter());
         sp.setSelection(selection, false);
@@ -1116,7 +1120,7 @@ public class FamilyIncomeFragment extends Fragment {
             it.isMainMember = (h == first);
             items.add(it);
         }
-        // B) is stored as a yearly amount, C + D as monthly amounts
+        // B1) is stored as a yearly amount, B2 + B3 as one monthly amount
         final ArrayList<RowHolder> toDeactivate = new ArrayList<>(removedHolders);
         final ArrayList<RowHolder> toReactivate = new ArrayList<>();
         for (RowHolder h : holders) {
@@ -1124,7 +1128,8 @@ public class FamilyIncomeFragment extends Fragment {
             if (h.removed && h.member.IsActive == 1 && !toDeactivate.contains(h)) toDeactivate.add(h);   // greyed out
             if (!h.removed && h.member.IsActive == 0) toReactivate.add(h);   // restored after it was saved as removed
         }
-        final int yearly = toInt(etAnnualFarm);   // B) is always a yearly amount
+        // B1) farm income is stored as a yearly amount (whatever frequency is selected)
+        final int yearly = (int) Math.round(toInt(etAnnualFarm) * factor(spFreqFarm.getSelectedItemPosition()) * 12);
         final int other = monthlyOf(spFreqRent, etRent) + monthlyOf(spFreqOther, etOtherIncome);
 
         // Main member's info needed for new members (Branch, Group, Address, MainMemberID)
@@ -1346,7 +1351,7 @@ public class FamilyIncomeFragment extends Fragment {
                     incomeChanged = true;
                 }
 
-                // Main member (first row): B, C, D are also stored in his income record
+                // Main member (first row): B1, B2, B3 are also stored in his income record
                 if (it.isMainMember) {
                     if (info.YearlyIncome != yearly) {
                         info.YearlyIncome = yearly;
@@ -1449,6 +1454,7 @@ public class FamilyIncomeFragment extends Fragment {
                 ? String.valueOf(first.OtherMonthlyIncome) : "");
 
         etRent.setText("");
+        spFreqFarm.setSelection(FREQ_ANNUAL);     // DB value is a yearly amount
         spFreqRent.setSelection(FREQ_MONTHLY);
         spFreqOther.setSelection(FREQ_MONTHLY);   // DB value is a monthly amount
     }
@@ -1459,7 +1465,7 @@ public class FamilyIncomeFragment extends Fragment {
      * total = A + B + C + D (all monthly)
      */
     private void calculate() {
-        if (etFamilyTotal == null || etPerCapita == null || spFreqRent == null || spFreqOther == null) return;
+        if (etFamilyTotal == null || etPerCapita == null || spFreqFarm == null || spFreqRent == null || spFreqOther == null) return;
 
         // A) = sum of the monthly income of all table rows (updates immediately when edited)
         totalMonthly = 0;
@@ -1469,7 +1475,7 @@ public class FamilyIncomeFragment extends Fragment {
             h.tvMonthly.setText(text(h.etIncome).isEmpty() ? "" : String.valueOf(m));
         }
 
-        int effectiveMonthly = (int) Math.round(toInt(etAnnualFarm) / 12.0);   // B) yearly / 12
+        int effectiveMonthly = monthlyOf(spFreqFarm, etAnnualFarm);   // B1) farm income as a monthly amount
         int rentMonthly = monthlyOf(spFreqRent, etRent);
         int otherMonthly = monthlyOf(spFreqOther, etOtherIncome);
         int familyTotal = totalMonthly + effectiveMonthly + rentMonthly + otherMonthly;
@@ -1502,7 +1508,7 @@ public class FamilyIncomeFragment extends Fragment {
                     .append(h.spFreq.getSelectedItemPosition()).append('|')
                     .append(text(h.etIncome)).append(h.removed ? "|R" : "|A").append(';');
         }
-        sb.append(text(etAnnualFarm)).append('|')
+        sb.append(text(etAnnualFarm)).append(':').append(spFreqFarm.getSelectedItemPosition()).append('|')
                 .append(text(etRent)).append(':').append(spFreqRent.getSelectedItemPosition()).append('|')
                 .append(text(etOtherIncome)).append(':').append(spFreqOther.getSelectedItemPosition());
         return sb.toString();

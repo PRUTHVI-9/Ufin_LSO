@@ -1268,6 +1268,7 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                                     .commit();
                         }
                     });
+                    
                     Button btCBCheck = new Button(mainActivity.getBaseContext());
                     btCBCheck.setText("CB Check");
                     btCBCheck.setTextSize(16);

@@ -42,7 +42,7 @@ public class FamilyExpenseFragment extends Fragment {
     private static final int SMALL_SP = 16;
     private static final int HEAD_SP = 15;   // column headings of the tables
     private static final String[] EXPENSE_LABELS = {
-            "१) प्रॉपर्टी टॅक्स",
+            "१) प्रॉपर्टी टॅक्स (घर स्वतःचे असेल तर)",
             "२) घरभाडे (घर भाड्याचे असेल तर)",
             "३) लाईटबिल",
             "४) पाणीपट्टी",
@@ -51,15 +51,15 @@ public class FamilyExpenseFragment extends Fragment {
             "७) आजारपणाचा खर्च",
             "८) इतर खर्च :\n अ) सण-समारंभ\n ब) पाहुणचार\n क) पुजा-अर्चा",
             "९) उधारी बाकी असणे. (किराणा, इतर देणी)",
-            "१०) महिन्याला भरण्याची बचत रक्कम\n अ) भिशी\n ब) फंड\n क) बचत गट",
-            "११) इन्शुरन्स /एलआयसी साठी भरणारी रक्कम\n (त्रैमासीक,सहामाही,वार्षिक)\n (महिना विभागून रक्कम भरावी)",
-            "१२) दरमहा अन्नपूर्णा बचतीसाठी भरणारी रक्कम\n (अन्नपूर्णा आर. डी., आधारपूर्णा)\n (ऍटोमॅटिक सॉफ्टवेअर मधुन यावा)"};
+            "१०) महिन्याला भरण्याची बचत रक्कम\n अ) भिशी\n ब) फंड\n क) बचत गट\n ड) बाहेरील RD",
+            "११) इन्शुरन्स /एलआयसी साठी भरणारी रक्कम",
+            "१२) दरमहा अन्नपूर्णा बचतीसाठी भरणारी रक्कम\n (आर. डी., आधारपूर्णा)\n (ऍटोमॅटिक सॉफ्टवेअर मधुन यावा)"};
     private static final int I_TAX = 0, I_RENT = 1, I_LIGHT = 2, I_WATER = 3, I_FOOD = 4, I_EDU = 5,
             I_MED = 6, I_OTHER = 7, I_CREDIT = 8, I_BHISHI = 9, I_INS = 10, I_SAV = 11;
 
     // Frequency options of the dropdown (item 9 also allows quarterly / half-yearly, as in the Excel label)
-    private static final String[] FREQ = {"Daily", "Weekly", "Monthly", "Annual"};
-    private static final String[] FREQ_INS = {"Daily", "Weekly", "Monthly", "Quarterly", "Half-yearly", "Annual"};
+    private static final String[] FREQ = {"Daily", "Weekly", "Monthly", "Yearly"};
+    private static final String[] FREQ_INS = {"Daily", "Weekly", "Monthly", "Quarterly", "Half-yearly", "Yearly"};
     // Weeks counted in one month for the "Weekly" option (change here if the business rule differs)
     private static final double WEEKS_PER_MONTH = 4;
 
@@ -92,24 +92,16 @@ public class FamilyExpenseFragment extends Fragment {
     private final List<EditText> increaseEdits = new ArrayList<>();
     private final List<EditText> scoreEdits = new ArrayList<>();    // internal score per criterion
     private EditText etTotalExpense, etMfi, etMfiAmt, etIncome, etHalfHome, etHalfInst, etExpSummary,
-            etMfiSummary, etBalHome, etBalInst, etFitted, etIncreaseTotal, etScoreTotal, etNextLoan;
+            etMfiSummary, etBalHome, etBalInst, etFitted, etIncreaseTotal, etScoreTotal;
+    private TextView etNextLoan;   // loan we can give, shown as text: amount, months, installment
     private Spinner spMfi;
+    private TextView tvExpenseWarn;   // shown when the family expense is more than 50% of the income
     // Score chart
     private EditText etChartScore1, etChartScore2, etChartLoan1, etChartLoan2,
-            etChartScoreTotal, etChartLoanTotal, etTargetLoan;
+            etChartScoreTotal, etChartLoanTotal;
     private Button btSave, btClose, btPrevious, btNext;
 
-    // Largest loan that fits the installment balance (same products and rules as the Repay screen)
-    // Loan product dropdown (same products and rules as the Repay screen). Index 0 = blank entry.
-    private Spinner spLoan;
-    private final ArrayList<Integer> loanDetailsIds = new ArrayList<>();     // rows shown in the dropdown
-    private final ArrayList<Integer> loanProductIds = new ArrayList<>();
-    private final ArrayList<String> loanPrincipals = new ArrayList<>();
-    private final ArrayList<String> loanPeriods = new ArrayList<>();
-    private final ArrayList<String> loanInstallments = new ArrayList<>();
-    private final ArrayList<String> loanTexts = new ArrayList<>();
-    private long loanShownInst = Long.MIN_VALUE, loanShownCap = Long.MIN_VALUE;
-    private int loanShownPos = 0;
+    // Active loan products (same products and filters as the Repay screen); used to find the largest loan that fits
     private final ArrayList<Integer> allDetailsIds = new ArrayList<>();      // every valid product detail
     private final ArrayList<Integer> allProductIds = new ArrayList<>();
     private final ArrayList<String> allPrincipals = new ArrayList<>();
@@ -270,7 +262,7 @@ public class FamilyExpenseFragment extends Fragment {
             case "Weekly": return WEEKS_PER_MONTH;
             case "Quarterly": return 1 / 3.0;
             case "Half-yearly": return 1 / 6.0;
-            case "Annual": return 1 / 12.0;
+            case "Yearly": return 1 / 12.0;
             default: return 1;   // Monthly
         }
     }
@@ -336,7 +328,7 @@ public class FamilyExpenseFragment extends Fragment {
         // A) header: label | expense (frequency) | rupees | monthly expense rupees
         r = newRow();
         cell(r, "A) कुटुंबाचा महिन्याचा खर्च", W_LABEL, Gravity.START, true, true, TEXT_SP);
-        cell(r, "खर्च\n(Daily, Weekly, Monthly, Annual)", W_FREQ, Gravity.CENTER, true, true, HEAD_SP);
+        cell(r, "खर्च\n(Daily, Weekly, Monthly, Yearly)", W_FREQ, Gravity.CENTER, true, true, HEAD_SP);
         cell(r, "रूपये", W_AMT, Gravity.CENTER, true, true, HEAD_SP);
         cell(r, "मासिक खर्च रूपये", W_MON, Gravity.CENTER, true, true, HEAD_SP);
 
@@ -348,7 +340,11 @@ public class FamilyExpenseFragment extends Fragment {
         etTotalExpense = numCell(r, W_MON, false, SMALL_SP);
 
         r = newRow();
-        cell(r, "B) इतर MFI/ बँकांचा एकूण कर्जाचा हप्ता", W_LABEL, Gravity.START, true, true, TEXT_SP);
+        TextView mfiLink = cell(r, "B) इतर MFI/ बँकांचा एकूण कर्जाचा हप्ता", W_LABEL, Gravity.START, true, true, TEXT_SP);
+        // Link to the MFI details screen
+        mfiLink.setTextColor(Color.parseColor("#0D47A1"));
+        mfiLink.setPaintFlags(mfiLink.getPaintFlags() | android.graphics.Paint.UNDERLINE_TEXT_FLAG);
+        mfiLink.setOnClickListener(v -> openMfiDetails());
         spMfi = freqCell(r, FREQ, W_FREQ);
         etMfiAmt = numCell(r, W_AMT, true, SMALL_SP);
         etMfi = numCell(r, W_MON, false, SMALL_SP);
@@ -376,9 +372,15 @@ public class FamilyExpenseFragment extends Fragment {
         r = newRow();
         cell(r, "शिल्लक रक्कम\n(हि रक्कम घरखर्चासाठी बाजूला ठेवणे)", 3f, Gravity.CENTER, true, true, SMALL_SP);
         etBalHome = numCell(r, 1.5f, false, SMALL_SP);
-        cell(r, "हप्त्यासाठी शिल्लक रक्कम\n(यात बसणाऱ्या हप्त्याच्या रकमे इतके कर्ज सभासदाला देता येईल.)", 3f,
+        cell(r, "हप्त्यासाठी रक्कम\n(यात बसणाऱ्या हप्त्याच्या रकमे इतके कर्ज सभासदाला देता येईल.)", 3f,
                 Gravity.CENTER, true, true, SMALL_SP);
         etBalInst = numCell(r, 1.5f, false, SMALL_SP);
+
+        // Message when the expense is more than 50% of the income
+        r = newRow();
+        tvExpenseWarn = cell(r, "", 1f, Gravity.CENTER, true, true, SMALL_SP);
+        tvExpenseWarn.setTextColor(Color.RED);
+        tvExpenseWarn.setVisibility(View.GONE);
 
         r = newRow();
         cell(r, "सभासदाला मिळू शकणारी कर्ज रक्कम खालील प्रमाणे आहे (प्रपोज कर्ज रक्कम)", 1f,
@@ -438,53 +440,15 @@ public class FamilyExpenseFragment extends Fragment {
         cell(r, "", wC, Gravity.CENTER, true, true, SMALL_SP);
 
         r = newRow();
-        cell(r, "एकूण मिळणारी कर्ज रक्कम", wA, Gravity.START, true, true, SMALL_SP);
+        cell(r, "एकूण मिळू शकणारी कर्ज रक्कम", wA, Gravity.START, true, true, SMALL_SP);
         cell(r, "", wB, Gravity.CENTER, true, true, SMALL_SP);
         etChartLoanTotal = numCell(r, wC, false, SMALL_SP);
 
         r = newRow();
-        cell(r, "एकूण मिळू शकणारी पुढील कर्ज रक्कम :\n(ही कर्ज रक्कम अशी असावी जेणेकरून कर्जाचा हप्ता हा खर्च वजा जाता  बाकी हप्त्याच्या शिल्लक रकमेत बसेल.)",
+        cell(r, "एकूण मिळू शकणारी पुढील कर्ज रक्कम\n( ही कर्ज रक्कम अशी असावी जेणेकरून कर्जाचा हप्ता हा खर्च वजा करून उत्पन्नातील एकूण 50%  रकमेमध्ये बसेल)",
                 1f, Gravity.CENTER, true, true, SMALL_SP);
-        etNextLoan = numCell(r, 1f, false, TEXT_SP);
+        etNextLoan = cell(r, "", 1f, Gravity.CENTER, true, true, SMALL_SP);
 
-        r = newRow();
-        cell(r, "टार्गेट लिस्ट पेक्षा वाढीव कर्ज वाढ हवी असल्यास कर्ज रक्कम\n(ही रक्कम ह्यातील ५० टक्के रकमेत बसणारी हवी.)",
-                1f, Gravity.CENTER, true, true, SMALL_SP);
-        etTargetLoan = numCell(r, 1f, true, TEXT_SP);
-
-        // Last field: loan product dropdown, same as on the Repay screen
-        // (only products that fit the installment balance and the eligible loan amount are listed)
-        LinearLayout loanBox = new LinearLayout(requireContext());
-        loanBox.setOrientation(LinearLayout.VERTICAL);
-        loanBox.setBackgroundResource(R.drawable.customborder);
-        loanBox.setPadding(dp(10), dp(10), dp(10), dp(10));
-        loanBox.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        TextView loanLabel = new TextView(requireContext());
-        loanLabel.setText(R.string.Field5_Repay);
-        loanLabel.setTextColor(Color.BLACK);
-        loanLabel.setTextSize(20);
-        loanLabel.setTypeface(null, Typeface.BOLD);
-        loanBox.addView(loanLabel, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        spLoan = new Spinner(requireContext());
-        LinearLayout.LayoutParams spLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        spLp.rightMargin = dp(20);
-        loanBox.addView(spLoan, spLp);
-        ll.addView(loanBox);
-        loanShownInst = Long.MIN_VALUE;   // force the first fill
-        spLoan.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position <= 0 || position == loanShownPos || position >= loanDetailsIds.size()) return;
-                loanShownPos = position;
-                applyLoanSelection(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
 
         // Bottom spacer only while the keyboard is visible; no blank space otherwise
         bottomSpacer = new View(requireContext());
@@ -504,7 +468,15 @@ public class FamilyExpenseFragment extends Fragment {
         etChartScore2.addTextChangedListener(w);
         etChartLoan1.addTextChangedListener(w);
         etChartLoan2.addTextChangedListener(w);
-        etTargetLoan.addTextChangedListener(w);
+    }
+
+    /** Opens the "other MFI loans" details screen (link on the B) row). */
+    private void openMfiDetails() {
+        if (!isAdded()) return;
+        // TODO: replace with the real MFI details screen, e.g.
+        // requireActivity().getSupportFragmentManager().beginTransaction().hide(this)
+        //         .add(R.id.fragment_container, new <MfiDetailsFragment>()).addToBackStack(null).commit();
+        Toast.makeText(requireContext(), "MFI तपशील स्क्रीन अजून जोडलेली नाही.", Toast.LENGTH_SHORT).show();
     }
 
     private void setSpacer(int h) {
@@ -621,7 +593,7 @@ public class FamilyExpenseFragment extends Fragment {
     }
 
     private void recalc() {
-        if (etTargetLoan == null) return;
+        if (etNextLoan == null) return;
         long exp = 0;
         for (int i = 0; i < amtEdits.size(); i++) {
             long m = mon(i);
@@ -641,17 +613,35 @@ public class FamilyExpenseFragment extends Fragment {
         etExpSummary.setText(String.valueOf(exp));
         etMfiSummary.setText(String.valueOf(mfi));
         etBalHome.setText(String.valueOf(half - exp));
-        etBalInst.setText(String.valueOf(half - mfi));
+        // Amount available for installments: 50% of the income; when the expense is more than that,
+        // income - expense is used instead (never the 50%). The other MFI installment is deducted in both cases.
+        boolean expenseHigh = exp > half;
+        long instBal = (expenseHigh ? totalIncome - exp : half) - mfi;
+        etBalInst.setText(String.valueOf(Math.max(0, instBal)));   // never show a negative amount
+        if (!expenseHigh) {
+            tvExpenseWarn.setVisibility(View.GONE);
+        } else {
+            tvExpenseWarn.setText(totalIncome - exp <= 0
+                    ? "कुटुंबाचा खर्च उत्पन्नापेक्षा जास्त/बरोबर आहे, त्यामुळे हप्त्यासाठी रक्कम शिल्लक नाही."
+                    : "कुटुंबाचा खर्च उत्पन्नाच्या ५०% पेक्षा जास्त आहे, हप्त्यासाठी शिल्लक रक्कम = उत्पन्न - खर्च (५०% नाही).");
+            tvExpenseWarn.setVisibility(View.VISIBLE);
+        }
         etIncreaseTotal.setText(String.valueOf(inc));
         etScoreTotal.setText(String.valueOf(score));
-        long nextLoan = val(etFitted) + inc;
-        etNextLoan.setText(String.valueOf(nextLoan));
+        // "एकूण मिळू शकणारी पुढील कर्ज रक्कम": largest loan whose installment fits the installment balance
+        int li = maxEligibleLoanIndex(instBal);
+        if (li < 0) {
+            etNextLoan.setText("हप्त्यासाठी रकमेत बसणारे कर्ज नाही.");
+        } else {
+            String t = "रु. " + allPrincipals.get(li) + "/- " + allPeriods.get(li) + "  महिने"
+                    + "  हप्ता रु. " + allInstallments.get(li) + "/-";
+            if (Boolean.TRUE.equals(productJointRequired.get(allProductIds.get(li)))) t += " *";
+            etNextLoan.setText(t);
+        }
         // Score chart: row 1 score = total of the internal scores above
         etChartScore1.setText(String.valueOf(score));
         etChartScoreTotal.setText(String.valueOf(score + val(etChartScore2)));
         etChartLoanTotal.setText(String.valueOf(val(etChartLoan1) + val(etChartLoan2)));
-        // Installment balance = 50% of income - other MFI installment (the "हप्त्यासाठी शिल्लक रक्कम" box)
-        refreshLoanOptions(half - mfi);
         // Used by other screens (RepayFragment: Monthly_Surplus); same formula as the old Expense screen
         try {
             mainActivity.ExpenseTotal = (int) (mon(I_RENT) + mon(I_FOOD) + mon(I_EDU) + mon(I_MED)
@@ -795,116 +785,28 @@ public class FamilyExpenseFragment extends Fragment {
         }
     }
 
-    private void refreshLoanOptions(long instBalance) {
-        if (spLoan == null || !isAdded()) return;
-        boolean home = false;
-        long cap = 0;
-        try {
-            home = "Home".equalsIgnoreCase(mainActivity.AdditionalDetails.strLoanReason);
-            cap = home ? mainActivity.AdditionalDetails.HomeLoanAmount
-                    : mainActivity.AdditionalDetails.NextLoanOfferAmount;
-        } catch (Exception ignored) { }
-        if (cap <= 0) cap = Long.MAX_VALUE;   // limit not known: only the installment balance limits the list
-        if (instBalance == loanShownInst && cap == loanShownCap) return;   // nothing changed
-        loanShownInst = instBalance;
-        loanShownCap = cap;
-
-        loanDetailsIds.clear();
-        loanProductIds.clear();
-        loanPrincipals.clear();
-        loanPeriods.clear();
-        loanInstallments.clear();
-        loanTexts.clear();
-        loanDetailsIds.add(0);
-        loanProductIds.add(0);
-        loanPrincipals.add("");
-        loanPeriods.add("");
-        loanInstallments.add("");
-        loanTexts.add("");
+    /**
+     * Largest loan whose installment fits the installment balance
+     * (50% of the income, or income - expense when the expense is more than 50%, minus the other MFI installments).
+     * Returns the index in the all* lists, or -1 when no loan fits.
+     */
+    private int maxEligibleLoanIndex(long instBalance) {
+        int best = -1;
+        long bestPrincipal = 0, bestInst = 0;
         for (int i = 0; i < allDetailsIds.size(); i++) {
-            long principal = Long.parseLong(allPrincipals.get(i));
-            long inst = Long.parseLong(allInstallments.get(i));
-            if (inst > instBalance || principal > cap) continue;
-            loanDetailsIds.add(allDetailsIds.get(i));
-            loanProductIds.add(allProductIds.get(i));
-            loanPrincipals.add(allPrincipals.get(i));
-            loanPeriods.add(allPeriods.get(i));
-            loanInstallments.add(allInstallments.get(i));
-            String text = "रु. " + allPrincipals.get(i) + "/- " + allPeriods.get(i) + "  महिने"
-                    + "  हप्ता रु. " + allInstallments.get(i) + "/-";
-            if (Boolean.TRUE.equals(productJointRequired.get(allProductIds.get(i)))) text += " *";
-            loanTexts.add(text);
-        }
-
-        // keep the loan chosen earlier (also on the Repay screen) when it is still in the list
-        int pos = 0;
-        try {
-            long cur = mainActivity.AdditionalDetails.LoanProductDetailsID;
-            for (int i = 1; i < loanDetailsIds.size(); i++) {
-                if (loanDetailsIds.get(i) == cur) {
-                    pos = i;
-                    break;
-                }
-            }
-        } catch (Exception ignored) { }
-
-        ArrayAdapter<String> ad = new ArrayAdapter<>(mainActivity.getBaseContext(),
-                R.layout.simple_spinner_item_small, loanTexts);
-        ad.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_small);
-        loanShownPos = pos;
-        spLoan.setAdapter(ad);
-        spLoan.setSelection(pos);
-    }
-
-    private void applyLoanSelection(int pos) {
-        try {
-            int principal = Integer.parseInt(loanPrincipals.get(pos));
-            int months = Integer.parseInt(loanPeriods.get(pos));
-            int detailsId = loanDetailsIds.get(pos);
-            int productId = loanProductIds.get(pos);
-
-            mainActivity.AdditionalDetails.LoanAmount = principal;
-            mainActivity.AdditionalDetails.LoanDuration = months;
             try {
-                for (int i = 0; i < mainActivity.newGroup.arrGroupMember.size(); i++) {
-                    if (mainActivity.Member.get(0).MemberID == mainActivity.newGroup.arrGroupMember.get(i).MemberID) {
-                        mainActivity.newGroup.arrGroupMember.get(i).LoanAmount = principal;
-                        mainActivity.newGroup.arrGroupMember.get(i).LoanDuration = months;
-                        break;
-                    }
+                long inst = Long.parseLong(allInstallments.get(i));
+                long principal = Long.parseLong(allPrincipals.get(i));
+                if (inst > instBalance) continue;
+                // largest loan; for the same loan amount the smaller installment (longer period)
+                if (principal > bestPrincipal || (principal == bestPrincipal && best >= 0 && inst < bestInst)) {
+                    best = i;
+                    bestPrincipal = principal;
+                    bestInst = inst;
                 }
             } catch (Exception ignored) { }
-
-            mainActivity.JointAccountHolderRequired = Boolean.TRUE.equals(productJointRequired.get(productId));
-            if (!mainActivity.JointAccountHolderRequired)
-                mainActivity.AdditionalDetails.JointLoaneeID = -1;
-
-            // With full community-meeting attendance incentive
-            mainActivity.AdditionalDetails.LoanProductDetailsID = detailsId;
-            mainActivity.AdditionalDetails.LoanProductDetailsID1 = detailsId;
-            mainActivity.AdditionalDetails.LoanProductDetailsID2 = 0;
-            mainActivity.AdditionalDetails.LoanProductDetailsID3 = 0;
-
-            // Half attendance: smaller loan of the same period
-            int half = principal - mainActivity.AdditionalDetails.incentiveCommunityMeetingPartAttendance;
-            for (int k = 1; k < loanDetailsIds.size(); k++) {
-                if (Integer.parseInt(loanPrincipals.get(k)) == half
-                        && months == Integer.parseInt(loanPeriods.get(k))) {
-                    mainActivity.AdditionalDetails.LoanProductDetailsID2 = loanDetailsIds.get(k);
-                    mainActivity.AdditionalDetails.LoanProductDetailsID3 = loanDetailsIds.get(k);
-                    break;
-                }
-            }
-            // No attendance
-            int none = principal - mainActivity.AdditionalDetails.incentiveCommunityMeetingFullAttendance;
-            for (int k = 1; k < loanDetailsIds.size(); k++) {
-                if (Integer.parseInt(loanPrincipals.get(k)) == none
-                        && months == Integer.parseInt(loanPeriods.get(k))) {
-                    mainActivity.AdditionalDetails.LoanProductDetailsID3 = loanDetailsIds.get(k);
-                    break;
-                }
-            }
-        } catch (Exception ignored) { }
+        }
+        return best;
     }
 
     private String signature() {
@@ -916,7 +818,7 @@ public class FamilyExpenseFragment extends Fragment {
         for (EditText e : increaseEdits) sb.append('|').append(val(e));
         for (EditText e : scoreEdits) sb.append('|').append(val(e));
         sb.append('|').append(val(etChartScore2)).append('|').append(val(etChartLoan1))
-                .append('|').append(val(etChartLoan2)).append('|').append(val(etTargetLoan));
+                .append('|').append(val(etChartLoan2));
         return sb.toString();
     }
 
