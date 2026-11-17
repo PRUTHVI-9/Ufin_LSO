@@ -113,6 +113,14 @@ public class FamilyExpenseFragment extends Fragment {
     private final ExecutorService saveExecutor = Executors.newSingleThreadExecutor();
     private int oldSoftInputMode = -1;
 
+    // true when this screen is shown inside the MainActivity PIF screens (R.layout.newpersonal_info).
+    // There MainActivity's own |< < CLOSE SAVE > >| bar is used: this fragment hides its own buttons and
+    // keeps MainActivity.FamilyImpactInfo / MemberFamilyDetails up to date, so MainActivity's SAVE saves it.
+    // When opened from Revisit this is false and everything works as before.
+    private boolean embedded = false;
+    private boolean ready = false;    // initial fill finished (do not push the prefilled values to the model)
+    private boolean pushed = false;   // user changed something at least once
+
     public FamilyExpenseFragment() { }
 
     @Override
@@ -133,6 +141,9 @@ public class FamilyExpenseFragment extends Fragment {
         btSave = rootView.findViewById(R.id.buttonSaveFamilyExpense);
         btNext = rootView.findViewById(R.id.buttonNext);
 
+        // Inside MainActivity's PIF screens the activity content view is newpersonal_info
+        embedded = (mainActivity != null && mainActivity.CurrentContentView == R.layout.newpersonal_info);
+
         loadExpenseData();
         loadLoanMaster();
         buildScreen();
@@ -142,7 +153,48 @@ public class FamilyExpenseFragment extends Fragment {
         baseline = signature();
         updateSaveEnabled();
         setupKeyboardSpacer();
+        ready = true;
         return rootView;
+    }
+
+    /** Hides this fragment's own < CLOSE SAVE > buttons (PIF screen uses MainActivity's bar). */
+    private void hideOwnButtons() {
+        Button[] bs = {btPrevious, btClose, btSave, btNext};
+        for (Button b : bs) {
+            if (b != null) b.setVisibility(View.GONE);
+        }
+        View p = btClose != null ? (View) btClose.getParent() : null;
+        if (p instanceof ViewGroup && p != rootView) {
+            ViewGroup g = (ViewGroup) p;
+            boolean allGone = true;
+            for (int i = 0; i < g.getChildCount(); i++) {
+                if (g.getChildAt(i).getVisibility() != View.GONE) {
+                    allGone = false;
+                    break;
+                }
+            }
+            if (allGone) g.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * PIF screen: write the values into MainActivity's objects (same fields as startSave() below),
+     * so MainActivity's SAVE button saves them. Starts only after the user changed something,
+     * so just opening the screen does not modify the data.
+     */
+    private void pushToModel() {
+        if (!embedded || !ready || baseline == null) return;
+        if (!pushed && signature().equals(baseline)) return;
+        pushed = true;
+        try {
+            mainActivity.FamilyImpactInfo.HouseRentExpense = (int) mon(I_RENT);
+            mainActivity.FamilyImpactInfo.FoodExpense = (int) mon(I_FOOD);
+            mainActivity.FamilyImpactInfo.EducationExpense = (int) mon(I_EDU);
+            mainActivity.FamilyImpactInfo.OtherExpenses = (int) mon(I_OTHER);
+            mainActivity.MemberFamilyDetails.MedicalExpenses = (int) mon(I_MED);
+            mainActivity.MemberFamilyDetails.MonthlyBhishi = (int) mon(I_BHISHI);
+            mainActivity.MemberFamilyDetails.MonthlyInstallments = (int) monthlyOf(spMfi, etMfiAmt);
+        } catch (Exception ignored) { }
     }
 
     // ------------------------------------------------------------ helpers
@@ -533,6 +585,16 @@ public class FamilyExpenseFragment extends Fragment {
                 }
             }
         } catch (Exception ignored) { }
+        if (embedded) {
+            // PIF screen: use MainActivity's in-memory data as it is (may contain unsaved edits and
+            // a new member that is not in the database yet). Do not reload from the database.
+            dataLoaded = true;
+            try {
+                for (int i = 0; i < mainActivity.OtherMFIData.size(); i++)
+                    otherMfiSum += mainActivity.OtherMFIData.get(i).MonthlyInstallment;
+            } catch (Exception ignored) { }
+            return;
+        }
         try {
             long id = currentMemberId;
             if (id <= 0 && mainActivity.Member != null && mainActivity.Member.size() > 0)
@@ -647,6 +709,7 @@ public class FamilyExpenseFragment extends Fragment {
             mainActivity.ExpenseTotal = (int) (mon(I_RENT) + mon(I_FOOD) + mon(I_EDU) + mon(I_MED)
                     + mon(I_OTHER) + mon(I_BHISHI) + mfi);
         } catch (Exception ignored) { }
+        pushToModel();
         updateSaveEnabled();
     }
 
@@ -829,6 +892,10 @@ public class FamilyExpenseFragment extends Fragment {
 
     // ------------------------------------------------------------ buttons / save
     private void setupButtons() {
+        if (embedded) {
+            hideOwnButtons();
+            return;   // MainActivity's bar does Close / Save / navigation
+        }
         btPrevious.setEnabled(true);
         btNext.setEnabled(false);
         btPrevious.setOnClickListener(v -> {

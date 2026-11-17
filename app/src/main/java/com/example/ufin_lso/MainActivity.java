@@ -14760,16 +14760,19 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 }
             }
 
-            if(syncRecord || (!FamilyImpactInfo.Compare_MemberFamilyImpactInfo(tFamilyImpactInfo))) {
-                LastTimeInMillis += 1000;
-                if(SQLite_saveFamilyImpactInfo(LastTimeInMillis, syncRecord)) {
-                    FamilyImpactInfo.Copy_MemberFamilyImpactInfo(tFamilyImpactInfo);
-                }
-            }
             if(syncRecord || (!MemberFamilyDetails.Compare_MemberFamilyDetails(tMemberFamilyDetails))) {
                 LastTimeInMillis += 1000;
                 if(SQLite_saveMemberFamilyDetails(LastTimeInMillis, syncRecord)) {
                     MemberFamilyDetails.Copy_MemberFamilyDetails(tMemberFamilyDetails);
+                }
+            }
+
+            FamilyImpactInfo.MemberFamilyDetailsID = MemberFamilyDetails.MemberFamilyDetailsID;
+
+            if(syncRecord || (!FamilyImpactInfo.Compare_MemberFamilyImpactInfo(tFamilyImpactInfo))) {
+                LastTimeInMillis += 1000;
+                if(SQLite_saveFamilyImpactInfo(LastTimeInMillis, syncRecord)) {
+                    FamilyImpactInfo.Copy_MemberFamilyImpactInfo(tFamilyImpactInfo);
                 }
             }
 
@@ -34430,7 +34433,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                     FamilyFragment tab1 = new FamilyFragment();
                     return tab1;
                 case PIF_FRAGMENT_SEQUENCE_NUMBER_INCOME:
-                    IncomeFragment tab2 = new IncomeFragment();
+                  //  IncomeFragment tab2 = new IncomeFragment();
+                    FamilyIncomeFragment tab2 = new FamilyIncomeFragment();
                     return tab2;
 //bmp 18-May-24
 //                case PIF_FRAGMENT_SEQUENCE_NUMBER_EXPENSES:
@@ -34458,7 +34462,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                     OtherLoansFragment tab3 = new OtherLoansFragment();
                     return tab3;
                 case PIF_FRAGMENT_SEQUENCE_NUMBER_EXPENSES:
-                    ExpenseFragment tab4 = new ExpenseFragment();
+                  //  ExpenseFragment tab4 = new ExpenseFragment();
+                    FamilyExpenseFragment tab4 = new FamilyExpenseFragment();
                     return tab4;
                 case PIF_FRAGMENT_SEQUENCE_NUMBER_LOAN:
                     LoanFragment tab5 = new LoanFragment();

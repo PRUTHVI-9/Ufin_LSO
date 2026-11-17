@@ -72,6 +72,14 @@ public class FamilyIncomeFragment extends Fragment {
     private EditText etFamilyTotal;       // grand total, auto-calculated
     private EditText etPerCapita;         // family total / number of members, auto-calculated
 
+    // true when this screen is shown inside MainActivity's PIF screens (R.layout.newpersonal_info).
+    // Then MainActivity's own |< < CLOSE SAVE > >| bar is used; this fragment hides its own buttons
+    // and keeps MainActivity's Member / PersonalImpactInfo / FamilyImpactInfo up to date.
+    // When opened from Revisit this is false and everything works as before.
+    private boolean embedded = false;
+    private boolean ready = false;    // initial fill finished (do not push the prefilled values to the model)
+    private boolean pushed = false;   // user changed something at least once
+
     /** One member row as loaded from the DB (used to build the table). */
     private static class MemberRow {
         String name;
@@ -108,6 +116,9 @@ public class FamilyIncomeFragment extends Fragment {
         if (mainActivity == null) {
             return rootView;
         }
+
+        // Inside MainActivity's PIF screens the activity content view is newpersonal_info
+        embedded = (mainActivity.CurrentContentView == R.layout.newpersonal_info);
 
         llMembers = rootView.findViewById(R.id.llMembers);
         etTotalMonthly = rootView.findViewById(R.id.editTextTotalMonthly);
@@ -170,6 +181,7 @@ public class FamilyIncomeFragment extends Fragment {
         if (tv != null) {
             tv.requestFocus();
         }
+        ready = true;
         return rootView;
     }
 
@@ -193,22 +205,30 @@ public class FamilyIncomeFragment extends Fragment {
                 ufinDbContract.BusinessMaster.COLUMN_NAME_SequenceID,
                 businessIds, businessNames);
 
-        if (memberId == 0) {
-            return;
+        if (!embedded) {
+            // Revisit flow: load everything from the DB
+            if (memberId == 0) {
+                return;
+            }
+
+            mainActivity.SQLite_getMembers(memberId, "MemberID");
+            if (mainActivity.Member.size() == 0) {
+                return;
+            }
+
+            // remaining family members
+            mainActivity.SQLite_getMembers(mainActivity.Member.get(0).MemberID, "MainMemberID");
+
+            // PersonalImpactInfo of every member
+            // (the list is cleared for the first member, the others are appended)
+            for (int i = 0; i < mainActivity.Member.size(); i++) {
+                mainActivity.SQLite_getPersonalImpactInfo(mainActivity.Member.get(i).MemberID);
+            }
         }
-
-        mainActivity.SQLite_getMembers(memberId, "MemberID");
-        if (mainActivity.Member.size() == 0) {
+        // PIF screen: use MainActivity's in-memory lists as they are (they may contain unsaved edits
+        // and new members that are not in the database yet). Do not reload from the database.
+        if (mainActivity.Member == null || mainActivity.Member.size() == 0) {
             return;
-        }
-
-        // remaining family members
-        mainActivity.SQLite_getMembers(mainActivity.Member.get(0).MemberID, "MainMemberID");
-
-        // PersonalImpactInfo of every member
-        // (the list is cleared for the first member, the others are appended)
-        for (int i = 0; i < mainActivity.Member.size(); i++) {
-            mainActivity.SQLite_getPersonalImpactInfo(mainActivity.Member.get(i).MemberID);
         }
 
         // Build the member rows (same as IncomeFragment: only IsActive == 1)
@@ -986,6 +1006,11 @@ public class FamilyIncomeFragment extends Fragment {
             }
         });
 
+        if (embedded) {
+            hideOwnButtons();
+            return;   // MainActivity's bar does Close / Save / Next
+        }
+
         // First screen: nothing before it, Next is available
         btPrevious.setEnabled(false);
         btNext.setEnabled(true);
@@ -1012,6 +1037,158 @@ public class FamilyIncomeFragment extends Fragment {
                 openNextScreen();
             }
         });
+    }
+
+    /** Hides this fragment's own < CLOSE SAVE > buttons (PIF screen uses MainActivity's bar). */
+    private void hideOwnButtons() {
+        Button[] bs = {btPrevious, btClose, btSave, btNext};
+        for (Button b : bs) {
+            if (b != null) b.setVisibility(View.GONE);
+        }
+        View p = btClose != null ? (View) btClose.getParent() : null;
+        if (p instanceof ViewGroup && p != rootView) {
+            ViewGroup g = (ViewGroup) p;
+            boolean allGone = true;
+            for (int i = 0; i < g.getChildCount(); i++) {
+                if (g.getChildAt(i).getVisibility() != View.GONE) {
+                    allGone = false;
+                    break;
+                }
+            }
+            if (allGone) g.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * PIF screen: writes the table into MainActivity's objects (Member, PersonalImpactInfo,
+     * FamilyImpactInfo.FamilyTotalIncome) so MainActivity's SAVE saves them.
+     * Starts only after the user changed something, so just opening the screen does not modify the data.
+     */
+    private void pushToModel() {
+        if (!embedded || !ready || baseline == null) return;
+        if (!pushed && signature().equals(baseline)) return;
+        pushed = true;
+
+        try {
+            final String today = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ENGLISH)
+                    .format(java.util.Calendar.getInstance().getTime());
+            long t = Math.max(mainActivity.LastTimeInMillis, System.currentTimeMillis());
+            final clsMemberData mainMember =
+                    (mainActivity.Member.size() > 0) ? mainActivity.Member.get(0) : null;
+            final RowHolder first = firstSavedHolder();
+
+            // B1 = yearly amount, B2 + B3 = one monthly amount (same as startSave)
+            final int yearly = (int) Math.round(toInt(etAnnualFarm)
+                    * factor(spFreqFarm.getSelectedItemPosition()) * 12);
+            final int other = monthlyOf(spFreqRent, etRent) + monthlyOf(spFreqOther, etOtherIncome);
+
+            for (RowHolder h : holders) {
+                if (isRowEmpty(h)) continue;
+
+                int relPos = h.spRelation.getSelectedItemPosition();
+                int busPos = h.spSource.getSelectedItemPosition();
+                long relationId = (relPos > 0) ? relationIds.get(relPos) : 0;
+                long businessId = (busPos > 0) ? businessIds.get(busPos) : 0;
+                int income = monthlyOf(h.spFreq, h.etIncome);
+                String name = text(h.etName).replaceAll("\\s+", " ");
+
+                // ---------- New row: create the member in memory (not in the DB yet) ----------
+                if (h.member == null) {
+                    if (!isRowComplete(h) || mainMember == null) continue;   // wait until all 4 fields are filled
+
+                    clsMemberData m = new clsMemberData();
+                    m.InitNewMember(mainActivity.strToday);
+                    m.BranchID = mainMember.BranchID;
+                    m.GroupID = mainMember.GroupID;
+                    m.MainMemberID = mainMember.MemberID;
+                    m.AddressID = mainMember.AddressID;
+                    m.RelationID = relationId;
+                    m.EncodedBy = mainActivity.UserID;
+                    m.JoiningDate = mainActivity.strToday;
+                    applyName(m, name);
+                    t += 1000;
+                    if (m.MemberID == 0) m.MemberID = t;   // MemberID is built from the time (see note)
+
+                    clsPersonalImpactInfo ni = new clsPersonalImpactInfo();
+                    ni.Init_PersonalImpactInfo();
+                    ni.EncodedBy = mainActivity.UserID;
+                    ni.MemberID = m.MemberID;
+                    ni.MonthlyIncome = income;
+                    ni.BusinessID = businessId;
+
+                    // keep Member / tMember / PersonalImpactInfo / tPersonalImpactInfo indexes in sync.
+                    // The t* lists get blank objects so MainActivity sees this member as "changed / new".
+                    mainActivity.Member.add(m);
+                    clsMemberData tm = new clsMemberData();
+                    tm.InitNewMember(mainActivity.strToday);
+                    mainActivity.tMember.add(tm);
+
+                    mainActivity.PersonalImpactInfo.add(ni);
+                    clsPersonalImpactInfo ti = new clsPersonalImpactInfo();
+                    ti.Init_PersonalImpactInfo();
+                    mainActivity.tPersonalImpactInfo.add(ti);
+
+                    h.member = m;
+                    h.info = ni;
+                    continue;
+                }
+
+                // ---------- Existing member: update the in-memory objects ----------
+                clsMemberData m = h.member;
+                if (!h.original) {   // name / relation of members loaded earlier are fixed
+                    if (!name.isEmpty() && !name.equals(buildName(m))) applyName(m, name);
+                    if (relationId > 0) m.RelationID = relationId;
+                }
+
+                if (h.removed) {
+                    if (m.IsActive == 1) {
+                        m.IsActive = 0;
+                        m.DeactivateDate = today;
+                        m.DeletionReasonID = REASON_GREYED;
+                    }
+                } else if (m.IsActive == 0) {
+                    m.IsActive = 1;           // restored
+                    m.DeactivateDate = "NA";
+                    m.DeletionReasonID = 0;
+                }
+
+                clsPersonalImpactInfo info = (h.info != null) ? h.info : findImpactInfo(m.MemberID);
+                if (info == null) {
+                    info = new clsPersonalImpactInfo();
+                    info.Init_PersonalImpactInfo();
+                    info.EncodedBy = mainActivity.UserID;
+                    info.MemberID = m.MemberID;
+                    mainActivity.PersonalImpactInfo.add(info);
+                    clsPersonalImpactInfo ti = new clsPersonalImpactInfo();
+                    ti.Init_PersonalImpactInfo();
+                    mainActivity.tPersonalImpactInfo.add(ti);
+                }
+                h.info = info;
+
+                info.IsActive = h.removed ? 0 : 1;
+                info.MonthlyIncome = income;
+                info.BusinessID = businessId;
+                if (h == first) {
+                    info.YearlyIncome = yearly;
+                    info.OtherMonthlyIncome = other;
+                }
+            }
+
+            // ---------- Rows deleted completely from the table ----------
+            for (RowHolder d : removedHolders) {
+                if (d.member != null && d.member.IsActive == 1) {
+                    d.member.IsActive = 0;
+                    d.member.DeactivateDate = today;
+                    d.member.DeletionReasonID = REASON_DELETED;
+                    if (d.info != null) d.info.IsActive = 0;
+                }
+            }
+
+            mainActivity.LastTimeInMillis = t;
+
+            // The expense screen reads this when it is opened without arguments
+            mainActivity.FamilyImpactInfo.FamilyTotalIncome = toInt(etFamilyTotal);
+        } catch (Exception ignored) { }
     }
 
     /** > : opens the next screen (monthly expense). This screen is only hidden, so the entered data is still there when we come back. */
@@ -1492,6 +1669,7 @@ public class FamilyIncomeFragment extends Fragment {
             if (!isRowEmpty(h) && !h.removed) members++;
         }
         etPerCapita.setText(String.valueOf(members > 0 ? familyTotal / members : 0));
+        pushToModel();
         updateSaveEnabled();
     }
 
