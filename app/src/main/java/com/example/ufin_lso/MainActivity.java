@@ -44,6 +44,7 @@ import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.provider.Settings;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -140,13 +141,13 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
     public static final int msecHttpURLConnectionTimeout    = 60000;
     public static final int msecServerSyncSleep             = 1000;
-//    public static final int msecOverlap                     = 10000;
+    //    public static final int msecOverlap                     = 10000;
     public static final int msecGetRefreshInterval          = 60000;
     public static final int msecGetSlowRefreshInterval          = 600000;
 
     public static final int ufin_DIALOG_STATE_NONE                          = 0;
     public static final int ufin_DIALOG_STATE_CLOSE                         = 1;
-//    public static final int ufin_DIALOG_STATE_CLOSE_GROUP                   = 2;
+    //    public static final int ufin_DIALOG_STATE_CLOSE_GROUP                   = 2;
     public static final int ufin_DIALOG_STATE_LOGIN                         = 5;
     public static final int ufin_DIALOG_STATE_VALIDATE_PIF_SCREEN           = 9;
     public static final int ufin_DIALOG_STATE_DISALLOW_DISBURSEMENT_DATE_CHANGE = 11;
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
     public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_MEMBER         = 0;
     public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_FAMILY         = 1;
     public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_INCOME         = 2;
-//bmp 18-May-24
+    //bmp 18-May-24
 //    public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_EXPENSES       = 3;
 //    public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_LOAN           = 4;
 //    public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_REPAY          = 5;
@@ -207,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
     public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_BANK_ACCOUNT   = 7;
     public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_GUARANTOR      = 8;
     public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_NOMINEE        = 9;
-//bmp 18-May-24
+    //bmp 18-May-24
     public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_HOUSE          = 10;
     public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_ECONOMIC_STATE = 11;
     public static final int PIF_FRAGMENT_SEQUENCE_NUMBER_ASSETS         = 12;
@@ -290,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
     public static final String URL_GetLatestNewGroupInfoForLSO          = "/api/TabData/GetGRTdataForLSO";
     public static final String URL_GetLatestNewGroupMemberInfoForLSO    = "/api/TabData/GetGRTMemberdataForLSO";
     public static final String URL_GetMonthlyCSVFileNames           = "/api/DocumentUpload/GetMonthlyCSVFileNames";
-//    public static final String URL_PostDebugInfoFile                = "/api/DocumentUpload/PostDebugInfoFile";
+    //    public static final String URL_PostDebugInfoFile                = "/api/DocumentUpload/PostDebugInfoFile";
     public static final String URL_InsertMonthlyDataStatus          = "/api/DocumentUpload/InsertMonthlyDataStatus";
     public static final String URL_GetMessages                      = "/api/TabData/GetMessages?LSO_ID=";
     public static final String URL_GetCSVFile                       = "/api/DocumentUpload/GetCSVFile";
@@ -329,14 +330,14 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
     String strEndOfDaySyncupTimestamp = "";
     boolean flagStartOfDaySyncup, flagEndOfDaySyncup;
     boolean flagStartOfDayUpdateOfRecoverySyncup, flagStartOfDayUpdateOfRDSyncup;
-//    boolean flagStartOfDayCorrectionUpdate;
+    //    boolean flagStartOfDayCorrectionUpdate;
     String tsOrgStructureSync, /*tsMemberDataForTabSync,*/ tsMemberDataSync, tsFamilyDetailsSync;
     String tsPersonalImpactInfoSync, tsFamilyImpactInfoSync;
     String tsMemberAddressSync, tsMemberDocRcvdSync, tsDocumentPhotosSync, tsNomineeDetailsSync, tsOtherNomineeDetailsSync, tsMemberImpactAnswerSync;
     String tsNewGroupMemberInfoSync, tsNewGroupInfoSync;
     String tsAdditionalDetailsSync;
     String tsOtherMFIDataSync;
-//    int indexMemberDataForTabSync;
+    //    int indexMemberDataForTabSync;
     boolean flagAddAutoPreClosureRequest;
 
     @Override
@@ -456,24 +457,24 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
     public TimerTask CheckIdleMainScreenTask;
     ArrayList<clsRDReceipt> RDReceiptList = new ArrayList<clsRDReceipt>();
     ArrayList<clsCollectionMember> CollectionMemberList = new ArrayList<clsCollectionMember>();
-//    ArrayList<clsWriteoffMember> WriteoffMemberList = new ArrayList<clsWriteoffMember>();
+    //    ArrayList<clsWriteoffMember> WriteoffMemberList = new ArrayList<clsWriteoffMember>();
     ArrayList<clsCollectionCenter> CollectionCenterList = new ArrayList<clsCollectionCenter>();
     ArrayList<clsRevisitMember> RevisitMemberList = new ArrayList<clsRevisitMember>();
     ArrayList<clsNewMemberIntro> NewIntroMemberList = new ArrayList<clsNewMemberIntro>();
     ArrayList<clsRevisitGroup> RevisitGroupList = new ArrayList<clsRevisitGroup>();
     clsRevisitGroup selectedRevisitGroup;//, originalRevisitGroup;
-//bmp 08-Aug-26
+    //bmp 08-Aug-26
 //    clsRevisitMember[] selectedRevisitGroupMember = new clsRevisitMember[5];
     ArrayList<clsRevisitMember> selectedRevisitGroupMember = new ArrayList<clsRevisitMember>();
-//bmp 08-Aug-26
+    //bmp 08-Aug-26
     long selectedCollectionCenterID;
-//    long selectedCollectionMemberID;
+    //    long selectedCollectionMemberID;
     int indexCollectionMemberList;
     int iPrePaymentPreClosureAmount;
-//bmp 19-Jun-23
+    //bmp 19-Jun-23
 //    public String strServerIP;
     public String strServerIP1, strServerIP2;
-//bmp 19-Jun-23
+    //bmp 19-Jun-23
     public String strServerPort;
     public String strAdminPassword;
     public String strMACaddress;
@@ -537,10 +538,10 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
     public clsNewGroup tnewGroup = new clsNewGroup();
     public ArrayList<Integer> VisitDetailsIDMaster = new ArrayList<Integer>();
     public ArrayList<String> VisitDetailsInMarathiMaster = new ArrayList<String>();
-//bmp 03-Sep-24
+    //bmp 03-Sep-24
     public ArrayList<Integer> HomeLoanOfferVisitDetailsIDMaster = new ArrayList<Integer>();
     public ArrayList<String> HomeLoanOfferVisitDetailsInMarathiMaster = new ArrayList<String>();
-//bmp 03-Sep-24
+    //bmp 03-Sep-24
 //    public long VisitDetailsIDMemberDead = 7;
 //    public long VisitDetailsIDLoanRequired = 1;
 //    public long VisitDetailsIDLoanActiveWillCometoSign = 2;
@@ -582,7 +583,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
     private static final int INITIAL_REQUEST = 1337;
     BluetoothConnectivity m_AemScrybeDevice;
     public BpPrinter m_AemPrinter = null;
-//bmp 19-Oct-23
+    //bmp 19-Oct-23
     public boolean AllowGradeEGroup = false;
 //bmp 19-Oct-23
 
@@ -966,7 +967,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         toast.setView(layout);
         toast.show();
     }
-//bmp 28-Apr-26
+    //bmp 28-Apr-26
     public void AdjustImageFileSize(String currentPhotoPath) {
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -1000,7 +1001,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             System.out.println("Error on saving file");
         }
     }
-//bmp 28-Apr-26
+    //bmp 28-Apr-26
     public boolean GetDeviceDigiPin() {
         boolean Status = false;
         char arrdigipinLabels[][] = {
@@ -1327,7 +1328,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //                            RevisitGroupList.get(j).OngoingLoanGroupMemberCount +
 //                            RevisitGroupList.get(j).LMFGroupMemberCount) >= 3) ) {
             if(     (       (RevisitGroupList.get(j).ReadyForLoanGroupMemberCount > 0) ||
-                            (RevisitGroupList.get(j).ZeroNewLoanAmtGroupMemberCount > 0) ) &&
+                    (RevisitGroupList.get(j).ZeroNewLoanAmtGroupMemberCount > 0) ) &&
                     (       (RevisitGroupList.get(j).ReadyForLoanGroupMemberCount +
                             RevisitGroupList.get(j).OngoingLoanGroupMemberCount +
                             RevisitGroupList.get(j).LMFGroupMemberCount) >= 3) ) {
@@ -1409,7 +1410,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 collectionCenter.CollectionStatus = clsCollectionCenter.COLLECTION_CENTER_STATUS_FULL;
 //            } else if(collectionCenter.PartialCollectionMemberCount > 0) {
             } else if(  (collectionCenter.PartialCollectionMemberCount > 0) ||
-                        (collectionCenter.CollectionMemberCount > collectionCenter.ScheduledCollectionMemberCount)  ) {
+                    (collectionCenter.CollectionMemberCount > collectionCenter.ScheduledCollectionMemberCount)  ) {
                 collectionCenter.CollectionStatus = clsCollectionCenter.COLLECTION_CENTER_STATUS_PARTIAL;
             } else {
                 collectionCenter.CollectionStatus = clsCollectionCenter.COLLECTION_CENTER_STATUS_SCHEDULED;
@@ -1417,7 +1418,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             CollectionCenterList.set(j, collectionCenter);
         }
     }
-//    public boolean GetM_USER_ForTab(String strServerIP) {
+    //    public boolean GetM_USER_ForTab(String strServerIP) {
 //        boolean Status = false;
 //
 //        URL url = null;
@@ -1489,160 +1490,160 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //        return Status;
 //    }
     public boolean GetM_USER_ForTab(String strServerIP) {
-    boolean Status = false;
+        boolean Status = false;
 
-    URL url = null;
-    try {
-        String Str1 =   "MacAddress=" + strMACaddress +
-                "&FName=" + strRegisterFName +
-                "&MName=" + strRegisterMName +
-                "&LName=" + strRegisterLName +
-                "&Password=" + strAdminPassword +
-                "&Org_ID=" + strOrgID;
-        Str1 = Str1.replaceAll(" ", "%20");
-        url = new URL("http://" + strServerIP + ":" + strServerPort + URL_GetUserFile + Str1);
+        URL url = null;
+        try {
+            String Str1 =   "MacAddress=" + strMACaddress +
+                    "&FName=" + strRegisterFName +
+                    "&MName=" + strRegisterMName +
+                    "&LName=" + strRegisterLName +
+                    "&Password=" + strAdminPassword +
+                    "&Org_ID=" + strOrgID;
+            Str1 = Str1.replaceAll(" ", "%20");
+            url = new URL("http://" + strServerIP + ":" + strServerPort + URL_GetUserFile + Str1);
 
-        Calendar cal = Calendar.getInstance();
-        long msecQueryTime = cal.getTimeInMillis();
-        msecResponseTime = msecHttpURLConnectionTimeout;
+            Calendar cal = Calendar.getInstance();
+            long msecQueryTime = cal.getTimeInMillis();
+            msecResponseTime = msecHttpURLConnectionTimeout;
 
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setReadTimeout(msecHttpURLConnectionTimeout /* milliseconds */);
-        urlConnection.setConnectTimeout(msecHttpURLConnectionTimeout /* milliseconds */);
-        urlConnection.setRequestMethod("GET");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setReadTimeout(msecHttpURLConnectionTimeout /* milliseconds */);
+            urlConnection.setConnectTimeout(msecHttpURLConnectionTimeout /* milliseconds */);
+            urlConnection.setRequestMethod("GET");
 
-        urlConnection.setUseCaches(false);
-        urlConnection.setDoInput(true);
-        urlConnection.setChunkedStreamingMode(0);
+            urlConnection.setUseCaches(false);
+            urlConnection.setDoInput(true);
+            urlConnection.setChunkedStreamingMode(0);
 
-        int responseCode=urlConnection.getResponseCode();
-        cal = Calendar.getInstance();
-        msecResponseTime = cal.getTimeInMillis() - msecQueryTime;
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String strHeader = "";
-            String strRecord = "";
-            int iCount = 0;
-            if ((strHeader = br.readLine()) != null) {
-                iCount++;
-            }
-            if ((strRecord = br.readLine()) != null) {
-                iCount++;
-            }
+            int responseCode=urlConnection.getResponseCode();
+            cal = Calendar.getInstance();
+            msecResponseTime = cal.getTimeInMillis() - msecQueryTime;
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                String strHeader = "";
+                String strRecord = "";
+                int iCount = 0;
+                if ((strHeader = br.readLine()) != null) {
+                    iCount++;
+                }
+                if ((strRecord = br.readLine()) != null) {
+                    iCount++;
+                }
 
-            urlConnection.disconnect();
+                urlConnection.disconnect();
 
-            if(iCount == 2) {
+                if(iCount == 2) {
 //bmp 29-Jun-26
-                ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
-                // Gets the data repository in write mode
-                SQLiteDatabase dbInt = mDbHelper.getWritableDatabase();
-                try {
-                    if(!strHeader.isEmpty()) {
-                        try {
-                            dbInt.delete(ufinDbContract.UserForTabMaster.TABLE_NAME, null, null);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            dbInt.execSQL(ufinDbContract.UserForTabMaster.SQL_CREATE_USER_FORTAB_MASTER);
-                        } catch (Exception e) {
-                        }
-                        String[] strSplit = strHeader.split("\\|");
-                        int NumberOfColumns = strSplit.length;
+                    ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
+                    // Gets the data repository in write mode
+                    SQLiteDatabase dbInt = mDbHelper.getWritableDatabase();
+                    try {
+                        if(!strHeader.isEmpty()) {
+                            try {
+                                dbInt.delete(ufinDbContract.UserForTabMaster.TABLE_NAME, null, null);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                dbInt.execSQL(ufinDbContract.UserForTabMaster.SQL_CREATE_USER_FORTAB_MASTER);
+                            } catch (Exception e) {
+                            }
+                            String[] strSplit = strHeader.split("\\|");
+                            int NumberOfColumns = strSplit.length;
 //                        if(strRecord.isEmpty())
 //                            continue;
-                        try {
-                            strSplit = strRecord.split("\\|");
-                            for(int j=strSplit.length; j<NumberOfColumns; j++) {
-                                strRecord = strRecord + " |";
-                            }
-                            strSplit = strRecord.split("\\|");
-                            ContentValues values1 = new ContentValues();
-                            int k = 0;
                             try {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ORGStructureID, Long.valueOf(strSplit[k++]));
-                            } catch (Exception e) {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ORGStructureID, 0);
-                            }
-                            try {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_UserID, Long.valueOf(strSplit[k++]));
-                            } catch (Exception e) {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_UserID, 0);
-                            }
-                            values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_UserName, strSplit[k++]);
-                            values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_Password, strSplit[k++]);
-                            try {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_NodeLevel, Long.valueOf(strSplit[k++]));
-                            } catch (Exception e) {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_NodeLevel, 0);
-                            }
-                            String strTemp = strSplit[k++];
-                            strTemp = strTemp.trim();
-                            values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ServerIP, strTemp);
-                            String strTemp2 = strSplit[k];
-                            strTemp2 = strTemp2.trim();
-                            if(strTemp2.contains(".")) {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ServerIP2, strTemp2);
-                                k++;
-                            } else {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ServerIP2, strTemp);
-                            }
-                            strTemp = strSplit[k++];
-                            strTemp = strTemp.trim();
-                            values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ServerPort, strTemp);
-                            values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_DefaultTimestamp, strSplit[k++]);
-                            try {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_OrgID, Long.valueOf(strSplit[k++]));
-                            } catch (Exception e) {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_OrgID, 0);
-                            }
-                            try {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_BranchID, Long.valueOf(strSplit[k++]));
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_BranchName, strSplit[k++]);
-                            } catch (Exception e) {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_BranchID, 0);
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_BranchName, "?");
-                            }
-                            values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_StartOfDaySyncupTimestamp, "");
-                            values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_EndOfDaySyncupTimestamp, "");
+                                strSplit = strRecord.split("\\|");
+                                for(int j=strSplit.length; j<NumberOfColumns; j++) {
+                                    strRecord = strRecord + " |";
+                                }
+                                strSplit = strRecord.split("\\|");
+                                ContentValues values1 = new ContentValues();
+                                int k = 0;
+                                try {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ORGStructureID, Long.valueOf(strSplit[k++]));
+                                } catch (Exception e) {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ORGStructureID, 0);
+                                }
+                                try {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_UserID, Long.valueOf(strSplit[k++]));
+                                } catch (Exception e) {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_UserID, 0);
+                                }
+                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_UserName, strSplit[k++]);
+                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_Password, strSplit[k++]);
+                                try {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_NodeLevel, Long.valueOf(strSplit[k++]));
+                                } catch (Exception e) {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_NodeLevel, 0);
+                                }
+                                String strTemp = strSplit[k++];
+                                strTemp = strTemp.trim();
+                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ServerIP, strTemp);
+                                String strTemp2 = strSplit[k];
+                                strTemp2 = strTemp2.trim();
+                                if(strTemp2.contains(".")) {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ServerIP2, strTemp2);
+                                    k++;
+                                } else {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ServerIP2, strTemp);
+                                }
+                                strTemp = strSplit[k++];
+                                strTemp = strTemp.trim();
+                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_ServerPort, strTemp);
+                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_DefaultTimestamp, strSplit[k++]);
+                                try {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_OrgID, Long.valueOf(strSplit[k++]));
+                                } catch (Exception e) {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_OrgID, 0);
+                                }
+                                try {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_BranchID, Long.valueOf(strSplit[k++]));
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_BranchName, strSplit[k++]);
+                                } catch (Exception e) {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_BranchID, 0);
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_BranchName, "?");
+                                }
+                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_StartOfDaySyncupTimestamp, "");
+                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_EndOfDaySyncupTimestamp, "");
 
-                            try {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_PaymentGatewayUsername, strSplit[k++]);
+                                try {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_PaymentGatewayUsername, strSplit[k++]);
+                                } catch (Exception e) {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_PaymentGatewayUsername, "1078346192");
+                                }
+                                try {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_PaymentGatewayPassword, strSplit[k++]);
+                                } catch (Exception e) {
+                                    values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_PaymentGatewayPassword, "1321");
+                                }
+                                long lTemp1 = 0;
+                                lTemp1 = dbInt.insert(ufinDbContract.UserForTabMaster.TABLE_NAME, null, values1);
+                                if (lTemp1 > 0) {
+                                }
                             } catch (Exception e) {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_PaymentGatewayUsername, "1078346192");
+                                e.printStackTrace();
+                                System.out.println(ufinDbContract.UserForTabMaster.TABLE_NAME + ": " + e.getMessage());
                             }
-                            try {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_PaymentGatewayPassword, strSplit[k++]);
-                            } catch (Exception e) {
-                                values1.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_PaymentGatewayPassword, "1321");
-                            }
-                            long lTemp1 = 0;
-                            lTemp1 = dbInt.insert(ufinDbContract.UserForTabMaster.TABLE_NAME, null, values1);
-                            if (lTemp1 > 0) {
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            System.out.println(ufinDbContract.UserForTabMaster.TABLE_NAME + ": " + e.getMessage());
                         }
+                        br.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println(ufinDbContract.UserForTabMaster.TABLE_NAME + ": " + e.getMessage());
                     }
-                    br.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println(ufinDbContract.UserForTabMaster.TABLE_NAME + ": " + e.getMessage());
-                }
-                dbInt.close();
+                    dbInt.close();
 //bmp 29-Jun-26
-                Status = true;
+                    Status = true;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
 
-    return Status;
-}
+        return Status;
+    }
     void setAppActionbar() {
         ActionBar.LayoutParams layoutparams = new ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
 
@@ -1964,9 +1965,9 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 }
                 int iDifference = iExpectedRecords - updateCount - insertCount;
                 String strStatus = ufinDbContract.UserForTabMaster.TABLE_NAME +
-                                    ": Records Expected: " + String.valueOf(iExpectedRecords) +
-                                    ": Actual: " + String.valueOf(updateCount + insertCount) +
-                                    ": Difference: " + String.valueOf(iDifference);
+                        ": Records Expected: " + String.valueOf(iExpectedRecords) +
+                        ": Actual: " + String.valueOf(updateCount + insertCount) +
+                        ": Difference: " + String.valueOf(iDifference);
                 messageData.putString("Status", strStatus);
                 msg.setData(messageData);
                 SyncByIndexHandler.sendMessage(msg);
@@ -2210,7 +2211,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //                        if(strTemp.trim().isEmpty()) {
 //                            continue;
 //                        } else {
-                            values1.put(ufinDbContract.StateMaster.COLUMN_NAME_MarathiDescription, strTemp);
+                        values1.put(ufinDbContract.StateMaster.COLUMN_NAME_MarathiDescription, strTemp);
 //                        }
                         values1.put(ufinDbContract.StateMaster.COLUMN_NAME_SequenceID, Integer.valueOf(strSplit[k++]));
 
@@ -5357,6 +5358,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         return Status;
     }
     public boolean CopyFromCSVDatabase_MemberFamilyDetails() {
+        ensureFamilyExpenseColumns();
         boolean Status = false;
 
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
@@ -5400,6 +5402,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //bmp 07-Apr-25
                 String[] strSplit = strHeader.split("\\|");
                 int NumberOfColumns = strSplit.length;
+                final String[] csvHeaderCols = strSplit;   // column names of the CSV file
                 int insertCount = 0;
                 int updateCount = 0;
                 int skipCount = 0;
@@ -5476,6 +5479,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_LoanNotAllowedReasonId, 0);
                         }
 
+                        values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense));
+                        values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense));
                         long lMemberID = values1.getAsLong(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MemberID);
 //bmp 22-Apr-25
 //                        if(CheckMemberInWIP(lMemberID)) {
@@ -5768,6 +5773,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         return Status;
     }
     public boolean CopyFromCSVDatabase_MemberFamilyImpactInfo() {
+        ensureFamilyExpenseColumns();
         boolean Status = false;
 
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
@@ -5811,6 +5817,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //bmp 07-Apr-25
                 String[] strSplit = strHeader.split("\\|");
                 int NumberOfColumns = strSplit.length;
+                final String[] csvHeaderCols = strSplit;   // column names of the CSV file
                 int insertCount = 0;
                 int updateCount = 0;
                 int skipCount = 0;
@@ -5886,6 +5893,16 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_IsActive, 0);
                         }
 
+                        values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_OtherIncomeLikePension, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_OtherIncomeLikePension));
+                        values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PropertyTax, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PropertyTax));
+                        values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_LightBill, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_LightBill));
+                        values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PaniPatti, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PaniPatti));
+                        values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_SanSamarambhExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_SanSamarambhExpense));
+                        values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PahuncharExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PahuncharExpense));
+                        values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PujaExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PujaExpense));
+                        values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense));
+                        values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense));
+                        values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP));
                         long lMemberFamilyDetailsID = values1.getAsLong(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_MemberFamilyDetailsID);
 //bmp 22-Apr-25
 //                        if (CheckMemberFamilyDetailsInWIP(lMemberFamilyDetailsID)) {
@@ -8909,7 +8926,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         db.close();
     }
-//bmp 21-Apr-25
+    //bmp 21-Apr-25
     public boolean CheckGroupInWIP(long groupID) {
         boolean flagWIP = false;
 
@@ -8934,7 +8951,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         return flagWIP;
     }
-//bmp 21-Apr-25
+    //bmp 21-Apr-25
 //bmp 22-Apr-25
     public boolean CheckMemberFamilyDetailsInWIP(long memberFamilyDetailsID) {
         boolean flagWIP = false;
@@ -8948,7 +8965,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         return flagWIP;
     }
-//bmp 22-Apr-25
+    //bmp 22-Apr-25
     public boolean CheckMemberAddressInWIP(long addressID) {
         boolean flagWIP = false;
 
@@ -9189,7 +9206,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //}
 //bmp 07-Oct-23
 
-//bmp 01-Sep-23
+    //bmp 01-Sep-23
     public boolean DeleteDisbursedLoanRecords() {
         boolean Status = false;
 
@@ -9565,7 +9582,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //bmp 05-Sep-26
 //                    whereClause = ufinDbContract.MemberDocRcvd.COLUMN_NAME_MemberID + "=" + "'" + String.valueOf(lMemberID.get(i)) + "'";
                     whereClause = ufinDbContract.MemberDocRcvd.COLUMN_NAME_MemberID + "=" + "'" + String.valueOf(lMemberID.get(i)) + "'"
-                     + " AND " + ufinDbContract.MemberDocRcvd.COLUMN_NAME_MemberDocumentsID + "!=" + "'" + String.valueOf(clsDocumentIDs.MEMBER_DOC_ID_ONLINE_COLLECTION) + "'";
+                            + " AND " + ufinDbContract.MemberDocRcvd.COLUMN_NAME_MemberDocumentsID + "!=" + "'" + String.valueOf(clsDocumentIDs.MEMBER_DOC_ID_ONLINE_COLLECTION) + "'";
 //bmp 05-Sep-26
                     dbInt.delete(ufinDbContract.MemberDocRcvd.TABLE_NAME, whereClause, null);
 
@@ -10730,7 +10747,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         tv = (TextView) findViewById(R.id.textViewDownloadKBPS);
         tv.setText("Dnload:" + String.valueOf(downloadKBPS));
     }
-//bmp 20-Jan-23
+    //bmp 20-Jan-23
     public void CheckWIPDisbursementDate() {
         arrlistWIP.clear();
 
@@ -10862,7 +10879,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             }
         }
     }
-//bmp 20-Jan-23
+    //bmp 20-Jan-23
     public void UpdateWIP() {
         arrlistWIP.clear();
 
@@ -11081,8 +11098,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                             (RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_HOMELOAN_REQUIRED) ||
                             (RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_TURNLOAN_REQUIRED) ) &&
                     (   RevisitMemberList.get(i).GroupName.contains("No Loan") ||
-                        RevisitMemberList.get(i).ListType.equalsIgnoreCase("NewMember") ||
-                        RevisitMemberList.get(i).ListType.equalsIgnoreCase("DeActive")
+                            RevisitMemberList.get(i).ListType.equalsIgnoreCase("NewMember") ||
+                            RevisitMemberList.get(i).ListType.equalsIgnoreCase("DeActive")
                     )
             )
                 PendingNoLoanGroupMemberCount++;
@@ -11142,7 +11159,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 PendingRevisitGroupCount++;
 //            } else if(RevisitGroupList.get(i).RevisitGroupStatus == clsRevisitGroup.REVISIT_GROUP_STATUS_READYGROUP) {
             } else if(  (RevisitGroupList.get(i).RevisitGroupStatus == clsRevisitGroup.REVISIT_GROUP_STATUS_READYGROUP) &&
-                        (RevisitGroupList.get(i).MemberCount >= 3) ) {
+                    (RevisitGroupList.get(i).MemberCount >= 3) ) {
                 PendingGroupFormCount++;
             }
         }
@@ -11231,10 +11248,10 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         String strToday = sdf.format(date);// all done
         if(flagAddAutoPreClosureRequest) {
             for(int i=0; i<CollectionMemberList.size(); i++) {
-            if (!strToday.equalsIgnoreCase(CollectionMemberList.get(i).RecoveryDate))
-                continue;
-            if (CollectionMemberList.get(i).EMIReceiptNumber.isEmpty())
-                continue;
+                if (!strToday.equalsIgnoreCase(CollectionMemberList.get(i).RecoveryDate))
+                    continue;
+                if (CollectionMemberList.get(i).EMIReceiptNumber.isEmpty())
+                    continue;
 //bmp 23-Jan-26
 //            if (CollectionMemberList.get(i).PendingPrincipal <= 0)
 //                continue;
@@ -11242,64 +11259,64 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //bmp 12-Jan-26
 //            if(CollectionMemberList.get(i).PreClosureRequestStatus > 0)
 //                continue;
-            if (CollectionMemberList.get(i).PreClosureRequestStatus > 0) {
-                int iTemp = CollectionMemberList.get(i).PreClosureAmount +
-                        CollectionMemberList.get(i).Expected_SD +
-                        CollectionMemberList.get(i).Expected_PolicyRenewalAmt +
-                        CollectionMemberList.get(i).ADHPTotalExpectedAndPastDueAmt +
-                        CollectionMemberList.get(i).RD1ExpectedAmount +
-                        CollectionMemberList.get(i).RD2ExpectedAmount +
-                        CollectionMemberList.get(i).RD3ExpectedAmount +
-                        CollectionMemberList.get(i).RD4ExpectedAmount +
-                        CollectionMemberList.get(i).RD5ExpectedAmount;
-                if (iTemp >= CollectionMemberList.get(i).TotalDueAmountsToPayRefday) {
+                if (CollectionMemberList.get(i).PreClosureRequestStatus > 0) {
+                    int iTemp = CollectionMemberList.get(i).PreClosureAmount +
+                            CollectionMemberList.get(i).Expected_SD +
+                            CollectionMemberList.get(i).Expected_PolicyRenewalAmt +
+                            CollectionMemberList.get(i).ADHPTotalExpectedAndPastDueAmt +
+                            CollectionMemberList.get(i).RD1ExpectedAmount +
+                            CollectionMemberList.get(i).RD2ExpectedAmount +
+                            CollectionMemberList.get(i).RD3ExpectedAmount +
+                            CollectionMemberList.get(i).RD4ExpectedAmount +
+                            CollectionMemberList.get(i).RD5ExpectedAmount;
+                    if (iTemp >= CollectionMemberList.get(i).TotalDueAmountsToPayRefday) {
+                        continue;
+                    }
+                }
+//bmp 12-Jan-26
+                boolean flagRequestPending = false;
+                for (int j = 0; j < SyncPrePayment_PreClosureRequest.size(); j++) {
+                    if (SyncPrePayment_PreClosureRequest.get(j).recordID == CollectionMemberList.get(i).MemberID) {
+                        flagRequestPending = true;
+                        break;
+                    }
+                }
+//bmp 21-Jan-26
+                for (int j = 0; j < SyncPrePayment_PreClosureApprovalStatus.size(); j++) {
+                    if (SyncPrePayment_PreClosureApprovalStatus.get(j).recordID == CollectionMemberList.get(i).MemberID) {
+                        flagRequestPending = true;
+                        break;
+                    }
+                }
+//bmp 21-Jan-26
+                if (flagRequestPending)
                     continue;
-                }
-            }
+                String strMaturityDate = CollectionMemberList.get(i).MaturityDate;
+                strMaturityDate = strMaturityDate.substring(0, 10);
+                String[] strSplit = strMaturityDate.split("-");
+                int iMaturityYear = Integer.parseInt(strSplit[0]);
 //bmp 12-Jan-26
-            boolean flagRequestPending = false;
-            for (int j = 0; j < SyncPrePayment_PreClosureRequest.size(); j++) {
-                if (SyncPrePayment_PreClosureRequest.get(j).recordID == CollectionMemberList.get(i).MemberID) {
-                    flagRequestPending = true;
-                    break;
+                if (OrgID == 1) {
+                    iMaturityYear = Integer.parseInt(strSplit[2]);
                 }
-            }
-//bmp 21-Jan-26
-            for (int j = 0; j < SyncPrePayment_PreClosureApprovalStatus.size(); j++) {
-                if (SyncPrePayment_PreClosureApprovalStatus.get(j).recordID == CollectionMemberList.get(i).MemberID) {
-                    flagRequestPending = true;
-                    break;
-                }
-            }
-//bmp 21-Jan-26
-            if (flagRequestPending)
-                continue;
-            String strMaturityDate = CollectionMemberList.get(i).MaturityDate;
-            strMaturityDate = strMaturityDate.substring(0, 10);
-            String[] strSplit = strMaturityDate.split("-");
-            int iMaturityYear = Integer.parseInt(strSplit[0]);
 //bmp 12-Jan-26
-            if (OrgID == 1) {
-                iMaturityYear = Integer.parseInt(strSplit[2]);
-            }
-//bmp 12-Jan-26
-            int iMaturityMonth = Integer.parseInt(strSplit[1]);
-            boolean flagMDWithinLimit = false;
-            if (iMaturityYear < iMDLimitYear)
-                flagMDWithinLimit = true;
-            else if ((iMaturityYear == iMDLimitYear) &&
-                    (iMaturityMonth <= iMDLimitMonth))
-                flagMDWithinLimit = true;
-            if (flagMDWithinLimit) {
+                int iMaturityMonth = Integer.parseInt(strSplit[1]);
+                boolean flagMDWithinLimit = false;
+                if (iMaturityYear < iMDLimitYear)
+                    flagMDWithinLimit = true;
+                else if ((iMaturityYear == iMDLimitYear) &&
+                        (iMaturityMonth <= iMDLimitMonth))
+                    flagMDWithinLimit = true;
+                if (flagMDWithinLimit) {
 //                GetPrePayment_PreClosureAmount(CollectionMemberList.get(i).MemberID, "", 0, 0);
-                GetPrePayment_PreClosureAmount(
-                        CollectionMemberList.get(i).MemberID,
-                        0,
-                        2,
-                        0,
-                        0);
+                    GetPrePayment_PreClosureAmount(
+                            CollectionMemberList.get(i).MemberID,
+                            0,
+                            2,
+                            0,
+                            0);
+                }
             }
-        }
             flagAddAutoPreClosureRequest = false;
         }
 //bmp 09-Dec-25
@@ -11321,13 +11338,13 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         String strUploadStatus = "";
         int iTempCollection = SyncUpdateCollectionDetails.size() +
-                    SyncUpdateRDReceipt.size() +
-                    SyncUpdateCollectionNarration.size() +
+                SyncUpdateRDReceipt.size() +
+                SyncUpdateCollectionNarration.size() +
 //bmp 09-Dec-25
-                    SyncPrePayment_PreClosureRequest.size() +
-                    SyncPrePayment_PreClosureApprovalStatus.size() +
+                SyncPrePayment_PreClosureRequest.size() +
+                SyncPrePayment_PreClosureApprovalStatus.size() +
 //bmp 09-Dec-25
-                    SyncCollectionSMS.size();
+                SyncCollectionSMS.size();
         strUploadStatus = strUploadStatus + "Collection:" + String.valueOf(iTempCollection);
         tv = (TextView) findViewById(R.id.textViewUploadStatus);
         tv.setText(strUploadStatus);
@@ -11430,10 +11447,10 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 ////                                }
 ////                            }
 //
-////        if(     (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_LOAN_REQUIRED) ||
-////                (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_LOAN_ONGOING) ||
-////                (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_HOMELOAN_REQUIRED) ||
-////                (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_TURNLOAN_REQUIRED) ) {
+    ////        if(     (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_LOAN_REQUIRED) ||
+    ////                (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_LOAN_ONGOING) ||
+    ////                (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_HOMELOAN_REQUIRED) ||
+    ////                (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_TURNLOAN_REQUIRED) ) {
 //
 //                            LoanStatusMemberList.add(lMemberID);
 //                            c1.moveToNext();
@@ -11925,8 +11942,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                         (Member.get(k).Mname.isEmpty() && Member.get(k).Lname.isEmpty()) ) {
                     PIFProblemsMember.add("कुटुंबातील व्यक्तीचे पूर्ण नाव भरणे बाकी - अनुक्रमांक: " + String.valueOf(k+1));
                 } else if(  (Member.get(k).Fname.equalsIgnoreCase("NA")) &&
-                            (Member.get(k).Mname.equalsIgnoreCase("NA")) &&
-                            (Member.get(k).Lname.equalsIgnoreCase("NA")) ) {
+                        (Member.get(k).Mname.equalsIgnoreCase("NA")) &&
+                        (Member.get(k).Lname.equalsIgnoreCase("NA")) ) {
                     PIFProblemsMember.add("कुटुंबातील व्यक्तीचे पूर्ण नाव भरणे बाकी - अनुक्रमांक: " + String.valueOf(k+1));
                 }
             }
@@ -12100,10 +12117,10 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                     if(flagInvalidAge) {
                         String strDataParamsQuery =
                                 "?PrimaryKey=" + String.valueOf(Member.get(0).MemberID) +
-                                "&TableName=" + "M_MEMBER" +
-                                "&ParameterName=" + "BirthDate" +
-                                "&LSO_ID=" + String.valueOf(LSO_ID) +
-                                "&Org_ID=" + String.valueOf(OrgID);
+                                        "&TableName=" + "M_MEMBER" +
+                                        "&ParameterName=" + "BirthDate" +
+                                        "&LSO_ID=" + String.valueOf(LSO_ID) +
+                                        "&Org_ID=" + String.valueOf(OrgID);
 
                         Calendar cal = Calendar.getInstance();
                         Date date = cal.getTime();
@@ -12214,45 +12231,45 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             PIFProblemsExpenses.add("इतर खर्च (सणवार, पाहुणचार) भरणे बाकी");
         }
     }
-//bmp 05-Apr-25
-   public boolean ValidateLoanProductDetailsID(long LoanProductDetailsID) {
-       boolean InvalidID = true;
+    //bmp 05-Apr-25
+    public boolean ValidateLoanProductDetailsID(long LoanProductDetailsID) {
+        boolean InvalidID = true;
 
-       ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
-       // Gets the data repository in write mode
-       SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-       String[] projectionID = {
-               ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_LoanProductDetailsID,
-       };
-       String ActiveID = "1";
-       String selectionID = ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_IsActive + "=" + "'" + ActiveID + "'"
-               + " and " + ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_LoanProductDetailsID + "=" + "'" + String.valueOf(LoanProductDetailsID) + "'";
-       Cursor cID = db.query(
-               ufinDbContract.LoanProductDetailsMaster.TABLE_NAME,  // The table to query
-               projectionID,                               // The columns to return
-               selectionID,                                // The columns for the WHERE clause
-               null,
-               null,                                     // don't group the rows
-               null,                                     // don't filter by row groups
-               null                                 // The sort order
-       );
-       try {
-           if (cID != null && cID.moveToFirst()) {
-               if (cID.getCount() > 0) {
-                   try {
-                       InvalidID = false;
-                   } catch (Exception e) {
-                       e.printStackTrace();
-                   }
-               }
-           }
-       } finally {
-           if(cID != null) { cID.close(); }
-       }
-       return InvalidID;
-   }
-//bmp 05-Apr-25
+        String[] projectionID = {
+                ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_LoanProductDetailsID,
+        };
+        String ActiveID = "1";
+        String selectionID = ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_IsActive + "=" + "'" + ActiveID + "'"
+                + " and " + ufinDbContract.LoanProductDetailsMaster.COLUMN_NAME_LoanProductDetailsID + "=" + "'" + String.valueOf(LoanProductDetailsID) + "'";
+        Cursor cID = db.query(
+                ufinDbContract.LoanProductDetailsMaster.TABLE_NAME,  // The table to query
+                projectionID,                               // The columns to return
+                selectionID,                                // The columns for the WHERE clause
+                null,
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+        try {
+            if (cID != null && cID.moveToFirst()) {
+                if (cID.getCount() > 0) {
+                    try {
+                        InvalidID = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } finally {
+            if(cID != null) { cID.close(); }
+        }
+        return InvalidID;
+    }
+    //bmp 05-Apr-25
     public void ValidateScreenRepay() {
         PIFProblemsRepay.clear();
         if(AdditionalDetails.LoanProductDetailsID == 0) {
@@ -12551,10 +12568,10 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 (Member.get(0).BankBranchID == 0) ||
                 (Member.get(0).Bank_Fname.equalsIgnoreCase("NA")) ||
                 ((Member.get(0).Bank_Mname.equalsIgnoreCase("NA")) &&
-                (Member.get(0).Bank_Lname.equalsIgnoreCase("NA"))) ) {
+                        (Member.get(0).Bank_Lname.equalsIgnoreCase("NA"))) ) {
             PIFProblemsBankAccount.add("अपूर्ण बँक तपशील: " + Member.get(0).Fname);
         } else if(  (Member.get(0).Bank_Mname.trim().isEmpty() &&
-                    (Member.get(0).Bank_Lname.trim().isEmpty())) ) {
+                (Member.get(0).Bank_Lname.trim().isEmpty())) ) {
             PIFProblemsBankAccount.add("अपूर्ण बँक तपशील: " + Member.get(0).Fname);
         }
     }
@@ -13152,7 +13169,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             Member.get(0).Bank_Lname = Member.get(0).Lname;
 
         if(     (getReferenceMemberDocumentID_1(PersonalImpactInfo.get(0).BusinessID) ==
-                    DocumentIDs.MEMBER_DOC_ID_SHOPACT_LICENSE) &&
+                DocumentIDs.MEMBER_DOC_ID_SHOPACT_LICENSE) &&
                 (LoanApplicationForBusiness(AdditionalDetails.LoanReasonID)) &&
                 (AdditionalDetails.LoanAmount >= 310000) ) {
             if (!isDocumentPhotoAvailable(Member.get(0).MemberID,
@@ -13244,7 +13261,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 PIFProblemsDocuments.add("(LR:8-b) इतर जामीनदार फोटो बाकी आहे.");
             }
             if(     (!isDocumentPhotoAvailable(Member.get(0).MemberID,
-                            DocumentIDs.MEMBER_DOC_ID_OTHER_GUARANTOR_AADHAARCARD)) &&
+                    DocumentIDs.MEMBER_DOC_ID_OTHER_GUARANTOR_AADHAARCARD)) &&
                     (!isDocumentPhotoAvailable(Member.get(0).MemberID,
                             DocumentIDs.MEMBER_DOC_ID_OTHER_GUARANTOR_PANCARD)) ) {
                 PIFProblemsDocuments.add("(LR:8-b) इतर जामीनदार ओळखपत्र फोटो बाकी आहे.");
@@ -13274,7 +13291,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             if( (!isDocumentPhotoAvailable(Member.get(indexGuarantor).MemberID,
                     DocumentIDs.MEMBER_DOC_ID_AADHAARCARD)) &&
                     (!isDocumentPhotoAvailable(Member.get(indexGuarantor).MemberID,
-                    DocumentIDs.MEMBER_DOC_ID_PANCARD)) ) {
+                            DocumentIDs.MEMBER_DOC_ID_PANCARD)) ) {
                 PIFProblemsDocuments.add("(LR:8-b) जामीनदार आधारकार्ड/पॅनकार्ड फोटो बाकी आहे: " + Member.get(indexGuarantor).Fname);
             }
             if(RelationIDSpouse <= 0) {
@@ -13282,7 +13299,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             }
             if(Member.get(indexGuarantor).RelationID != RelationIDSpouse) {
                 if(     (!isDocumentPhotoAvailable(Member.get(0).MemberID,
-                            DocumentIDs.MEMBER_DOC_ID_ITER_NATEWAIK_CHITTHI)) &&
+                        DocumentIDs.MEMBER_DOC_ID_ITER_NATEWAIK_CHITTHI)) &&
                         (!isDocumentPhotoAvailable(Member.get(indexGuarantor).MemberID,
                                 DocumentIDs.MEMBER_DOC_ID_ITER_NATEWAIK_CHITTHI)) ) {
                     PIFProblemsDocuments.add("(LR:11) इतर जामीनदार नातेवाईक चिठ्ठी फोटो बाकी आहे.");
@@ -13290,7 +13307,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             }
             if(OrgID == 1) {
                 if(AdditionalDetails.OtherGuarantorReasonID
-                                == clsAdditionalDetails.OTHER_GUARANTOR_REASON_ID_SPOUSE_OUTSTATION_ORGID_1) {
+                        == clsAdditionalDetails.OTHER_GUARANTOR_REASON_ID_SPOUSE_OUTSTATION_ORGID_1) {
                     if(!isDocumentPhotoAvailable(Member.get(0).MemberID,
                             DocumentIDs.MEMBER_DOC_ID_SPOUSE_OUTSTATION)) {
                         PIFProblemsDocuments.add("जोडीदार बाहेर गावी/परदेशी राहतात (पुरावा) फोटो बाकी आहे.");
@@ -13315,7 +13332,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                     PIFProblemsDocuments.add("(LR:18) इतर सहकर्जदार फोटो बाकी आहे.");
                 }
                 if(     (!isDocumentPhotoAvailable(Member.get(0).MemberID,
-                            DocumentIDs.MEMBER_DOC_ID_JOINT_LOANEE_AADHAARCARD)) &&
+                        DocumentIDs.MEMBER_DOC_ID_JOINT_LOANEE_AADHAARCARD)) &&
                         (!isDocumentPhotoAvailable(Member.get(0).MemberID,
                                 DocumentIDs.MEMBER_DOC_ID_JOINT_LOANEE_PANCARD)) ) {
                     PIFProblemsDocuments.add("(LR:18) इतर सहकर्जदार ओळखपत्र फोटो बाकी आहे.");
@@ -14104,7 +14121,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             if (pbSync != null) {
                 pbSync.setVisibility(View.INVISIBLE);
             }
-                InitDesktop();
+            InitDesktop();
         }
     }
     private class AsyncCallWS_NewEditPIF extends AsyncTask<String, Void, Void> {
@@ -14647,7 +14664,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //bmp 25-Aug-25
 //bmp 20-Aug-25
                 UpdateMemberContactNumber(newGroup.arrGroupMember.get(selectedMemberPosition).MemberID,
-                                            newGroup.arrGroupMember.get(selectedMemberPosition).ContactNo);
+                        newGroup.arrGroupMember.get(selectedMemberPosition).ContactNo);
 //bmp 20-Aug-25
                 return null;
             }
@@ -16327,7 +16344,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             db.close();
         }
     }
-//bmp 20-Aug-25
+    //bmp 20-Aug-25
     public void UpdateMemberContactNumber(long lMemberID, String strContactNumber) {
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
         // Gets the data repository in write mode
@@ -18344,7 +18361,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             db.close();
         }
     }
-//bmp 11-May-23
+    //bmp 11-May-23
     public void SQLite_getLastPunarbhetVisitDetailsMaster() {
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
         // Gets the data repository in write mode
@@ -18399,7 +18416,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             db.close();
         }
     }
-//bmp 24-Apr-24
+    //bmp 24-Apr-24
     public void SQLite_getNextLoanNotAllowedMaster() {
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
         // Gets the data repository in write mode
@@ -18463,7 +18480,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             db.close();
         }
     }
-//bmp 24-Apr-24
+    //bmp 24-Apr-24
 //bmp 11-May-23
     public void SQLite_getGroupMembersInfo() {
         if (selectedGroupID > 0) {
@@ -20411,7 +20428,79 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         return Status;
     }
+    // ---- make sure the new family expense columns exist in the local DB (old installs) ----
+    private void ensureFamilyExpenseColumns() {
+        SQLiteDatabase w = null;
+        try {
+            ufinDbHelper h = new ufinDbHelper(getBaseContext());
+            w = h.getWritableDatabase();
+            addColumnsIfMissing(w, ufinDbContract.FamilyImpactInfo.TABLE_NAME, new String[]{
+                    "OtherIncomeLikePension", "PropertyTax", "LightBill", "PaniPatti", "SanSamarambhExpense",
+                    "PahuncharExpense", "PujaExpense", "UdhariExpense", "InsuranceExpense", "AnnPurnaRDADHP"});
+            addColumnsIfMissing(w, ufinDbContract.MemberFamilyDetails.TABLE_NAME, new String[]{
+                    "FundExpense", "BachatGatExpense"});
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { if (w != null) w.close(); } catch (Exception ignored) { }
+        }
+    }
+
+    private void addColumnsIfMissing(SQLiteDatabase db, String table, String[] cols) {
+        java.util.HashSet<String> existing = new java.util.HashSet<String>();
+        Cursor c = null;
+        try {
+            c = db.rawQuery("PRAGMA table_info(" + table + ")", null);
+            while (c != null && c.moveToNext()) {
+                existing.add(c.getString(c.getColumnIndexOrThrow("name")).toLowerCase(Locale.ENGLISH));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { if (c != null) c.close(); } catch (Exception ignored) { }
+        }
+        for (String col : cols) {
+            if (!existing.contains(col.toLowerCase(Locale.ENGLISH))) {
+                try {
+                    db.execSQL("ALTER TABLE " + table + " ADD COLUMN " + col + " INTEGER DEFAULT 0");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    // ---- helpers for the new family expense columns ----
+    /** Integer value of a cursor column; 0 when the column does not exist yet or the value is empty. */
+    private int sqlGetInt(Cursor c, String column) {
+        try {
+            String s = c.getString(c.getColumnIndexOrThrow(column));
+            if (s == null) return 0;
+            s = s.trim();
+            int dot = s.indexOf('.');
+            if (dot >= 0) s = s.substring(0, dot);
+            return Integer.parseInt(s);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    /** CSV value of a column found by its header name (order independent); 0 when it is missing. */
+    private int csvGetIntByHeader(String[] header, String[] record, String column) {
+        try {
+            for (int i = 0; i < header.length && i < record.length; i++) {
+                if (header[i].trim().equalsIgnoreCase(column)) {
+                    String s = record[i].trim();
+                    int dot = s.indexOf('.');
+                    if (dot >= 0) s = s.substring(0, dot);
+                    return Integer.parseInt(s);
+                }
+            }
+        } catch (Exception ignored) { }
+        return 0;
+    }
     public boolean SQLite_saveMemberFamilyDetails(long TimeInMillis, boolean syncRecord) {
+        ensureFamilyExpenseColumns();
         boolean Status = false;
 
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
@@ -20435,6 +20524,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MonthlyBhishi, MemberFamilyDetails.MonthlyBhishi);
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MedicalExpenses, MemberFamilyDetails.MedicalExpenses);
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MonthlyInstallments, MemberFamilyDetails.MonthlyInstallments);
+            values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense, MemberFamilyDetails.FundExpense);
+            values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense, MemberFamilyDetails.BachatGatExpense);
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_RationCardNo, MemberFamilyDetails.RationCardNo);
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_RationCardType, MemberFamilyDetails.RationCardType);
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_WhoseContactNo, MemberFamilyDetails.WhoseContactNo);
@@ -20453,6 +20544,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MonthlyBhishi, MemberFamilyDetails.MonthlyBhishi);
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MedicalExpenses, MemberFamilyDetails.MedicalExpenses);
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MonthlyInstallments, MemberFamilyDetails.MonthlyInstallments);
+                    postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense, MemberFamilyDetails.FundExpense);
+                    postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense, MemberFamilyDetails.BachatGatExpense);
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_RationCardNo, MemberFamilyDetails.RationCardNo);
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_RationCardType, MemberFamilyDetails.RationCardType);
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_WhoseContactNo, MemberFamilyDetails.WhoseContactNo);
@@ -20566,6 +20659,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         return Status;
     }
     public boolean SQLite_saveFamilyImpactInfo(long TimeInMillis, boolean syncRecord) {
+        ensureFamilyExpenseColumns();
         boolean Status = false;
 
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
@@ -20595,6 +20689,16 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_FoodExpense, FamilyImpactInfo.FoodExpense);
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_EducationExpense, FamilyImpactInfo.EducationExpense);
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_OtherExpenses, FamilyImpactInfo.OtherExpenses);
+            values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_OtherIncomeLikePension, FamilyImpactInfo.OtherIncomeLikePension);
+            values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PropertyTax, FamilyImpactInfo.PropertyTax);
+            values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_LightBill, FamilyImpactInfo.LightBill);
+            values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PaniPatti, FamilyImpactInfo.PaniPatti);
+            values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_SanSamarambhExpense, FamilyImpactInfo.SanSamarambhExpense);
+            values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PahuncharExpense, FamilyImpactInfo.PahuncharExpense);
+            values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PujaExpense, FamilyImpactInfo.PujaExpense);
+            values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense, FamilyImpactInfo.UdhariExpense);
+            values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense, FamilyImpactInfo.InsuranceExpense);
+            values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP, FamilyImpactInfo.AnnPurnaRDADHP);
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_EncodedBy, FamilyImpactInfo.EncodedBy);
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_ImpactEncodedDate, FamilyImpactInfo.ImpactEncodedDate);
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UpdatedBy, FamilyImpactInfo.UpdatedBy);
@@ -20610,6 +20714,16 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_FoodExpense, FamilyImpactInfo.FoodExpense);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_EducationExpense, FamilyImpactInfo.EducationExpense);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_OtherExpenses, FamilyImpactInfo.OtherExpenses);
+                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_OtherIncomeLikePension, FamilyImpactInfo.OtherIncomeLikePension);
+                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PropertyTax, FamilyImpactInfo.PropertyTax);
+                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_LightBill, FamilyImpactInfo.LightBill);
+                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PaniPatti, FamilyImpactInfo.PaniPatti);
+                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_SanSamarambhExpense, FamilyImpactInfo.SanSamarambhExpense);
+                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PahuncharExpense, FamilyImpactInfo.PahuncharExpense);
+                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PujaExpense, FamilyImpactInfo.PujaExpense);
+                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense, FamilyImpactInfo.UdhariExpense);
+                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense, FamilyImpactInfo.InsuranceExpense);
+                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP, FamilyImpactInfo.AnnPurnaRDADHP);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_EncodedBy, FamilyImpactInfo.EncodedBy);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_ImpactEncodedDate, FamilyImpactInfo.ImpactEncodedDate);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UpdatedBy, FamilyImpactInfo.UpdatedBy);
@@ -21428,6 +21542,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         return Status;
     }
     public void SQLite_getMemberFamilyDetails(long actNumber) {
+        ensureFamilyExpenseColumns();
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -21450,6 +21565,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 ufinDbContract.MemberFamilyDetails.COLUMN_NAME_WhoseContactNo,
                 ufinDbContract.MemberFamilyDetails.COLUMN_NAME_WhoRunsBusiness,
                 ufinDbContract.MemberFamilyDetails.COLUMN_NAME_AddressOnRationcard,
+                ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense,
+                ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense,
         };
         String selection1 = ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MemberID + "=" + "'" + String.valueOf(actNumber) + "'";
 
@@ -21582,6 +21699,10 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                             MemberFamilyDetails.LoanNotAllowedReasonId = 0;
                         }
                         tMemberFamilyDetails.LoanNotAllowedReasonId = MemberFamilyDetails.LoanNotAllowedReasonId;
+                        MemberFamilyDetails.FundExpense = sqlGetInt(c1, ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense);
+                        tMemberFamilyDetails.FundExpense = MemberFamilyDetails.FundExpense;
+                        MemberFamilyDetails.BachatGatExpense = sqlGetInt(c1, ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense);
+                        tMemberFamilyDetails.BachatGatExpense = MemberFamilyDetails.BachatGatExpense;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -21593,6 +21714,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         }
     }
     public void SQLite_getFamilyImpactInfo(long actNumber) {
+        ensureFamilyExpenseColumns();
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -21612,6 +21734,16 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UpdatedBy,
                 ufinDbContract.FamilyImpactInfo.COLUMN_NAME_ImpactUpdatedDate,
                 ufinDbContract.FamilyImpactInfo.COLUMN_NAME_IsActive,
+                ufinDbContract.FamilyImpactInfo.COLUMN_NAME_OtherIncomeLikePension,
+                ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PropertyTax,
+                ufinDbContract.FamilyImpactInfo.COLUMN_NAME_LightBill,
+                ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PaniPatti,
+                ufinDbContract.FamilyImpactInfo.COLUMN_NAME_SanSamarambhExpense,
+                ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PahuncharExpense,
+                ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PujaExpense,
+                ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense,
+                ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense,
+                ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP,
         };
 
         String selection1 = ufinDbContract.FamilyImpactInfo.COLUMN_NAME_MemberFamilyDetailsID + "=" + "'" + String.valueOf(actNumber) + "'";
@@ -21716,6 +21848,26 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                                 FamilyImpactInfo.IsActive = 0;
                         }
                         tFamilyImpactInfo.IsActive = FamilyImpactInfo.IsActive;
+                        FamilyImpactInfo.OtherIncomeLikePension = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_OtherIncomeLikePension);
+                        tFamilyImpactInfo.OtherIncomeLikePension = FamilyImpactInfo.OtherIncomeLikePension;
+                        FamilyImpactInfo.PropertyTax = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PropertyTax);
+                        tFamilyImpactInfo.PropertyTax = FamilyImpactInfo.PropertyTax;
+                        FamilyImpactInfo.LightBill = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_LightBill);
+                        tFamilyImpactInfo.LightBill = FamilyImpactInfo.LightBill;
+                        FamilyImpactInfo.PaniPatti = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PaniPatti);
+                        tFamilyImpactInfo.PaniPatti = FamilyImpactInfo.PaniPatti;
+                        FamilyImpactInfo.SanSamarambhExpense = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_SanSamarambhExpense);
+                        tFamilyImpactInfo.SanSamarambhExpense = FamilyImpactInfo.SanSamarambhExpense;
+                        FamilyImpactInfo.PahuncharExpense = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PahuncharExpense);
+                        tFamilyImpactInfo.PahuncharExpense = FamilyImpactInfo.PahuncharExpense;
+                        FamilyImpactInfo.PujaExpense = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PujaExpense);
+                        tFamilyImpactInfo.PujaExpense = FamilyImpactInfo.PujaExpense;
+                        FamilyImpactInfo.UdhariExpense = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense);
+                        tFamilyImpactInfo.UdhariExpense = FamilyImpactInfo.UdhariExpense;
+                        FamilyImpactInfo.InsuranceExpense = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense);
+                        tFamilyImpactInfo.InsuranceExpense = FamilyImpactInfo.InsuranceExpense;
+                        FamilyImpactInfo.AnnPurnaRDADHP = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP);
+                        tFamilyImpactInfo.AnnPurnaRDADHP = FamilyImpactInfo.AnnPurnaRDADHP;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -22498,7 +22650,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         return Status;
     }
-//bmp 16-May-24
+    //bmp 16-May-24
     public void SQLite_getMemberOtherMFIData(long actNumber) {
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
         // Gets the data repository in write mode
@@ -22549,7 +22701,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             db.close();
         }
     }
-//bmp 16-May-24
+    //bmp 16-May-24
     public void SQLite_getMemberDocRcvd(long actNumber) {
         ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
         // Gets the data repository in write mode
@@ -25337,11 +25489,11 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //                        String whereClause = ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("ERP") + "'";
                         String whereClause =
                                 ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("ERP") + "'" +
-                                " or " + ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("Meeting") + "'" +
-                                " or " + ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("Training") + "'" +
-                                " or " + ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("Holiday") + "'" +
-                                " or " + ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("Leave") + "'" +
-                                " or " + ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("Other") + "'";
+                                        " or " + ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("Meeting") + "'" +
+                                        " or " + ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("Training") + "'" +
+                                        " or " + ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("Holiday") + "'" +
+                                        " or " + ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("Leave") + "'" +
+                                        " or " + ufinDbContract.ActivitySchedule.COLUMN_NAME_ActivityType + "=" + "'" + String.valueOf("Other") + "'";
 //bmp 27-Mar-24
                         long lTemp1 = db.delete(ufinDbContract.ActivitySchedule.TABLE_NAME, whereClause, null);
 
@@ -25382,7 +25534,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             String strTemp =    "BM_ID=" + String.valueOf(LSO_ParentID) +
 //                                "&selMonth=" + sdfMM.format(cal.getTime()) +
 //                                "&selYear=" + sdfyyyy.format(cal.getTime()) +
-                                "&Org_ID=" + String.valueOf(OrgID);
+                    "&Org_ID=" + String.valueOf(OrgID);
             url = new URL("http://" + strServerIP + ":" + strServerPort + URL_GetBMSchedule + strTemp);
 
             long msecQueryTime = cal.getTimeInMillis();
@@ -25423,21 +25575,21 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                         for(int i=0; i<iCount; i++) {
                             JSONObject jObj = (JSONObject) jsonArray.get(i);
                             if(jObj.getLong("LSOID") == LSO_ID) {
-                                 if(jObj.getString("ScheduleName").contains("Time Slot")) {
-                                     if (jObj.getString("ScheduleName").contains("GRT")) {
-                                         clsSchedule newActivity = new clsSchedule();
-                                         try {
-                                             long lTemp = jObj.getLong("StartTime");
-                                             lTemp = lTemp * 1000;
-                                             newActivity.StartTime = lTemp;
-                                             lTemp = jObj.getLong("EndTime");
-                                             lTemp = lTemp * 1000;
-                                             newActivity.EndTime = lTemp;
-                                             newActivity.ActivityType = "GRT";
-                                             newActivity.ActivityDetails = "Empty Time Slot";
-                                             newSchedule.add(newActivity);
-                                         } catch (Exception e) {
-                                         }
+                                if(jObj.getString("ScheduleName").contains("Time Slot")) {
+                                    if (jObj.getString("ScheduleName").contains("GRT")) {
+                                        clsSchedule newActivity = new clsSchedule();
+                                        try {
+                                            long lTemp = jObj.getLong("StartTime");
+                                            lTemp = lTemp * 1000;
+                                            newActivity.StartTime = lTemp;
+                                            lTemp = jObj.getLong("EndTime");
+                                            lTemp = lTemp * 1000;
+                                            newActivity.EndTime = lTemp;
+                                            newActivity.ActivityType = "GRT";
+                                            newActivity.ActivityDetails = "Empty Time Slot";
+                                            newSchedule.add(newActivity);
+                                        } catch (Exception e) {
+                                        }
 //bmp 20-Aug-25
 //                                     } else if (jObj.getString("ScheduleName").contains("Loan Orientation")) {
 //                                         clsSchedule newActivity = new clsSchedule();
@@ -25454,8 +25606,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //                                         } catch (Exception e) {
 //                                         }
 //bmp 20-Aug-25
-                                     }
-                                 }
+                                    }
+                                }
                             }
                         }
                     }
@@ -27420,10 +27572,10 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //                            int iCount = jsonArray.length();
 //                            int iCount2 = 0;
 //                            if (iCount > 0) {
-////                    EnquiryDate: 21-11-2024
-////                    CBScore : returned by HighMark
-////                    CBStatus : OK/Reject/Pending by our CB Team
-////                    Remark : Remark of our CB team
+    ////                    EnquiryDate: 21-11-2024
+    ////                    CBScore : returned by HighMark
+    ////                    CBStatus : OK/Reject/Pending by our CB Team
+    ////                    Remark : Remark of our CB team
 //                                ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
 //                                try {
 //                                    for (iCount2 = 0; iCount2 < iCount; iCount2++) {
@@ -27660,7 +27812,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         }
         return Status;
     }
-//bmp 18-Mar-26
+    //bmp 18-Mar-26
     public boolean GetCSVFile(String strServerIP) {
         HttpURLConnection urlConnection = null;
         boolean Status = false;
@@ -28330,7 +28482,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         return Status;
     }
-//bmp 30-Mar-26
+    //bmp 30-Mar-26
 //    private void CheckDuplicateFamilyMembers() {
     private void CheckDuplicateFamilyMembers(String strListType) {
 //bmp 30-Mar-26
@@ -28387,7 +28539,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             }
         }
     }
-//bmp 30-Mar-26
+    //bmp 30-Mar-26
 //    private void GetMemberInfo() {
     private void GetMemberInfo(String strListType) {
 //bmp 30-Mar-26
@@ -28564,6 +28716,9 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             }
             SQLite_getMemberFamilyDetails(Member.get(0).MemberID);
             SQLite_getFamilyImpactInfo(MemberFamilyDetails.MemberFamilyDetailsID);
+            Log.d("FIMP", "tax=" + FamilyImpactInfo.PropertyTax + " light=" + FamilyImpactInfo.LightBill
+                    + " udhari=" + FamilyImpactInfo.UdhariExpense + " mfdId=" + MemberFamilyDetails.MemberFamilyDetailsID);   // <-- ithe
+            SQLite_getMemberImpactAnswer(MemberFamilyDetails.MemberFamilyDetailsID);
             SQLite_getMemberImpactAnswer(MemberFamilyDetails.MemberFamilyDetailsID);
             boolean boolDone = false;
             for(int j=0; j<MemberImpactAnswer.size(); j++) {
@@ -29965,7 +30120,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //            if (BM_ID > 0) {
 //                strAPI = URL_UpdateLoanProductDetailsID;
 //            } else {
-                strAPI = URL_InsertMemberAdditionalDetails;
+            strAPI = URL_InsertMemberAdditionalDetails;
 //            }
 
             String strDataParamsQuery = SyncMemberAdditionalDetails.get(i).PostParams;
@@ -30258,7 +30413,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //            if (BM_ID > 0) {
 //                strAPI = URL_UpdateLoanProductDetailsID;
 //            } else {
-                strAPI = URL_UpdatePunarbhetVisitDetails;
+            strAPI = URL_UpdatePunarbhetVisitDetails;
 //            }
 
             String strDataParamsQuery = SyncUpdateRevisitDetails.get(i).PostParams;
@@ -30829,7 +30984,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         return Status;
     }
-//bmp 09-Dec-25
+    //bmp 09-Dec-25
 //    public boolean GetPrePayment_PreClosureAmount(long lMemberID, String strPreClosureReason, int iPrePaymentMonths, int iPrePaymentAmount) {
     public boolean GetPrePayment_PreClosureAmount(long lMemberID, int iPreClosureReasonID, int iPrePaymentORPreClosure, int iPrePaymentMonths, int iPrePaymentAmount) {
         boolean Status = false;
@@ -30938,7 +31093,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         return Status;
     }
-//bmp 09-Apr-26
+    //bmp 09-Apr-26
 //    public boolean GetPrePayment_PreClosureApprovalStatus(long lMemberID) {
     public boolean GetPrePayment_PreClosureApprovalStatus(long lMemberID, String strTimeStamp) {
 //bmp 09-Apr-26
@@ -31138,10 +31293,10 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //
 //                                flagStartOfDayCorrectionUpdate = true;
 //                                if(flagStartOfDayUpdateOfRDSyncup && flagStartOfDayUpdateOfRecoverySyncup) {
-////                                    cal = Calendar.getInstance();
-////                                    Date date = cal.getTime();
-////                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-////                                    String strTimeStamp = sdf.format(date);// all done
+    ////                                    cal = Calendar.getInstance();
+    ////                                    Date date = cal.getTime();
+    ////                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+    ////                                    String strTimeStamp = sdf.format(date);// all done
 //                                    ContentValues values2 = new ContentValues();
 //                                    strStartOfDaySyncupTimestamp = strTimeStamp;
 //                                    values2.put(ufinDbContract.UserForTabMaster.COLUMN_NAME_StartOfDaySyncupTimestamp, strStartOfDaySyncupTimestamp);
@@ -31663,9 +31818,9 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //                                        if (lTemp2 > 0) {
 //                                        } else {
 //bmp 09-Jul-26
-                                            lTemp2 = dbInt.insert(ufinDbContract.MemberTransaction.TABLE_NAME, null, values2);
-                                            if (lTemp2 > 0) {
-                                            }
+                                        lTemp2 = dbInt.insert(ufinDbContract.MemberTransaction.TABLE_NAME, null, values2);
+                                        if (lTemp2 > 0) {
+                                        }
 //bmp 09-Jul-26
 //                                        }
 //bmp 09-Jul-26
@@ -31906,9 +32061,9 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //                                        if (lTemp11 > 0) {
 //                                        } else {
 //bmp 09-Jul-26
-                                            lTemp11 = dbInt.insert(ufinDbContract.RDTransaction.TABLE_NAME, null, values11);
-                                            if (lTemp11 > 0) {
-                                            }
+                                        lTemp11 = dbInt.insert(ufinDbContract.RDTransaction.TABLE_NAME, null, values11);
+                                        if (lTemp11 > 0) {
+                                        }
 //bmp 09-Jul-26
 //                                        }
 //bmp 09-Jul-26
@@ -32338,7 +32493,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         }
         return Status;
     }
-//bmp 09-Dec-25
+    //bmp 09-Dec-25
     public boolean PostCollectionSMS(String strServerIP) {
         HttpURLConnection urlConnection = null;
         boolean Status = false;
@@ -34327,7 +34482,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //            urlConnection.setUseCaches(false);
 //            urlConnection.setDoOutput(true);
 //            urlConnection.setDoInput(true);
-////            urlConnection.setChunkedStreamingMode(0);
+    ////            urlConnection.setChunkedStreamingMode(0);
 //
 //            //Start content wrapper:
 //            DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
@@ -34433,7 +34588,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                     FamilyFragment tab1 = new FamilyFragment();
                     return tab1;
                 case PIF_FRAGMENT_SEQUENCE_NUMBER_INCOME:
-                  //  IncomeFragment tab2 = new IncomeFragment();
+                    //  IncomeFragment tab2 = new IncomeFragment();
                     FamilyIncomeFragment tab2 = new FamilyIncomeFragment();
                     return tab2;
 //bmp 18-May-24
@@ -34462,7 +34617,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                     OtherLoansFragment tab3 = new OtherLoansFragment();
                     return tab3;
                 case PIF_FRAGMENT_SEQUENCE_NUMBER_EXPENSES:
-                  //  ExpenseFragment tab4 = new ExpenseFragment();
+                    //  ExpenseFragment tab4 = new ExpenseFragment();
                     FamilyExpenseFragment tab4 = new FamilyExpenseFragment();
                     return tab4;
                 case PIF_FRAGMENT_SEQUENCE_NUMBER_LOAN:
@@ -34651,7 +34806,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 null,
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
-        	    null	                                 // The sort order
+                null	                                 // The sort order
         );
 
         try {
@@ -36800,10 +36955,10 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         return newDocPhoto.DocumentPhotoID;
     }
 //    public long AddGroupDocumentPhotos(clsDocumentPhoto newDocPhoto, boolean syncRecord) {
-////        clsDocumentPhoto newDocPhoto = new clsDocumentPhoto();
-////        newDocPhoto.Init_DocumentPhoto();
-////        newDocPhoto.MemberDocuemntsRcvdID = DocRcvdID;
-////        newDocPhoto.GroupID = groupID;
+    ////        clsDocumentPhoto newDocPhoto = new clsDocumentPhoto();
+    ////        newDocPhoto.Init_DocumentPhoto();
+    ////        newDocPhoto.MemberDocuemntsRcvdID = DocRcvdID;
+    ////        newDocPhoto.GroupID = groupID;
 //
 //        DocumentPhotos.add(newDocPhoto);
 //        int newIndex = DocumentPhotos.size() - 1;

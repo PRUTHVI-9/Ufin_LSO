@@ -15,9 +15,12 @@ public class clsMemberFamilyDetails {
     int WhoseContactNo;
     int WhoRunsBusiness;
     String AddressOnRationcard;
-//bmp 20-Sep-22
+    //bmp 20-Sep-22
     long LoanNotAllowedReasonId;
-//bmp 20-Sep-22
+    //bmp 20-Sep-22
+    int FundExpense;
+    int BachatGatExpense;
+
     public void Init_MemberFamilyDetails() {
         MemberFamilyDetailsID = 0;
         MemberID = 0;
@@ -36,6 +39,8 @@ public class clsMemberFamilyDetails {
 //bmp 20-Sep-22
         LoanNotAllowedReasonId = 0;
 //bmp 20-Sep-22
+        FundExpense = 0;
+        BachatGatExpense = 0;
     }
 
     public boolean Compare_MemberFamilyDetails(clsMemberFamilyDetails Obj) {
@@ -71,6 +76,10 @@ public class clsMemberFamilyDetails {
         if(LoanNotAllowedReasonId != Obj.LoanNotAllowedReasonId)
             return false;
 //bmp 20-Sep-22
+        if(FundExpense != Obj.FundExpense)
+            return false;
+        if(BachatGatExpense != Obj.BachatGatExpense)
+            return false;
 
         return true;
     }
@@ -92,5 +101,7 @@ public class clsMemberFamilyDetails {
 //bmp 20-Sep-22
         Obj.LoanNotAllowedReasonId = LoanNotAllowedReasonId;
 //bmp 20-Sep-22
+        Obj.FundExpense = FundExpense;
+        Obj.BachatGatExpense = BachatGatExpense;
     }
 }

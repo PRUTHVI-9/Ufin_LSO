@@ -591,6 +591,7 @@ public class ufinDbContract {
                         COLUMN_NAME_DeactivateDate + TEXT_TYPE +
                         ")";
     }
+
     public static abstract class MemberFamilyDetails implements BaseColumns {
         public static final String TABLE_NAME = "M_MEMBER_FAMILY_DETAILS";
 
@@ -609,6 +610,8 @@ public class ufinDbContract {
         public static final String COLUMN_NAME_WhoRunsBusiness = "WhoRunsBusiness";
         public static final String COLUMN_NAME_AddressOnRationcard = "AddressOnRationcard";
         public static final String COLUMN_NAME_LoanNotAllowedReasonId = "LoanNotAllowedReasonId";
+        public static final String COLUMN_NAME_FundExpense = "FundExpense";
+        public static final String COLUMN_NAME_BachatGatExpense = "BachatGatExpense";
 
         public static final String SQL_CREATE_MEMBER_FAMILY_DETAILS =
                 "CREATE TABLE " + TABLE_NAME + " (" +
@@ -626,9 +629,12 @@ public class ufinDbContract {
                         COLUMN_NAME_WhoseContactNo + INTEGER_TYPE + COMMA_SEP +
                         COLUMN_NAME_WhoRunsBusiness + INTEGER_TYPE + COMMA_SEP +
                         COLUMN_NAME_AddressOnRationcard + TEXT_TYPE + COMMA_SEP +
-                        COLUMN_NAME_LoanNotAllowedReasonId + INTEGER_TYPE +
+                        COLUMN_NAME_LoanNotAllowedReasonId + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_FundExpense + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_BachatGatExpense + INTEGER_TYPE +
                         ")";
     }
+
     public static abstract class PersonalImpactInfo implements BaseColumns {
         public static final String TABLE_NAME = "TD_Member_Personal_Impact_Info";
 
@@ -667,6 +673,7 @@ public class ufinDbContract {
                         COLUMN_NAME_IsActive + INTEGER_TYPE +
                         ")";
     }
+
     public static abstract class FamilyImpactInfo implements BaseColumns {
         public static final String TABLE_NAME = "TD_Family_Impact_Info";
 
@@ -682,6 +689,16 @@ public class ufinDbContract {
         public static final String COLUMN_NAME_UpdatedBy = "UpdatedBy";
         public static final String COLUMN_NAME_ImpactUpdatedDate = "ImpactUpdatedDate";
         public static final String COLUMN_NAME_IsActive = "IsActive";
+        public static final String COLUMN_NAME_OtherIncomeLikePension = "OtherIncomeLikePension";
+        public static final String COLUMN_NAME_PropertyTax = "PropertyTax";
+        public static final String COLUMN_NAME_LightBill = "LightBill";
+        public static final String COLUMN_NAME_PaniPatti = "PaniPatti";
+        public static final String COLUMN_NAME_SanSamarambhExpense = "SanSamarambhExpense";
+        public static final String COLUMN_NAME_PahuncharExpense = "PahuncharExpense";
+        public static final String COLUMN_NAME_PujaExpense = "PujaExpense";
+        public static final String COLUMN_NAME_UdhariExpense = "UdhariExpense";
+        public static final String COLUMN_NAME_InsuranceExpense = "InsuranceExpense";
+        public static final String COLUMN_NAME_AnnPurnaRDADHP = "AnnPurnaRDADHP";
 
         public static final String SQL_CREATE_FAMILY_IMPACT_INFO =
                 "CREATE TABLE " + TABLE_NAME + " (" +
@@ -696,9 +713,20 @@ public class ufinDbContract {
                         COLUMN_NAME_ImpactEncodedDate + TEXT_TYPE + COMMA_SEP +
                         COLUMN_NAME_UpdatedBy + INTEGER_TYPE + COMMA_SEP +
                         COLUMN_NAME_ImpactUpdatedDate + TEXT_TYPE + COMMA_SEP +
-                        COLUMN_NAME_IsActive + INTEGER_TYPE +
+                        COLUMN_NAME_IsActive + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_OtherIncomeLikePension + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_PropertyTax + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_LightBill + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_PaniPatti + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_SanSamarambhExpense + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_PahuncharExpense + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_PujaExpense + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_UdhariExpense + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_InsuranceExpense + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_AnnPurnaRDADHP + INTEGER_TYPE +
                         ")";
     }
+
     public static abstract class MemberAddress implements BaseColumns {
         public static final String TABLE_NAME = "M_ADDRESS";
 

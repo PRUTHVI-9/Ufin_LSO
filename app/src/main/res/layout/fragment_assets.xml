@@ -53,14 +53,14 @@
                 android:paddingBottom="5dp">
 
                 <CheckBox
-                    android:id="@+id/checkBoxNoGadget"
+                    android:id="@+id/checkBoxPClaptop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:layoutDirection="rtl"
-                    android:text="@string/Field5_Assets"
+                    android:text="@string/Field4_Assets"
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
@@ -99,14 +99,14 @@
                     android:textStyle="bold" />
 
                 <CheckBox
-                    android:id="@+id/checkBoxPClaptop"
+                    android:id="@+id/checkBoxNoGadget"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:layoutDirection="rtl"
-                    android:text="@string/Field4_Assets"
+                    android:text="@string/Field5_Assets"
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
@@ -155,14 +155,14 @@
                 android:paddingBottom="5dp">
 
                 <CheckBox
-                    android:id="@+id/checkBoxNoAppliance"
+                    android:id="@+id/checkBoxFridge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:layoutDirection="rtl"
-                    android:text="@string/Field30_Assets"
+                    android:text="@string/Field9_Assets"
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
@@ -225,14 +225,14 @@
                     android:textStyle="bold" />
 
                 <CheckBox
-                    android:id="@+id/checkBoxFridge"
+                    android:id="@+id/checkBoxNoAppliance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:layoutDirection="rtl"
-                    android:text="@string/Field9_Assets"
+                    android:text="@string/Field30_Assets"
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
@@ -263,6 +263,17 @@
                 android:layout_weight="1"
                 android:layoutDirection="rtl"
                 android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioButtonMobileNone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:text="@string/Field_No"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
 
                 <RadioButton
                     android:id="@+id/radioButtonMobile3"
@@ -297,17 +308,6 @@
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
-                <RadioButton
-                    android:id="@+id/radioButtonMobileNone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:text="@string/Field_No"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
-
             </RadioGroup>
         </LinearLayout>
 
@@ -336,23 +336,11 @@
                 android:paddingBottom="5dp">
 
                 <CheckBox
-                    android:id="@+id/checkBoxVehicleNone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1.5"
-                    android:gravity="right|center_vertical"
-                    android:layoutDirection="rtl"
-                    android:text="@string/Field_No"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
-
-                <CheckBox
                     android:id="@+id/checkBoxCycle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.1"
                     android:gravity="right|center_vertical"
                     android:layoutDirection="rtl"
                     android:text="@string/Field17_Assets"
@@ -364,10 +352,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:gravity="right|center_vertical"
                     android:layoutDirection="rtl"
                     android:text="@string/Field18_Assets"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxCar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1.1"
+                    android:gravity="right|center_vertical"
+                    android:layoutDirection="rtl"
+                    android:text="@string/Field19_Assets"
                     android:textSize="26sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -379,18 +379,6 @@
                 android:layoutDirection="ltr"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp">
-
-                <CheckBox
-                    android:id="@+id/checkBoxCar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:layoutDirection="rtl"
-                    android:text="@string/Field19_Assets"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
 
                 <CheckBox
                     android:id="@+id/checkBoxTempo"
@@ -415,15 +403,6 @@
                     android:text="@string/Field21_Assets"
                     android:textSize="26sp"
                     android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layoutDirection="ltr"
-                android:orientation="horizontal"
-                android:paddingBottom="5dp">
 
                 <CheckBox
                     android:id="@+id/checkBoxRentalCar"
@@ -436,6 +415,15 @@
                     android:text="@string/Field22_Assets"
                     android:textSize="26sp"
                     android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layoutDirection="ltr"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
 
                 <CheckBox
                     android:id="@+id/checkBoxRentalTempo"
@@ -458,6 +446,18 @@
                     android:gravity="right|center_vertical"
                     android:layoutDirection="rtl"
                     android:text="@string/Field24_Assets"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxVehicleNone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:layoutDirection="rtl"
+                    android:text="@string/Field_No"
                     android:textSize="26sp"
                     android:textStyle="bold" />
             </LinearLayout>

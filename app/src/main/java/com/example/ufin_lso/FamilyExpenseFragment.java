@@ -41,6 +41,7 @@ public class FamilyExpenseFragment extends Fragment {
     private static final int TEXT_SP = 18;
     private static final int SMALL_SP = 16;
     private static final int HEAD_SP = 15;   // column headings of the tables
+
     private static final String[] EXPENSE_LABELS = {
             "१) प्रॉपर्टी टॅक्स (घर स्वतःचे असेल तर)",
             "२) घरभाडे (घर भाड्याचे असेल तर)",
@@ -57,7 +58,7 @@ public class FamilyExpenseFragment extends Fragment {
     private static final int I_TAX = 0, I_RENT = 1, I_LIGHT = 2, I_WATER = 3, I_FOOD = 4, I_EDU = 5,
             I_MED = 6, I_OTHER = 7, I_CREDIT = 8, I_BHISHI = 9, I_INS = 10, I_SAV = 11;
 
-    // Frequency options of the dropdown (item 9 also allows quarterly / half-yearly, as in the Excel label)
+    // Frequency options of the dropdown (item 11 also allows quarterly / half-yearly, as in the Excel label)
     private static final String[] FREQ = {"Daily", "Weekly", "Monthly", "Yearly"};
     private static final String[] FREQ_INS = {"Daily", "Weekly", "Monthly", "Quarterly", "Half-yearly", "Yearly"};
     // Weeks counted in one month for the "Weekly" option (change here if the business rule differs)
@@ -178,7 +179,38 @@ public class FamilyExpenseFragment extends Fragment {
     }
 
     /**
-     * PIF screen: write the values into MainActivity's objects (same fields as startSave() below),
+     * Writes all monthly values into MainActivity's objects (FamilyImpactInfo / MemberFamilyDetails).
+     * Used by pushToModel() (PIF screen) and by startSave() (Revisit screen).
+     * Call it with values computed on the UI thread (monthlyValues()).
+     * Item 8 -> OtherExpenses, item 10 -> MonthlyBhishi (one amount each, as before).
+     * The sub-columns (SanSamarambh/Pahuncher/Puja, Fund/BachatGat) are not touched.
+     */
+    private void applyToModel(long[] m, int inst) {
+        mainActivity.FamilyImpactInfo.PropertyTax = (int) m[I_TAX];
+        mainActivity.FamilyImpactInfo.HouseRentExpense = (int) m[I_RENT];
+        mainActivity.FamilyImpactInfo.LightBill = (int) m[I_LIGHT];
+        mainActivity.FamilyImpactInfo.PaniPatti = (int) m[I_WATER];
+        mainActivity.FamilyImpactInfo.FoodExpense = (int) m[I_FOOD];
+        mainActivity.FamilyImpactInfo.EducationExpense = (int) m[I_EDU];
+        mainActivity.FamilyImpactInfo.OtherExpenses = (int) m[I_OTHER];   // item 8 (one amount)
+        mainActivity.FamilyImpactInfo.UdhariExpense = (int) m[I_CREDIT];
+        mainActivity.FamilyImpactInfo.InsuranceExpense = (int) m[I_INS];
+        mainActivity.FamilyImpactInfo.AnnPurnaRDADHP = (int) m[I_SAV];
+
+        mainActivity.MemberFamilyDetails.MedicalExpenses = (int) m[I_MED];
+        mainActivity.MemberFamilyDetails.MonthlyBhishi = (int) m[I_BHISHI];
+        mainActivity.MemberFamilyDetails.MonthlyInstallments = inst;
+    }
+
+    /** Monthly value of every expense row (frequency applied), in the I_* order. */
+    private long[] monthlyValues() {
+        long[] m = new long[amtEdits.size()];
+        for (int i = 0; i < m.length; i++) m[i] = mon(i);
+        return m;
+    }
+
+    /**
+     * PIF screen: write the values into MainActivity's objects,
      * so MainActivity's SAVE button saves them. Starts only after the user changed something,
      * so just opening the screen does not modify the data.
      */
@@ -187,13 +219,7 @@ public class FamilyExpenseFragment extends Fragment {
         if (!pushed && signature().equals(baseline)) return;
         pushed = true;
         try {
-            mainActivity.FamilyImpactInfo.HouseRentExpense = (int) mon(I_RENT);
-            mainActivity.FamilyImpactInfo.FoodExpense = (int) mon(I_FOOD);
-            mainActivity.FamilyImpactInfo.EducationExpense = (int) mon(I_EDU);
-            mainActivity.FamilyImpactInfo.OtherExpenses = (int) mon(I_OTHER);
-            mainActivity.MemberFamilyDetails.MedicalExpenses = (int) mon(I_MED);
-            mainActivity.MemberFamilyDetails.MonthlyBhishi = (int) mon(I_BHISHI);
-            mainActivity.MemberFamilyDetails.MonthlyInstallments = (int) monthlyOf(spMfi, etMfiAmt);
+            applyToModel(monthlyValues(), (int) monthlyOf(spMfi, etMfiAmt));
         } catch (Exception ignored) { }
     }
 
@@ -561,8 +587,8 @@ public class FamilyExpenseFragment extends Fragment {
     // ------------------------------------------------------------ data
     private boolean dataLoaded = false;   // was this member's MemberFamilyDetails found in the DB
     private int otherMfiSum = 0;
-    private int insuranceAmt = 0;   // 9) insurance / LIC (monthly)
-    private int savingsAmt = 0;     // 10) RD + Adharpurna (monthly)
+    private int insuranceAmt = 0;   // 11) insurance / LIC (monthly)
+    private int savingsAmt = 0;     // 12) RD + Adharpurna (monthly)
 
     private void loadExpenseData() {
         dataLoaded = false;
@@ -577,7 +603,6 @@ public class FamilyExpenseFragment extends Fragment {
             for (int i = 0; i < mainActivity.CollectionMemberList.size(); i++) {
                 clsCollectionMember cm = mainActivity.CollectionMemberList.get(i);
                 if (cm.MemberID == mid) {
-                    insuranceAmt = cm.Monthly_PolicyRenewalAmt;
                     savingsAmt = cm.Monthly_ADHP + cm.RD1MonthlyInstallmentAmt + cm.RD2MonthlyInstallmentAmt
                             + cm.RD3MonthlyInstallmentAmt + cm.RD4MonthlyInstallmentAmt
                             + cm.RD5MonthlyInstallmentAmt;
@@ -613,8 +638,7 @@ public class FamilyExpenseFragment extends Fragment {
     }
 
     private void prefill() {
-        // 9 and 10 are filled automatically but can still be edited
-        if (insuranceAmt > 0) amtEdits.get(I_INS).setText(String.valueOf(insuranceAmt));
+        // 11 and 12 are filled automatically (collection list) but can still be edited
         if (savingsAmt > 0) amtEdits.get(I_SAV).setText(String.valueOf(savingsAmt));
         if (!dataLoaded) {
             // No record: only the other-MFI installment (if any)
@@ -623,10 +647,17 @@ public class FamilyExpenseFragment extends Fragment {
         }
         try {
             if (mainActivity.FamilyImpactInfo != null) {
+                set(I_TAX, mainActivity.FamilyImpactInfo.PropertyTax);
                 set(I_RENT, mainActivity.FamilyImpactInfo.HouseRentExpense);   // house rent is always editable
+                set(I_LIGHT, mainActivity.FamilyImpactInfo.LightBill);
+                set(I_WATER, mainActivity.FamilyImpactInfo.PaniPatti);
                 set(I_FOOD, mainActivity.FamilyImpactInfo.FoodExpense);
                 set(I_EDU, mainActivity.FamilyImpactInfo.EducationExpense);
                 set(I_OTHER, mainActivity.FamilyImpactInfo.OtherExpenses);
+                set(I_CREDIT, mainActivity.FamilyImpactInfo.UdhariExpense);
+                // the automatic values (collection list) win; the saved value is used only when there is none
+                set(I_INS, mainActivity.FamilyImpactInfo.InsuranceExpense);   // 11) insurance: only from FamilyImpactInfo.InsuranceExpense
+                if (savingsAmt <= 0) set(I_SAV, mainActivity.FamilyImpactInfo.AnnPurnaRDADHP);
             }
             if (mainActivity.MemberFamilyDetails != null) {
                 set(I_MED, mainActivity.MemberFamilyDetails.MedicalExpenses);
@@ -921,20 +952,13 @@ public class FamilyExpenseFragment extends Fragment {
         btSave.setEnabled(false);
         btClose.setEnabled(false);
         btPrevious.setEnabled(false);
-        final int rent = (int) mon(I_RENT), food = (int) mon(I_FOOD),
-                edu = (int) mon(I_EDU), med = (int) mon(I_MED),
-                bhishi = (int) mon(I_BHISHI), other = (int) mon(I_OTHER),
-                inst = (int) monthlyOf(spMfi, etMfiAmt);
+        // values are read on the UI thread, the background thread only writes them
+        final long[] mv = monthlyValues();
+        final int inst = (int) monthlyOf(spMfi, etMfiAmt);
         saveExecutor.execute(() -> {
             boolean ok = true;
             try {
-                mainActivity.FamilyImpactInfo.HouseRentExpense = rent;
-                mainActivity.FamilyImpactInfo.FoodExpense = food;
-                mainActivity.FamilyImpactInfo.EducationExpense = edu;
-                mainActivity.FamilyImpactInfo.OtherExpenses = other;
-                mainActivity.MemberFamilyDetails.MedicalExpenses = med;
-                mainActivity.MemberFamilyDetails.MonthlyBhishi = bhishi;
-                mainActivity.MemberFamilyDetails.MonthlyInstallments = inst;
+                applyToModel(mv, inst);
                 long t = Math.max(mainActivity.LastTimeInMillis, System.currentTimeMillis()) + 1000;
                 mainActivity.LastTimeInMillis = t;
                 ok &= mainActivity.SQLite_saveFamilyImpactInfo(t, true);

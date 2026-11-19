@@ -327,13 +327,13 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/radioButtonPrivateTap"
+                    android:id="@+id/radioButtonNoTap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
-                    android:text="@string/Field20_House"
+                    android:text="@string/Field18_House"
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
@@ -349,13 +349,13 @@
                     android:textStyle="bold" />
 
                 <RadioButton
-                    android:id="@+id/radioButtonNoTap"
+                    android:id="@+id/radioButtonPrivateTap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
-                    android:text="@string/Field18_House"
+                    android:text="@string/Field20_House"
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
@@ -387,6 +387,17 @@
                 android:orientation="horizontal">
 
                 <RadioButton
+                    android:id="@+id/radioButtonNoToilet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:text="@string/Field18_House"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
                     android:id="@+id/radioButtonPrivate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -405,17 +416,6 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:text="@string/Field22_House"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
-
-                <RadioButton
-                    android:id="@+id/radioButtonNoToilet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:text="@string/Field18_House"
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
@@ -447,17 +447,6 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/radioButtonEleYes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:text="@string/Field_Yes"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
-
-                <RadioButton
                     android:id="@+id/radioButtonEleNo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -465,6 +454,17 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:text="@string/Field_No"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonEleYes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:text="@string/Field_Yes"
                     android:textSize="26sp"
                     android:textStyle="bold" />
 

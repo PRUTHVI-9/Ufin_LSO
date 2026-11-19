@@ -180,7 +180,7 @@
     <string name="Field6_Heir">पालक</string>
     <string name="Field7_Heir">सभासदाशी असलेले नाते</string>
     <string name="Field8_Heir">पत्ता व पिनकोड</string>
-    <string name="Field9_Heir">मोबाईल नं.</string>
+    <string name="Field9_Heir">मोबाईल नंबर (आधारलिंक मोबाईल नंबर)</string>
     <string name="Field1_Hobbies">सभासदाला आवड/छंद आहे का?</string>
     <string name="Field2_Hobbies">कोणता?</string>
     <string name="Field3_Hobbies">पेपर वाचणे/पुस्तक वाचणे/बातम्या पाहणे</string>

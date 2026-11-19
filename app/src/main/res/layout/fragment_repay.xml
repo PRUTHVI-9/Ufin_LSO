@@ -146,6 +146,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:padding="1dp">
 
                     <TextView
@@ -195,6 +196,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:padding="1dp">
 
                     <TextView
@@ -266,6 +268,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:padding="1dp">
 
                     <TextView
@@ -337,6 +340,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:padding="1dp">
 
                     <TextView
@@ -443,24 +447,41 @@
 <!--&lt;!&ndash;                        android:textStyle="bold" />&ndash;&gt;-->
 <!--                </LinearLayout>-->
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="@drawable/customborder"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:gravity="center_vertical">
 
-                    <TextView
+                    <!-- सहकर्जदार Label -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="*सहकर्जदार:"
-                        android:textSize="26sp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="*सहकर्जदार:"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="(२ लाख ५ हजार कर्ज रकमेच्या पुढील रकमेस लागू)"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
 
                     <Spinner
                         android:id="@+id/spinnerJointLoanee"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
                     <TextView
@@ -473,19 +494,10 @@
                     <Spinner
                         android:id="@+id/spinnerGuarantor"
                         android:enabled="false"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
-                    <!--                    <Button-->
-                    <!--                        android:id="@+id/buttonScanOtherJointLoanee"-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_weight="1.5"-->
-                    <!--                        android:enabled="false"-->
-                    <!--                        android:text="@string/Field13_Documents"-->
-                    <!--                        android:textSize="30sp"-->
-                    <!--                        android:textStyle="bold" />-->
                 </LinearLayout>
 
                 <LinearLayout

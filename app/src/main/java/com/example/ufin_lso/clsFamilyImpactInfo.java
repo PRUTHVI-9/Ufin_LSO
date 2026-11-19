@@ -14,6 +14,17 @@ public class clsFamilyImpactInfo {
     String ImpactUpdatedDate;
     int IsActive;
 
+    int OtherIncomeLikePension;
+    int PropertyTax;
+    int LightBill;
+    int PaniPatti;
+    int SanSamarambhExpense;
+    int PahuncharExpense;
+    int PujaExpense;
+    int UdhariExpense;
+    int InsuranceExpense;
+    int AnnPurnaRDADHP;
+
     int FamilyTotalIncome;  //Local Variable
 
     public void Init_FamilyImpactInfo() {
@@ -29,6 +40,16 @@ public class clsFamilyImpactInfo {
         UpdatedBy = 0;
         ImpactUpdatedDate = "2000-01-01";
         IsActive = 1;
+        OtherIncomeLikePension = 0;
+        PropertyTax = 0;
+        LightBill = 0;
+        PaniPatti = 0;
+        SanSamarambhExpense = 0;
+        PahuncharExpense = 0;
+        PujaExpense = 0;
+        UdhariExpense = 0;
+        InsuranceExpense = 0;
+        AnnPurnaRDADHP = 0;
         FamilyTotalIncome = 0;
     }
     public boolean Compare_MemberFamilyImpactInfo(clsFamilyImpactInfo Obj) {
@@ -56,6 +77,26 @@ public class clsFamilyImpactInfo {
             return false;
         if(IsActive != Obj.IsActive)
             return false;
+        if(OtherIncomeLikePension != Obj.OtherIncomeLikePension)
+            return false;
+        if(PropertyTax != Obj.PropertyTax)
+            return false;
+        if(LightBill != Obj.LightBill)
+            return false;
+        if(PaniPatti != Obj.PaniPatti)
+            return false;
+        if(SanSamarambhExpense != Obj.SanSamarambhExpense)
+            return false;
+        if(PahuncharExpense != Obj.PahuncharExpense)
+            return false;
+        if(PujaExpense != Obj.PujaExpense)
+            return false;
+        if(UdhariExpense != Obj.UdhariExpense)
+            return false;
+        if(InsuranceExpense != Obj.InsuranceExpense)
+            return false;
+        if(AnnPurnaRDADHP != Obj.AnnPurnaRDADHP)
+            return false;
 
         return true;
     }
@@ -72,5 +113,15 @@ public class clsFamilyImpactInfo {
         Obj.UpdatedBy = UpdatedBy;
         Obj.ImpactUpdatedDate = ImpactUpdatedDate;
         Obj.IsActive = IsActive;
+        Obj.OtherIncomeLikePension = OtherIncomeLikePension;
+        Obj.PropertyTax = PropertyTax;
+        Obj.LightBill = LightBill;
+        Obj.PaniPatti = PaniPatti;
+        Obj.SanSamarambhExpense = SanSamarambhExpense;
+        Obj.PahuncharExpense = PahuncharExpense;
+        Obj.PujaExpense = PujaExpense;
+        Obj.UdhariExpense = UdhariExpense;
+        Obj.InsuranceExpense = InsuranceExpense;
+        Obj.AnnPurnaRDADHP = AnnPurnaRDADHP;
     }
 }
