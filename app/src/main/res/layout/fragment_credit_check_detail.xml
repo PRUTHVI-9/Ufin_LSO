@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="4dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="4dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="2">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Member Name:" android:textStyle="bold" android:padding="5dp"/>
+                <TextView android:id="@+id/tvSummaryMemberName" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="-" android:padding="5dp"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Saving Account:" android:textStyle="bold" android:padding="5dp"/>
+                <TextView android:id="@+id/tvSummarySavingAccount" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="----" android:padding="5dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="2">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CB Score:" android:textStyle="bold" android:padding="5dp"/>
+                <TextView android:id="@+id/tvSummaryCBScore" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="-" android:padding="5dp"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EMI Total Amount:" android:textStyle="bold" android:padding="5dp"/>
+                <TextView android:id="@+id/tvSummaryEmiTotal" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="0.00" android:padding="5dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="2">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="No Of Active Loans:" android:textStyle="bold" android:padding="5dp"/>
+                <TextView android:id="@+id/tvSummaryactiveloan" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="-" android:padding="5dp"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="current balance:" android:textStyle="bold" android:padding="5dp"/>
+                <TextView android:id="@+id/tvSummarycurrentbal" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="---" android:padding="5dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <!--  LOAN HEADER  -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="55dp" android:orientation="horizontal">
+        <!--  Fixed header  -->
+        <LinearLayout android:layout_width="280dp" android:layout_height="match_parent" android:orientation="horizontal" android:background="#DCE6F1">
+            <TextView android:layout_width="150dp" android:layout_height="match_parent" android:text="MFI Name" android:textSize="16sp" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:background="@drawable/customborder" android:padding="5dp"/>
+            <TextView android:layout_width="130dp" android:layout_height="match_parent" android:text="Loan Type" android:textSize="16sp" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:background="@drawable/customborder" android:padding="5dp"/>
+        </LinearLayout>
+        <!--  Scrollable header  -->
+        <HorizontalScrollView android:id="@+id/hsvLoanHeader" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:fillViewport="false" android:scrollbars="horizontal" android:overScrollMode="never">
+            <LinearLayout android:layout_width="920dp" android:layout_height="match_parent" android:orientation="horizontal" android:background="#DCE6F1">
+                <TextView android:layout_width="130dp" android:layout_height="match_parent" android:gravity="center" android:padding="5dp" android:text="Own / Guarantor" android:textStyle="bold" android:textColor="@android:color/black" android:textSize="13sp"/>
+                <TextView android:layout_width="150dp" android:layout_height="match_parent" android:text="Loan Start Date" android:textSize="16sp" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:background="@drawable/customborder" android:padding="5dp"/>
+                <TextView android:layout_width="160dp" android:layout_height="match_parent" android:text="Disbursement Amount" android:textSize="16sp" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:background="@drawable/customborder" android:padding="5dp"/>
+                <TextView android:layout_width="150dp" android:layout_height="match_parent" android:text=" Total EMI Amount" android:textSize="16sp" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:background="@drawable/customborder" android:padding="5dp"/>
+                <TextView android:layout_width="150dp" android:layout_height="match_parent" android:text=" Total Current Balance" android:textSize="16sp" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:background="@drawable/customborder" android:padding="5dp"/>
+                <TextView android:layout_width="160dp" android:layout_height="match_parent" android:text="Delinquent Amount" android:textSize="16sp" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:background="@drawable/customborder" android:padding="5dp"/>
+                <TextView android:layout_width="150dp" android:layout_height="match_parent" android:text="Write Off Amount" android:textSize="16sp" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:background="@drawable/customborder" android:padding="5dp"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#000000"/>
+    <!--  SINGLE RECYCLERVIEW  -->
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvCreditCheckLoans" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:clipToPadding="false" android:paddingBottom="4dp" android:overScrollMode="ifContentScrolls" android:nestedScrollingEnabled="false"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center" android:layout_marginTop="10dp" android:layout_marginBottom="8dp" android:padding="2dp">
+        <Button android:id="@+id/backbtn" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Back" android:textSize="16sp" android:textStyle="bold" android:layout_margin="5dp"/>
+        <Button android:id="@+id/previewbtn" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Preview" android:textSize="16sp" android:textStyle="bold" android:layout_margin="5dp"/>
+        <Button android:id="@+id/printbtn" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Print" android:textSize="16sp" android:textStyle="bold" android:layout_margin="5dp"/>
+    </LinearLayout>
+</LinearLayout>

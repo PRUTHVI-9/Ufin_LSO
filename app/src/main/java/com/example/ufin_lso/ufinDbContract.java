@@ -713,7 +713,7 @@ public class ufinDbContract {
                         COLUMN_NAME_ImpactEncodedDate + TEXT_TYPE + COMMA_SEP +
                         COLUMN_NAME_UpdatedBy + INTEGER_TYPE + COMMA_SEP +
                         COLUMN_NAME_ImpactUpdatedDate + TEXT_TYPE + COMMA_SEP +
-                        COLUMN_NAME_IsActive + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_IsActive + INTEGER_TYPE +
                         COLUMN_NAME_OtherIncomeLikePension + INTEGER_TYPE + COMMA_SEP +
                         COLUMN_NAME_PropertyTax + INTEGER_TYPE + COMMA_SEP +
                         COLUMN_NAME_LightBill + INTEGER_TYPE + COMMA_SEP +
@@ -2141,4 +2141,99 @@ public class ufinDbContract {
                         COLUMN_NAME_CreditStatus + TEXT_TYPE +
                         ")";
     }
+
+    //RK
+    public static abstract class MemberCBStatusAuto implements BaseColumns{
+        public static final String TABLE_NAME = "MemberCBStatusAuto";
+        public static final String COLUMN_ID = "_id";
+        public static final String COLUMN_MemberID = "MemberID";
+        public static final String COLUMN_Org_ID = "Org_ID";
+
+        public static final String COLUMN_LastLoanStatus = "LastLoanStatus";
+        public static final String COLUMN_CBStatus = "CBStatus";
+        public static final String COLUMN_Remark = "Remark";
+        public static final String COLUMN_Checked_Date = "Checked_Date";
+        public static final String COLUMN_CBScore = "CBScore";
+        public static final String COLUMN_NoOfActiveLoans = "NoOfActiveLoans";
+        public static final String COLUMN_TotalLoanBalance = "TotalLoanBalance";
+
+        public static final String COLUMN_MFIname = "MFIname";
+        public static final String COLUMN_LoanStatus = "LoanStatus";
+        public static final String COLUMN_LoanType = "LoanType";
+        public static final String COLUMN_OwnGuarantor = "OwnGuarantor";
+        public static final String COLUMN_LoanStartSate = "LoanStartSate";
+
+        public static final String COLUMN_DisbursementAmout = "DisbursementAmout";
+        public static final String COLUMN_InstallamentAmount = "InstallamentAmount";
+        public static final String COLUMN_CurrentBalance = "CurrentBalance";
+        public static final String COLUMN_DelinquentAmount = "DelinquentAmount";
+        public static final String COLUMN_WriteOffAmount = "WriteOffAmount";
+
+        public static final String SQL_CREATE_CB_AUTO =
+                "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+                        COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_MemberID + " TEXT NOT NULL, " +
+                        COLUMN_Org_ID + " TEXT NOT NULL, " +
+                        COLUMN_LastLoanStatus + " TEXT, " +
+                        COLUMN_CBStatus + " TEXT, " +
+                        COLUMN_Remark + " TEXT, " +
+                        COLUMN_Checked_Date + " TEXT, " +
+                        COLUMN_CBScore + " REAL, " +
+                        COLUMN_NoOfActiveLoans + " INTEGER, " +
+                        COLUMN_TotalLoanBalance + " REAL, " +
+                        COLUMN_MFIname + " TEXT, " +
+                        COLUMN_LoanStatus + " TEXT, " +
+                        COLUMN_LoanType + " TEXT, " +
+                        COLUMN_OwnGuarantor + " TEXT, " +
+                        COLUMN_LoanStartSate + " TEXT, " +
+                        COLUMN_DisbursementAmout + " REAL, " +
+                        COLUMN_InstallamentAmount + " REAL, " +
+                        COLUMN_CurrentBalance + " REAL, " +
+                        COLUMN_DelinquentAmount + " REAL, " +
+                        COLUMN_WriteOffAmount + " REAL" +
+                        ")";
+
+    }
+
+    //RK
+
+    /*public static abstract class CreditRejectReasonMaster implements BaseColumns {
+
+        public static final String TABLE_NAME = "CreditRejectReason";
+
+        public static final String COLUMN_NAME_ReasonID = "ReasonID";
+        public static final String COLUMN_NAME_ReasonCode = "ReasonCode";
+        public static final String COLUMN_NAME_ReasonName = "ReasonName";
+        public static final String COLUMN_NAME_IsActive = "IsActive";
+
+        public static final String SQL_CREATE_CREDIT_REJECT_REASON_MASTER =
+                "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+                        COLUMN_NAME_ReasonID + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_ReasonCode + TEXT_TYPE + COMMA_SEP +
+                        COLUMN_NAME_ReasonName + TEXT_TYPE + COMMA_SEP +
+                        COLUMN_NAME_IsActive + INTEGER_TYPE +
+                        ")";
+    }
+
+    public static abstract class CreditRejectQuestionMaster implements BaseColumns {
+
+        public static final String TABLE_NAME = "CreditRejectQuestion";
+
+        public static final String COLUMN_NAME_QuestionID = "QuestionID";
+        public static final String COLUMN_NAME_ReasonCode = "ReasonCode";
+        public static final String COLUMN_NAME_QuestionNo = "QuestionNo";
+        public static final String COLUMN_NAME_Question = "Question";
+        public static final String COLUMN_NAME_AnswerType = "AnswerType";
+        public static final String COLUMN_NAME_IsActive = "IsActive";
+
+        public static final String SQL_CREATE_CREDIT_REJECT_QUESTION_MASTER =
+                "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+                        COLUMN_NAME_QuestionID + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_ReasonCode + TEXT_TYPE + COMMA_SEP +
+                        COLUMN_NAME_QuestionNo + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_NAME_Question + TEXT_TYPE + COMMA_SEP +
+                        COLUMN_NAME_AnswerType + TEXT_TYPE + COMMA_SEP +
+                        COLUMN_NAME_IsActive + INTEGER_TYPE +
+                        ")";
+    }*/
 }

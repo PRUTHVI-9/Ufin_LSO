@@ -54,7 +54,7 @@ public class FamilyExpenseFragment extends Fragment {
             "९) उधारी बाकी असणे. (किराणा, इतर देणी)",
             "१०) महिन्याला भरण्याची बचत रक्कम\n अ) भिशी\n ब) फंड\n क) बचत गट\n ड) बाहेरील RD",
             "११) इन्शुरन्स /एलआयसी साठी भरणारी रक्कम",
-            "१२) दरमहा अन्नपूर्णा बचतीसाठी भरणारी रक्कम\n (आर. डी., आधारपूर्णा)\n (ऍटोमॅटिक सॉफ्टवेअर मधुन यावा)"};
+            "१२) दरमहा अन्नपूर्णा बचतीसाठी भरणारी रक्कम\n (आर. डी., आधारपूर्णा)"};
     private static final int I_TAX = 0, I_RENT = 1, I_LIGHT = 2, I_WATER = 3, I_FOOD = 4, I_EDU = 5,
             I_MED = 6, I_OTHER = 7, I_CREDIT = 8, I_BHISHI = 9, I_INS = 10, I_SAV = 11;
 
@@ -94,6 +94,7 @@ public class FamilyExpenseFragment extends Fragment {
     private final List<EditText> scoreEdits = new ArrayList<>();    // internal score per criterion
     private EditText etTotalExpense, etMfi, etMfiAmt, etIncome, etHalfHome, etHalfInst, etExpSummary,
             etMfiSummary, etBalHome, etBalInst, etFitted, etIncreaseTotal, etScoreTotal;
+    private TextView tvCriteria1;   // label of criteria row 1 ('ए' / 'बी' ग्रेड गट)
     private TextView etNextLoan;   // loan we can give, shown as text: amount, months, installment
     private Spinner spMfi;
     private TextView tvExpenseWarn;   // shown when the family expense is more than 50% of the income
@@ -178,13 +179,6 @@ public class FamilyExpenseFragment extends Fragment {
         }
     }
 
-    /**
-     * Writes all monthly values into MainActivity's objects (FamilyImpactInfo / MemberFamilyDetails).
-     * Used by pushToModel() (PIF screen) and by startSave() (Revisit screen).
-     * Call it with values computed on the UI thread (monthlyValues()).
-     * Item 8 -> OtherExpenses, item 10 -> MonthlyBhishi (one amount each, as before).
-     * The sub-columns (SanSamarambh/Pahuncher/Puja, Fund/BachatGat) are not touched.
-     */
     private void applyToModel(long[] m, int inst) {
         mainActivity.FamilyImpactInfo.PropertyTax = (int) m[I_TAX];
         mainActivity.FamilyImpactInfo.HouseRentExpense = (int) m[I_RENT];
@@ -200,6 +194,7 @@ public class FamilyExpenseFragment extends Fragment {
         mainActivity.MemberFamilyDetails.MedicalExpenses = (int) m[I_MED];
         mainActivity.MemberFamilyDetails.MonthlyBhishi = (int) m[I_BHISHI];
         mainActivity.MemberFamilyDetails.MonthlyInstallments = inst;
+        setIntField(mainActivity.FamilyImpactInfo, "OtherLoanInstallMent", inst);   // new column
     }
 
     /** Monthly value of every expense row (frequency applied), in the I_* order. */
@@ -209,11 +204,6 @@ public class FamilyExpenseFragment extends Fragment {
         return m;
     }
 
-    /**
-     * PIF screen: write the values into MainActivity's objects,
-     * so MainActivity's SAVE button saves them. Starts only after the user changed something,
-     * so just opening the screen does not modify the data.
-     */
     private void pushToModel() {
         if (!embedded || !ready || baseline == null) return;
         if (!pushed && signature().equals(baseline)) return;
@@ -466,7 +456,7 @@ public class FamilyExpenseFragment extends Fragment {
 
         r = newRow();
         cell(r, "सभासदाची फिटलेली कर्ज रक्कम -", 1f, Gravity.START, true, true, TEXT_SP);
-        etFitted = numCell(r, 1f, true, TEXT_SP);
+        etFitted = numCell(r, 1f, false, TEXT_SP);
 
         // Increase criteria: criterion | internal score | increase amount (same column grid as the table above)
         float wCrit = W_LABEL + W_FREQ;
@@ -482,9 +472,10 @@ public class FamilyExpenseFragment extends Fragment {
             inner.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, wCrit));
             r.addView(inner);
             cell(inner, MAR_DIGITS[i], 0.45f, Gravity.CENTER, true, true, TEXT_SP);
-            cell(inner, INCREASE_LABELS[i], 3f, Gravity.START, false, true, SMALL_SP);
-            scoreEdits.add(numCell(r, W_AMT, true, SMALL_SP));
-            increaseEdits.add(numCell(r, W_MON, true, SMALL_SP));
+            TextView critLabel = cell(inner, INCREASE_LABELS[i], 3f, Gravity.START, false, true, SMALL_SP);
+            if (i == 0) tvCriteria1 = critLabel;
+            scoreEdits.add(numCell(r, W_AMT, false, SMALL_SP));
+            increaseEdits.add(numCell(r, W_MON, false, SMALL_SP));
         }
 
         r = newRow();
@@ -505,12 +496,12 @@ public class FamilyExpenseFragment extends Fragment {
         r = newRow();
         cell(r, "१ - अन्नपूर्णातुन मिळणारा इंटरनल स्कोअर", wA, Gravity.START, true, true, SMALL_SP);
         etChartScore1 = numCell(r, wB, false, SMALL_SP);
-        etChartLoan1 = numCell(r, wC, true, SMALL_SP);
+        etChartLoan1 = numCell(r, wC, false, SMALL_SP);
 
         r = newRow();
         cell(r, "२ - क्रेडिट ब्युरो स्कोअर", wA, Gravity.START, true, true, SMALL_SP);
-        etChartScore2 = numCell(r, wB, true, SMALL_SP);
-        etChartLoan2 = numCell(r, wC, true, SMALL_SP);
+        etChartScore2 = numCell(r, wB, false, SMALL_SP);
+        etChartLoan2 = numCell(r, wC, false, SMALL_SP);
 
         r = newRow();
         cell(r, "एकूण स्कोअर", wA, Gravity.START, true, true, SMALL_SP);
@@ -550,11 +541,36 @@ public class FamilyExpenseFragment extends Fragment {
 
     /** Opens the "other MFI loans" details screen (link on the B) row). */
     private void openMfiDetails() {
-        if (!isAdded()) return;
-        // TODO: replace with the real MFI details screen, e.g.
-        // requireActivity().getSupportFragmentManager().beginTransaction().hide(this)
-        //         .add(R.id.fragment_container, new <MfiDetailsFragment>()).addToBackStack(null).commit();
-        Toast.makeText(requireContext(), "MFI तपशील स्क्रीन अजून जोडलेली नाही.", Toast.LENGTH_SHORT).show();
+        if (!isAdded() || mainActivity == null) return;
+        long mid = currentMemberId;
+        if (mid <= 0 && mainActivity.Member != null && mainActivity.Member.size() > 0)
+            mid = mainActivity.Member.get(0).MemberID;
+        long org = mainActivity.OrgID;
+        if (mid <= 0 || org <= 0) {
+            Toast.makeText(requireContext(), "सभासद / Org ID सापडला नाही.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Shown on top of the whole screen (android.R.id.content) so it also works inside the PIF
+        // ViewPager. This screen stays underneath untouched, so the entered values are kept; the CB
+        // screen's back button (or the device back button) removes it and returns to this page.
+        final FragmentManager fm = requireActivity().getSupportFragmentManager();
+        if (fm.isStateSaved()) return;
+        fm.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+            @Override
+            public void onFragmentViewCreated(FragmentManager f, androidx.fragment.app.Fragment fr,
+                                              View v, Bundle savedInstanceState) {
+                if (fr instanceof CreditCheckDetailFragment) {
+                    v.setClickable(true);   // do not let touches reach the screen below
+                    if (v.getBackground() == null) v.setBackgroundColor(Color.WHITE);
+                    fm.unregisterFragmentLifecycleCallbacks(this);
+                }
+            }
+        }, false);
+        fm.beginTransaction()
+                .setReorderingAllowed(true)
+                .add(android.R.id.content, CreditCheckDetailFragment.newInstance(mid, org))
+                .addToBackStack("mfi_details")
+                .commit();
     }
 
     private void setSpacer(int h) {
@@ -599,16 +615,6 @@ public class FamilyExpenseFragment extends Fragment {
             long mid = currentMemberId;
             if (mid <= 0 && mainActivity.Member != null && mainActivity.Member.size() > 0)
                 mid = mainActivity.Member.get(0).MemberID;
-            // Insurance and savings (RD / Adharpurna) come from the collection member list (TD_MEMBER_RECOVERY)
-            for (int i = 0; i < mainActivity.CollectionMemberList.size(); i++) {
-                clsCollectionMember cm = mainActivity.CollectionMemberList.get(i);
-                if (cm.MemberID == mid) {
-                    savingsAmt = cm.Monthly_ADHP + cm.RD1MonthlyInstallmentAmt + cm.RD2MonthlyInstallmentAmt
-                            + cm.RD3MonthlyInstallmentAmt + cm.RD4MonthlyInstallmentAmt
-                            + cm.RD5MonthlyInstallmentAmt;
-                    break;
-                }
-            }
         } catch (Exception ignored) { }
         if (embedded) {
             // PIF screen: use MainActivity's in-memory data as it is (may contain unsaved edits and
@@ -637,7 +643,117 @@ public class FamilyExpenseFragment extends Fragment {
         } catch (Exception ignored) { }
     }
 
+    /** "पुढील मिळणाऱ्या वाढीव कर्ज रक्कमेचे निकष": amounts from the promotion list (TD_PromotionLists / PunarbhetSchedule). */
+
+    private String promoTotalScore = null;   // TotalScore from TD_PromotionLists, shown as received
+
+    /*
+     * Criteria table = promotion list only (TD_PromotionLists CSV -> RevisitMemberList item), shown as it comes:
+     * "NA" -> NA, null -> null, number -> number; no value / field / member missing -> "--".
+     * Field names are the CSV column names (the match ignores upper / lower case). Each row = {score, amount}.
+     */
+    private static final String[][] PROMO_FIELDS = {
+            {"ScoreATypeGroup", "incentiveATypeGroup"},                       // 1 'ए' ग्रेड गट बनवल्याबद्दल
+            {"ScoreRegularLoanRepay", "incentiveRegularLoanRepay"},           // 2 उत्कृष्ट कर्जफेड
+            {"ScoreRequiredJLGAvailable", "incentiveRequiredJLGAvailable"},   // 3 बचत, शेअर्स न काढणे
+            {"ScoreRegularRDpay", "incentiveRegularRDpay"},                   // 4 आर डी नियमित
+            {"ScoreRegularADHPpay", "incentiveRegularADHPpay"},               // 5 आधारपूर्णा नियमित
+            {"ScoreComMeetingAttendance", "incentiveComMeetingAttendance"},   // 6 कम्युनिटी मिटींग
+            {"ScoreAGMAttendance", "incentiveAGMAttendance"}};                // 7 एजीएम
+
+    /** Value of a field of the promotion-list member as text (field name matched ignoring case); null if there is no such field. */
+    private String fieldText(Object o, String name) {
+        try {
+            for (java.lang.reflect.Field f : o.getClass().getDeclaredFields()) {
+                if (f.getName().equalsIgnoreCase(name)) {
+                    f.setAccessible(true);   // the model fields are package-private
+                    Object v = f.get(o);
+                    return v == null ? "null" : String.valueOf(v);
+                }
+            }
+        } catch (Exception ignored) { }
+        return null;   // field not present in clsRevisitMember
+    }
+
+    /** First field (of the given names) that has a value; "--" when none has. */
+    private String firstOf(Object o, String... names) {
+        for (String n : names) {
+            String v = fieldText(o, n);
+            if (v != null && !v.trim().isEmpty()) return v;
+        }
+        return "--";
+    }
+
+    /**
+     * Grade of the group (TD_NewGroup_Info / NewGroupInfo.GradeOfGroup). Revisit (promotion list) is always 'A'.
+     * In the PIF screens the grade of the member's group is read from the database; when it cannot be read it is 'A'.
+     */
+    private boolean isAGradeGroup() {
+        if (!embedded) return true;
+        SQLiteDatabase db = null;
+        Cursor c = null;
+        try {
+            ufinDbHelper helper = new ufinDbHelper(mainActivity.getBaseContext());
+            db = helper.getReadableDatabase();
+            c = db.query(ufinDbContract.NewGroupInfo.TABLE_NAME,
+                    new String[]{ufinDbContract.NewGroupInfo.COLUMN_NAME_GradeOfGroup},
+                    ufinDbContract.NewGroupInfo.COLUMN_NAME_GroupID + "='" + mainActivity.selectedGroupID + "'",
+                    null, null, null, null);
+            if (c != null && c.moveToFirst()) {
+                String g = c.getString(0);
+                if (g != null && g.trim().toUpperCase().startsWith("B")) return false;
+            }
+        } catch (Exception ignored) {
+        } finally {
+            try { if (c != null) c.close(); } catch (Exception ignored) { }
+            try { if (db != null) db.close(); } catch (Exception ignored) { }
+        }
+        return true;
+    }
+
+    /** Criteria table + score chart values from the promotion list data (RevisitMemberList = PunarbhetSchedule / CSV). */
+    private void showPromotionData() {
+        long mid = currentMemberId;
+        if (mid <= 0 && mainActivity.Member != null && mainActivity.Member.size() > 0)
+            mid = mainActivity.Member.get(0).MemberID;
+        clsRevisitMember pm = null;
+        try {
+            for (int i = 0; i < mainActivity.RevisitMemberList.size(); i++) {
+                if (mainActivity.RevisitMemberList.get(i).MemberID == mid) {
+                    pm = mainActivity.RevisitMemberList.get(i);
+                    break;
+                }
+            }
+        } catch (Exception ignored) { }
+        // no data -> "--"
+        // row 1 depends on the grade of the group: A -> A-type group fields, B -> B-type group fields
+        boolean aGrade = isAGradeGroup();
+        if (tvCriteria1 != null)
+            tvCriteria1.setText(aGrade ? INCREASE_LABELS[0] : "'बी' ग्रेड गट बनवल्याबद्दल");
+        for (int i = 0; i < PROMO_FIELDS.length && i < scoreEdits.size(); i++) {
+            String[] f = PROMO_FIELDS[i];
+            if (i == 0 && !aGrade) f = new String[]{"ScoreBTypeGroup", "IncentiveBTypeGroup"};
+            scoreEdits.get(i).setText(pm == null ? "--" : firstOf(pm, f[0]));
+            increaseEdits.get(i).setText(pm == null ? "--" : firstOf(pm, f[1]));
+        }
+        // क्रेडिट ब्युरो स्कोअर / एकूण स्कोअर (the "कर्जवाढ" cells of the chart are not filled)
+        etChartScore2.setText(pm == null ? "--" : firstOf(pm, "CreditBureau"));
+        promoTotalScore = pm == null ? "--" : firstOf(pm, "TotalScore");
+        // सभासदाची फिटलेली कर्ज रक्कम = NewLoanAmt of the promotion list
+        etFitted.setText(pm == null ? "--" : firstOf(pm, "NewLoanAmt", "NewLoanAmount"));
+    }
+
+    /** Value exactly as received: null -> "null", "NA" -> "NA", 5.0 -> "5". */
+    private String rawValue(org.json.JSONObject o, String key) {
+        if (!o.has(key)) return "--";
+        if (o.isNull(key)) return "null";
+        Object v = o.opt(key);
+        if (v instanceof Double && ((Double) v) == Math.rint((Double) v)) return String.valueOf(((Double) v).longValue());
+        return String.valueOf(v);
+    }
+
     private void prefill() {
+        showPromotionData();
         // 11 and 12 are filled automatically (collection list) but can still be edited
         if (savingsAmt > 0) amtEdits.get(I_SAV).setText(String.valueOf(savingsAmt));
         if (!dataLoaded) {
@@ -662,10 +778,34 @@ public class FamilyExpenseFragment extends Fragment {
             if (mainActivity.MemberFamilyDetails != null) {
                 set(I_MED, mainActivity.MemberFamilyDetails.MedicalExpenses);
                 set(I_BHISHI, mainActivity.MemberFamilyDetails.MonthlyBhishi);
-                int inst = mainActivity.MemberFamilyDetails.MonthlyInstallments;
-                if (inst <= 0) inst = otherMfiSum;   // sum of the installments of the other MFI loans
+                // B) other loans installment: FamilyImpactInfo.OtherLoanInstallMent (new column);
+                // while that field does not exist yet the old sources are used
+                String olim = mainActivity.FamilyImpactInfo == null ? null
+                        : fieldText(mainActivity.FamilyImpactInfo, "OtherLoanInstallMent");
+                int inst;
+                if (olim != null) {
+                    inst = (int) Math.round(parseNum(olim));
+                } else {
+                    inst = mainActivity.MemberFamilyDetails.MonthlyInstallments;
+                    if (inst <= 0) inst = otherMfiSum;
+                }
                 if (inst > 0) etMfiAmt.setText(String.valueOf(inst));
             }
+        } catch (Exception ignored) { }
+    }
+
+    private static double parseNum(String t) {
+        try { return Double.parseDouble(t.trim()); } catch (Exception e) { return 0; }
+    }
+
+    /** Sets an int field by name (new columns that may not exist in the class yet are skipped). */
+    private static void setIntField(Object o, String name, int v) {
+        try {
+            java.lang.reflect.Field f = o.getClass().getDeclaredField(name);
+            f.setAccessible(true);
+            if (f.getType() == int.class) f.setInt(o, v);
+            else if (f.getType() == long.class) f.setLong(o, v);
+            else if (f.getType() == String.class) f.set(o, String.valueOf(v));
         } catch (Exception ignored) { }
     }
 
@@ -675,7 +815,9 @@ public class FamilyExpenseFragment extends Fragment {
 
     private long val(EditText e) {
         try {
-            String s = e.getText().toString().replaceAll("[^0-9]", "");
+            String t = e.getText().toString().trim();
+            if (t.matches("\\d+(\\.\\d+)?")) return Math.round(Double.parseDouble(t));   // e.g. 2.5 from the server
+            String s = t.replaceAll("[^0-9]", "");
             return s.isEmpty() ? 0 : Long.parseLong(s);
         } catch (Exception ex) { return 0; }
     }
@@ -733,7 +875,8 @@ public class FamilyExpenseFragment extends Fragment {
         }
         // Score chart: row 1 score = total of the internal scores above
         etChartScore1.setText(String.valueOf(score));
-        etChartScoreTotal.setText(String.valueOf(score + val(etChartScore2)));
+        etChartScoreTotal.setText(promoTotalScore != null ? promoTotalScore
+                : String.valueOf(score + val(etChartScore2)));
         etChartLoanTotal.setText(String.valueOf(val(etChartLoan1) + val(etChartLoan2)));
         // Used by other screens (RepayFragment: Monthly_Surplus); same formula as the old Expense screen
         try {

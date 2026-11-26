@@ -24,6 +24,7 @@ public class clsFamilyImpactInfo {
     int UdhariExpense;
     int InsuranceExpense;
     int AnnPurnaRDADHP;
+    int OtherLoanInstallMent;
 
     int FamilyTotalIncome;  //Local Variable
 
@@ -50,6 +51,7 @@ public class clsFamilyImpactInfo {
         UdhariExpense = 0;
         InsuranceExpense = 0;
         AnnPurnaRDADHP = 0;
+        OtherLoanInstallMent = 0;
         FamilyTotalIncome = 0;
     }
     public boolean Compare_MemberFamilyImpactInfo(clsFamilyImpactInfo Obj) {
@@ -97,6 +99,8 @@ public class clsFamilyImpactInfo {
             return false;
         if(AnnPurnaRDADHP != Obj.AnnPurnaRDADHP)
             return false;
+        if(OtherLoanInstallMent != Obj.OtherLoanInstallMent)
+            return false;
 
         return true;
     }
@@ -123,5 +127,6 @@ public class clsFamilyImpactInfo {
         Obj.UdhariExpense = UdhariExpense;
         Obj.InsuranceExpense = InsuranceExpense;
         Obj.AnnPurnaRDADHP = AnnPurnaRDADHP;
+        Obj.OtherLoanInstallMent = OtherLoanInstallMent;
     }
 }

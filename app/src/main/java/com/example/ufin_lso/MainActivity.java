@@ -102,6 +102,8 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -109,9 +111,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -134,6 +138,10 @@ import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_SETTINGS;
+import static android.content.ContentValues.TAG;
+
+import androidx.core.content.ContextCompat;
+import com.example.ufin_lso.networkmonitor.NetworkMonitorService;
 
 public class MainActivity extends AppCompatActivity implements Scrybe {
     public static final int MAX_PHOTO_FILESIZE             = (4 * 1024 * 1024);
@@ -268,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
     boolean SyncDB = false;
     String SyncDBType = "";
     ArrayList<String> csvdbFilenames = new ArrayList<String>();
+    private final HashMap<String, TextView> creditCheckTextViews = new HashMap<>();    //RK
 
     public static final String URL_InsertMemberData                 = "/api/TabData/InsertTabMemberData";
     public static final String URL_InsertMemberFamilyDetails        = "/api/TabData/InsertTabMemberFamilyDetails";
@@ -307,7 +316,11 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
     public static final String URL_GetMemberPromotionListData       = "/api/TabData/GetPromotionListFromAdharNumber";
     public static final String URL_CheckMemberValidity              = "/api/TabData/CheckMemberValidity";
     public static final String URL_GetCBStatus                      = "/api/TabData/GetCBStatus";
-    public static final String URL_InsertCBDocument                 = "/api/DocumentUpload/InsertCBDocument";
+    public static final String URL_CheckCBStatus                    = "/api/TabData/CheckCBStatus";   ///RK
+    public static final String URL_GetCBStatusAuto                   = "/api/TabData/GetCBStatusAuto";   ///RK
+    public static final String URL_GetCBRejectQue                    = "/api/TabData/GetCBRejectQuestions";   ///RK
+    public static final String URL_InsertCBRejectAnswers                    = "/api/TabData/InsertCBRejectAnswers";   ///RK
+    public static final String URL_InsertCBDocument                   = "/api/DocumentUpload/InsertCBDocument";
     public static final String URL_GetPrePayment_PreClosureAmount           = "/api/TabData/GetPrePayment_PreClosureAmount";
     public static final String URL_GetPrePayment_PreClosureApprovalStatus   = "/api/TabData/GetPrePayment_PreClosureApprovalStatus";
     public static final String URL_GetPartialCollectionUpdateForToday = "/api/TabData/GetPartialCollectionUpdateForToday";
@@ -592,6 +605,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
     ArrayList<String> arrlistCSVTableNames = new ArrayList<String>();
     ArrayList<Integer> arrlistCSVTableRecords = new ArrayList<Integer>();
+    private final Map<String, String> creditCheckRemarks = new HashMap<>();  // RK
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1784,10 +1798,525 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 } else if(arrlistCSVTableNames.get(i).equalsIgnoreCase(ufinDbContract.PunarbhetVisitDetailsMatser.TABLE_NAME)) {
                     CopyFromCSVDatabase_PunarbhetVisitDetailsMaster();
                 }
+
+             /*   //RK
+                else if(arrlistCSVTableNames.get(i).equalsIgnoreCase(ufinDbContract.CreditRejectReasonMaster.TABLE_NAME)) {
+                    CopyFromCSVDatabase_CreditRejectReason();
+
+                } else if(arrlistCSVTableNames.get(i).equalsIgnoreCase(ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME)) {
+                    CopyFromCSVDatabase_CreditRejectQuestion();
+                }*/
             }
 //bmp 26-Jun-26
         }
     }
+
+    //RK
+    /*public boolean CopyFromCSVDatabase_CreditRejectReason() {
+        boolean Status = false;
+
+        ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
+        SQLiteDatabase dbInt = mDbHelper.getWritableDatabase();
+
+        try {
+            String StrFileName = baseDir + "/csvdb/" + ufinDbContract.CreditRejectReasonMaster.TABLE_NAME + ".csv";
+
+            File csvFile = new File(StrFileName);
+
+            if (!csvFile.exists()) {Message msg;Bundle messageData;
+                msg = Message.obtain(SyncByIndexHandler);
+                messageData = new Bundle();
+                msg.what = 0;
+
+                messageData.putString("Status", ufinDbContract.CreditRejectReasonMaster.TABLE_NAME + ": File Not Found.");
+
+                msg.setData(messageData);
+                SyncByIndexHandler.sendMessage(msg);
+
+                dbInt.close();
+                return Status;
+            }
+
+            BufferedReader br = new BufferedReader(new FileReader(csvFile));
+
+            String strHeader = br.readLine();
+
+            if (strHeader != null && !strHeader.isEmpty()) {
+
+                try {
+                    dbInt.delete(
+                            ufinDbContract.CreditRejectReasonMaster.TABLE_NAME,
+                            null,
+                            null
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    dbInt.execSQL(
+                            ufinDbContract.CreditRejectReasonMaster
+                                    .SQL_CREATE_CREDIT_REJECT_REASON_MASTER
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String[] strSplit = strHeader.split("\\|");
+                int NumberOfColumns = strSplit.length;
+
+                int insertCount = 0;
+                int updateCount = 0;
+
+                String strRecord = "";
+
+                while ((strRecord = br.readLine()) != null) {
+
+                    if (strRecord.isEmpty())
+                        continue;
+
+                    try {
+                        strSplit = strRecord.split("\\|");
+
+                        for (int j = strSplit.length;
+                             j < NumberOfColumns;
+                             j++) {
+
+                            strRecord = strRecord + " |";
+                        }
+
+                        strSplit = strRecord.split("\\|");
+
+                        ContentValues values1 = new ContentValues();
+
+                        int k = 0;
+
+                        // ReasonID
+                        try {
+                            values1.put(
+                                    ufinDbContract.CreditRejectReasonMaster
+                                            .COLUMN_NAME_ReasonID,
+                                    Long.valueOf(strSplit[k++])
+                            );
+                        } catch (Exception e) {
+                            values1.put(
+                                    ufinDbContract.CreditRejectReasonMaster
+                                            .COLUMN_NAME_ReasonID,
+                                    0
+                            );
+                        }
+
+                        // ReasonCode
+                        values1.put(ufinDbContract.CreditRejectReasonMaster.COLUMN_NAME_ReasonCode, strSplit[k++]);
+
+                        // ReasonName
+                        values1.put(ufinDbContract.CreditRejectReasonMaster.COLUMN_NAME_ReasonName, strSplit[k++]);
+
+                        // IsActive
+                        try {
+                            values1.put(ufinDbContract.CreditRejectReasonMaster.COLUMN_NAME_IsActive, Integer.valueOf(strSplit[k++]));
+                        } catch (Exception e) {
+                            values1.put(ufinDbContract.CreditRejectReasonMaster.COLUMN_NAME_IsActive, 0);
+                        }
+
+                        long lTemp1 = dbInt.insert(
+                                ufinDbContract.CreditRejectReasonMaster.TABLE_NAME,
+                                null,
+                                values1
+                        );
+
+                        if (lTemp1 > 0) {
+                            insertCount++;
+                        }
+
+                        Message msg;
+                        Bundle messageData;
+
+                        msg = Message.obtain(SyncByIndexHandler);
+                        messageData = new Bundle();
+                        msg.what = -1;
+
+                        messageData.putString(
+                                "Status",
+                                ufinDbContract.CreditRejectReasonMaster.TABLE_NAME +
+                                        ": Records: " +
+                                        String.valueOf(updateCount + insertCount)
+                        );
+
+                        msg.setData(messageData);
+                        SyncByIndexHandler.sendMessage(msg);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+
+                        System.out.println(
+                                ufinDbContract.CreditRejectReasonMaster.TABLE_NAME +
+                                        ": " + e.getMessage()
+                        );
+
+                        break;
+                    }
+                }
+
+                Message msg;
+                Bundle messageData;
+
+                msg = Message.obtain(SyncByIndexHandler);
+                messageData = new Bundle();
+                msg.what = 0;
+
+                int iExpectedRecords = 0;
+
+                for (int i = 0;
+                     i < arrlistCSVTableNames.size();
+                     i++) {
+
+                    if (arrlistCSVTableNames.get(i).equalsIgnoreCase(
+                            ufinDbContract.CreditRejectReasonMaster.TABLE_NAME)) {
+
+                        iExpectedRecords =
+                                arrlistCSVTableRecords.get(i);
+
+                        break;
+                    }
+                }
+
+                int iDifference = iExpectedRecords - updateCount - insertCount;
+
+                String strStatus =
+                        ufinDbContract.CreditRejectReasonMaster.TABLE_NAME +
+                                ": Records Expected: " +
+                                String.valueOf(iExpectedRecords) +
+                                ": Actual: " +
+                                String.valueOf(updateCount + insertCount) +
+                                ": Difference: " +
+                                String.valueOf(iDifference);
+
+                messageData.putString("Status", strStatus);
+                msg.setData(messageData);
+                SyncByIndexHandler.sendMessage(msg);
+
+                Status = true;
+
+                System.out.println(
+                        "Updated From External DB: " +
+                                ufinDbContract.CreditRejectReasonMaster.TABLE_NAME +
+                                ": " + String.valueOf(updateCount)
+                );
+
+                System.out.println(
+                        "Inserted From External DB: " +
+                                ufinDbContract.CreditRejectReasonMaster.TABLE_NAME +
+                                ": " + String.valueOf(insertCount)
+                );
+            }
+
+            br.close();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            System.out.println(
+                    ufinDbContract.CreditRejectReasonMaster.TABLE_NAME +
+                            ": " + e.getMessage()
+            );
+
+            Message msg;
+            Bundle messageData;
+
+            msg = Message.obtain(SyncByIndexHandler);
+            messageData = new Bundle();
+            msg.what = 0;
+
+            messageData.putString(
+                    "Status",
+                    ufinDbContract.CreditRejectReasonMaster.TABLE_NAME +
+                            ": " + e.getMessage()
+            );
+
+            msg.setData(messageData);
+            SyncByIndexHandler.sendMessage(msg);
+        }
+
+        dbInt.close();
+
+        return Status;
+    }*/
+
+    //RK
+    /*public boolean CopyFromCSVDatabase_CreditRejectQuestion() {
+        boolean Status = false;
+
+        ufinDbHelper mDbHelper = new ufinDbHelper(getBaseContext());
+        SQLiteDatabase dbInt = mDbHelper.getWritableDatabase();
+
+        try {
+            String StrFileName = baseDir + "/csvdb/" +
+                    ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME + ".csv";
+
+            File csvFile = new File(StrFileName);
+
+            if (!csvFile.exists()) {
+                Message msg;
+                Bundle messageData;
+
+                msg = Message.obtain(SyncByIndexHandler);
+                messageData = new Bundle();
+                msg.what = 0;
+
+                messageData.putString(
+                        "Status",
+                        ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME +
+                                ": File Not Found."
+                );
+
+                msg.setData(messageData);
+                SyncByIndexHandler.sendMessage(msg);
+
+                dbInt.close();
+                return Status;
+            }
+
+            BufferedReader br = new BufferedReader(new FileReader(csvFile));
+
+            String strHeader = br.readLine();
+
+            if (strHeader != null && !strHeader.isEmpty()) {
+
+                try {
+                    dbInt.delete(
+                            ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME,
+                            null,
+                            null
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    dbInt.execSQL(
+                            ufinDbContract.CreditRejectQuestionMaster
+                                    .SQL_CREATE_CREDIT_REJECT_QUESTION_MASTER
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String[] strSplit = strHeader.split("\\|");
+                int NumberOfColumns = strSplit.length;
+
+                int insertCount = 0;
+                int updateCount = 0;
+
+                String strRecord = "";
+
+                while ((strRecord = br.readLine()) != null) {
+
+                    if (strRecord.isEmpty())
+                        continue;
+
+                    try {
+                        strSplit = strRecord.split("\\|");
+
+                        for (int j = strSplit.length;
+                             j < NumberOfColumns;
+                             j++) {
+
+                            strRecord = strRecord + " |";
+                        }
+
+                        strSplit = strRecord.split("\\|");
+
+                        ContentValues values1 = new ContentValues();
+
+                        int k = 0;
+
+                        // QuestionID
+                        try {
+                            values1.put(
+                                    ufinDbContract.CreditRejectQuestionMaster
+                                            .COLUMN_NAME_QuestionID,
+                                    Long.valueOf(strSplit[k++])
+                            );
+                        } catch (Exception e) {
+                            values1.put(
+                                    ufinDbContract.CreditRejectQuestionMaster
+                                            .COLUMN_NAME_QuestionID,
+                                    0
+                            );
+                        }
+
+                        // ReasonCode
+                        values1.put(
+                                ufinDbContract.CreditRejectQuestionMaster
+                                        .COLUMN_NAME_ReasonCode,
+                                strSplit[k++]
+                        );
+
+                        // QuestionNo
+                        try {
+                            values1.put(
+                                    ufinDbContract.CreditRejectQuestionMaster
+                                            .COLUMN_NAME_QuestionNo,
+                                    Integer.valueOf(strSplit[k++])
+                            );
+                        } catch (Exception e) {
+                            values1.put(
+                                    ufinDbContract.CreditRejectQuestionMaster
+                                            .COLUMN_NAME_QuestionNo,
+                                    0
+                            );
+                        }
+
+                        // Question
+                        values1.put(
+                                ufinDbContract.CreditRejectQuestionMaster
+                                        .COLUMN_NAME_Question,
+                                strSplit[k++]
+                        );
+
+                        // AnswerType
+                        values1.put(
+                                ufinDbContract.CreditRejectQuestionMaster
+                                        .COLUMN_NAME_AnswerType,
+                                strSplit[k++]
+                        );
+
+                        // IsActive
+                        try {
+                            values1.put(
+                                    ufinDbContract.CreditRejectQuestionMaster
+                                            .COLUMN_NAME_IsActive,
+                                    Integer.valueOf(strSplit[k++])
+                            );
+                        } catch (Exception e) {
+                            values1.put(
+                                    ufinDbContract.CreditRejectQuestionMaster
+                                            .COLUMN_NAME_IsActive,
+                                    0
+                            );
+                        }
+
+                        long lTemp1 = dbInt.insert(
+                                ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME,
+                                null,
+                                values1
+                        );
+
+                        if (lTemp1 > 0) {
+                            insertCount++;
+                        }
+
+                        Message msg;
+                        Bundle messageData;
+
+                        msg = Message.obtain(SyncByIndexHandler);
+                        messageData = new Bundle();
+                        msg.what = -1;
+
+                        messageData.putString(
+                                "Status",
+                                ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME +
+                                        ": Records: " +
+                                        String.valueOf(updateCount + insertCount)
+                        );
+
+                        msg.setData(messageData);
+                        SyncByIndexHandler.sendMessage(msg);
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+
+                        System.out.println(
+                                ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME +
+                                        ": " + e.getMessage()
+                        );
+
+                        break;
+                    }
+                }
+
+                Message msg;
+                Bundle messageData;
+
+                msg = Message.obtain(SyncByIndexHandler);
+                messageData = new Bundle();
+                msg.what = 0;
+
+                int iExpectedRecords = 0;
+
+                for (int i = 0;
+                     i < arrlistCSVTableNames.size();
+                     i++) {
+
+                    if (arrlistCSVTableNames.get(i).equalsIgnoreCase(
+                            ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME)) {
+
+                        iExpectedRecords = arrlistCSVTableRecords.get(i);
+
+                        break;
+                    }
+                }
+
+                int iDifference = iExpectedRecords - updateCount - insertCount;
+
+                String strStatus = ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME +
+                                ": Records Expected: " + String.valueOf(iExpectedRecords) +
+                                ": Actual: " + String.valueOf(updateCount + insertCount) +
+                                ": Difference: " + String.valueOf(iDifference);
+
+                messageData.putString("Status", strStatus);
+                msg.setData(messageData);
+                SyncByIndexHandler.sendMessage(msg);
+
+                Status = true;
+
+                System.out.println(
+                        "Updated From External DB: " +
+                                ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME +
+                                ": " + String.valueOf(updateCount)
+                );
+
+                System.out.println(
+                        "Inserted From External DB: " +
+                                ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME +
+                                ": " + String.valueOf(insertCount)
+                );
+            }
+
+            br.close();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            System.out.println(
+                    ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME +
+                            ": " + e.getMessage()
+            );
+
+            Message msg;
+            Bundle messageData;
+
+            msg = Message.obtain(SyncByIndexHandler);
+            messageData = new Bundle();
+            msg.what = 0;
+
+            messageData.putString(
+                    "Status",
+                    ufinDbContract.CreditRejectQuestionMaster.TABLE_NAME +
+                            ": " + e.getMessage()
+            );
+
+            msg.setData(messageData);
+        }
+
+        dbInt.close();
+
+        return Status;
+    }*/
     public boolean CopyFromCSVDatabase_UserMaster() {
         boolean Status = false;
 
@@ -2872,6 +3401,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         return Status;
     }
+
     public boolean CopyFromCSVDatabase_RelationMaster() {
         boolean Status = false;
 
@@ -5481,6 +6011,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
                         values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense));
                         values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense));
+                        values1.put("HouseRentIncome", csvGetIntByHeader(csvHeaderCols, strSplit, "HouseRentIncome"));
                         long lMemberID = values1.getAsLong(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MemberID);
 //bmp 22-Apr-25
 //                        if(CheckMemberInWIP(lMemberID)) {
@@ -5903,6 +6434,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                         values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense));
                         values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense));
                         values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP, csvGetIntByHeader(csvHeaderCols, strSplit, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP));
+                        values1.put("OtherLoanInstallMent", csvGetIntByHeader(csvHeaderCols, strSplit, "OtherLoanInstallMent"));
                         long lMemberFamilyDetailsID = values1.getAsLong(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_MemberFamilyDetailsID);
 //bmp 22-Apr-25
 //                        if (CheckMemberFamilyDetailsInWIP(lMemberFamilyDetailsID)) {
@@ -20428,7 +20960,6 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         return Status;
     }
-    // ---- make sure the new family expense columns exist in the local DB (old installs) ----
     private void ensureFamilyExpenseColumns() {
         SQLiteDatabase w = null;
         try {
@@ -20436,9 +20967,10 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             w = h.getWritableDatabase();
             addColumnsIfMissing(w, ufinDbContract.FamilyImpactInfo.TABLE_NAME, new String[]{
                     "OtherIncomeLikePension", "PropertyTax", "LightBill", "PaniPatti", "SanSamarambhExpense",
-                    "PahuncharExpense", "PujaExpense", "UdhariExpense", "InsuranceExpense", "AnnPurnaRDADHP"});
+                    "PahuncharExpense", "PujaExpense", "UdhariExpense", "InsuranceExpense", "AnnPurnaRDADHP",
+                    "OtherLoanInstallMent"});
             addColumnsIfMissing(w, ufinDbContract.MemberFamilyDetails.TABLE_NAME, new String[]{
-                    "FundExpense", "BachatGatExpense"});
+                    "FundExpense", "BachatGatExpense", "HouseRentIncome"});
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -20526,6 +21058,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MonthlyInstallments, MemberFamilyDetails.MonthlyInstallments);
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense, MemberFamilyDetails.FundExpense);
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense, MemberFamilyDetails.BachatGatExpense);
+            values1.put("HouseRentIncome", MemberFamilyDetails.HouseRentIncome);
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_RationCardNo, MemberFamilyDetails.RationCardNo);
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_RationCardType, MemberFamilyDetails.RationCardType);
             values1.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_WhoseContactNo, MemberFamilyDetails.WhoseContactNo);
@@ -20544,8 +21077,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MonthlyBhishi, MemberFamilyDetails.MonthlyBhishi);
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MedicalExpenses, MemberFamilyDetails.MedicalExpenses);
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MonthlyInstallments, MemberFamilyDetails.MonthlyInstallments);
-                    postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense, MemberFamilyDetails.FundExpense);
-                    postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense, MemberFamilyDetails.BachatGatExpense);
+                    // FundExpense / BachatGatExpense are no longer sent (not in the updated API); HouseRentIncome is new
+                    postDataParams.put("HouseRentIncome", MemberFamilyDetails.HouseRentIncome);
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_RationCardNo, MemberFamilyDetails.RationCardNo);
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_RationCardType, MemberFamilyDetails.RationCardType);
                     postDataParams.put(ufinDbContract.MemberFamilyDetails.COLUMN_NAME_WhoseContactNo, MemberFamilyDetails.WhoseContactNo);
@@ -20699,6 +21232,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense, FamilyImpactInfo.UdhariExpense);
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense, FamilyImpactInfo.InsuranceExpense);
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP, FamilyImpactInfo.AnnPurnaRDADHP);
+            values1.put("OtherLoanInstallMent", FamilyImpactInfo.OtherLoanInstallMent);
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_EncodedBy, FamilyImpactInfo.EncodedBy);
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_ImpactEncodedDate, FamilyImpactInfo.ImpactEncodedDate);
             values1.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UpdatedBy, FamilyImpactInfo.UpdatedBy);
@@ -20718,12 +21252,11 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PropertyTax, FamilyImpactInfo.PropertyTax);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_LightBill, FamilyImpactInfo.LightBill);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PaniPatti, FamilyImpactInfo.PaniPatti);
-                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_SanSamarambhExpense, FamilyImpactInfo.SanSamarambhExpense);
-                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PahuncharExpense, FamilyImpactInfo.PahuncharExpense);
-                    postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_PujaExpense, FamilyImpactInfo.PujaExpense);
+                    // SanSamarambh / Pahuncher / Puja are no longer sent (not in the updated API)
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense, FamilyImpactInfo.UdhariExpense);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense, FamilyImpactInfo.InsuranceExpense);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP, FamilyImpactInfo.AnnPurnaRDADHP);
+                    postDataParams.put("OtherLoanInstallMent", FamilyImpactInfo.OtherLoanInstallMent);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_EncodedBy, FamilyImpactInfo.EncodedBy);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_ImpactEncodedDate, FamilyImpactInfo.ImpactEncodedDate);
                     postDataParams.put(ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UpdatedBy, FamilyImpactInfo.UpdatedBy);
@@ -21567,6 +22100,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 ufinDbContract.MemberFamilyDetails.COLUMN_NAME_AddressOnRationcard,
                 ufinDbContract.MemberFamilyDetails.COLUMN_NAME_FundExpense,
                 ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense,
+                "HouseRentIncome",
         };
         String selection1 = ufinDbContract.MemberFamilyDetails.COLUMN_NAME_MemberID + "=" + "'" + String.valueOf(actNumber) + "'";
 
@@ -21703,6 +22237,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                         tMemberFamilyDetails.FundExpense = MemberFamilyDetails.FundExpense;
                         MemberFamilyDetails.BachatGatExpense = sqlGetInt(c1, ufinDbContract.MemberFamilyDetails.COLUMN_NAME_BachatGatExpense);
                         tMemberFamilyDetails.BachatGatExpense = MemberFamilyDetails.BachatGatExpense;
+                        MemberFamilyDetails.HouseRentIncome = sqlGetInt(c1, "HouseRentIncome");
+                        tMemberFamilyDetails.HouseRentIncome = MemberFamilyDetails.HouseRentIncome;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -21744,6 +22280,7 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                 ufinDbContract.FamilyImpactInfo.COLUMN_NAME_UdhariExpense,
                 ufinDbContract.FamilyImpactInfo.COLUMN_NAME_InsuranceExpense,
                 ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP,
+                "OtherLoanInstallMent",
         };
 
         String selection1 = ufinDbContract.FamilyImpactInfo.COLUMN_NAME_MemberFamilyDetailsID + "=" + "'" + String.valueOf(actNumber) + "'";
@@ -21868,6 +22405,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
                         tFamilyImpactInfo.InsuranceExpense = FamilyImpactInfo.InsuranceExpense;
                         FamilyImpactInfo.AnnPurnaRDADHP = sqlGetInt(c1, ufinDbContract.FamilyImpactInfo.COLUMN_NAME_AnnPurnaRDADHP);
                         tFamilyImpactInfo.AnnPurnaRDADHP = FamilyImpactInfo.AnnPurnaRDADHP;
+                        FamilyImpactInfo.OtherLoanInstallMent = sqlGetInt(c1, "OtherLoanInstallMent");
+                        tFamilyImpactInfo.OtherLoanInstallMent = FamilyImpactInfo.OtherLoanInstallMent;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -25728,6 +26267,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 
         return Status;
     }
+
+
     public boolean GetMemberOtherMFIData(String strServerIP) {
         HttpURLConnection urlConnection = null;
         boolean Status = false;
@@ -27650,6 +28191,8 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
 //        }
 //        return Status;
 //    }
+
+//old
     public boolean GetCBStatus(String strServerIP) {
         HttpURLConnection urlConnection = null;
         boolean Status = false;
@@ -27812,6 +28355,849 @@ public class MainActivity extends AppCompatActivity implements Scrybe {
         }
         return Status;
     }
+
+    //RK 9/10/26
+    /*
+//1
+    public String getCBTextViewKey(long memberID, long orgID) {
+        return memberID + "_" + orgID;
+    }*/
+
+   /* //2
+    public void checkCBStatusAndSaveDetails(long memberID, long lsoID, long orgID) {
+        new Thread(() -> {
+            long responseMemberID = CheckCBStatus(
+                    strServerIP1,
+                    memberID,
+                    lsoID,
+                    orgID
+            );
+
+            String workingServer = strServerIP1;
+
+            // Step 2: If first server fails, try second server
+            if (responseMemberID != memberID) {
+                responseMemberID = CheckCBStatus(
+                        strServerIP2,
+                        memberID,
+                        lsoID,
+                        orgID
+                );
+
+                workingServer = strServerIP2;
+            }
+
+            // Step 3: Stop if MemberID does not match
+            if (responseMemberID != memberID) {
+                runOnUiThread(() ->
+                        Toast.makeText(
+                                MainActivity.this,
+                                "CB Check failed",
+                                Toast.LENGTH_LONG
+                        ).show()
+                );
+                return;
+            }
+
+            // Step 4: Fetch CB details and save them to SQLite
+            boolean detailsSaved = GetCBStatusAuto(workingServer, memberID, orgID );
+
+            System.out.println("MemberID: " + memberID);
+            System.out.println("OrgID: " + orgID);
+            System.out.println("Working Server: " + workingServer);
+            System.out.println("Details Saved: " + detailsSaved);
+
+            runOnUiThread(() -> {
+
+                if (detailsSaved) {
+                    String cbStatus = getCBStatusFromDatabase(memberID, orgID);
+                    updateCreditCheckTextView(memberID, orgID, cbStatus);
+                    Toast.makeText(MainActivity.this, "CB Check successful", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "CB details could not be saved", Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }).start();
+    }*/
+
+    public void checkCBStatusAndSaveDetails(long memberID, long lsoID, long orgID, CBCheckCallback callback) {
+
+        new Thread(() -> {
+
+            String workingServer = strServerIP1;
+
+            long responseMemberID = CheckCBStatus(strServerIP1, memberID, lsoID, orgID);
+
+            if (responseMemberID != memberID) {
+                workingServer = strServerIP2;
+
+                responseMemberID =
+                        CheckCBStatus(strServerIP2, memberID, lsoID, orgID);
+            }
+
+            if (responseMemberID != memberID) {
+                runOnUiThread(() ->
+                        callback.onFailure("CB Check failed"));
+                return;
+            }
+
+            boolean detailsSaved =
+                    GetCBStatusAuto(workingServer, memberID, orgID);
+
+            if (!detailsSaved) {
+                runOnUiThread(() ->
+                        callback.onFailure("CB details could not be saved"));
+                return;
+            }
+
+            // Read the saved CB status from the database.
+            String cbStatus = getCBStatusFromDatabase(memberID, orgID);
+
+            runOnUiThread(() -> {
+                if (cbStatus != null && !cbStatus.trim().isEmpty()) {
+                    callback.onSuccess(cbStatus);
+                } else {
+                    callback.onFailure("CB status not found in database");
+                }
+            });
+
+        }).start();
+    }
+
+    //3
+    public long CheckCBStatus( String strServerIP, long memberID, long lsoID, long orgID) {
+        HttpURLConnection connection = null;
+        try {
+            String strUrl = "http://" + strServerIP + ":8080/api/TabData/CheckCBStatus" + "?MemberID=" + memberID + "&LSO_ID=" + lsoID + "&Org_ID=" + orgID;
+//            String strUrl = "http://" + strServerIP1 + strServerPort +URL_CheckCBStatus + "?MemberID=" + memberID + "&LSO_ID=" + lsoID + "&Org_ID=" + orgID;
+
+            connection = (HttpURLConnection) new URL(strUrl).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setConnectTimeout(msecHttpURLConnectionTimeout);
+            connection.setReadTimeout(msecHttpURLConnectionTimeout);
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+
+            System.out.println("CheckCBStatus URL: " + strUrl);
+
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+
+                StringBuilder response = new StringBuilder();
+
+                try (BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()))) {
+                    String line;
+
+                    while ((line = reader.readLine()) != null) {response.append(line);}
+                }
+
+                String responseText = response.toString().trim();
+
+                // Response
+                if (responseText.length() >= 2
+                        && responseText.startsWith("\"")
+                        && responseText.endsWith("\"")) {
+
+                    responseText = responseText.substring(
+                            1, responseText.length() - 1
+                    );
+                }
+
+                long responseMemberID = Long.parseLong(responseText);
+
+                System.out.println("CheckCBStatus Response MemberID: " + responseMemberID);
+
+                return responseMemberID;
+
+            } else {
+                System.out.println("CheckCBStatus HTTP Error: " + responseCode);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+
+        return -1;
+    }
+
+    //RK
+//4
+    public boolean GetCBStatusAuto(String strServerIP, long memberID, long orgID) {
+
+        HttpURLConnection connection = null;
+        ufinDbHelper dbHelper = null;
+        SQLiteDatabase db = null;
+
+        String memberId = String.valueOf(memberID);
+        String orgId = String.valueOf(orgID);
+
+        try {
+            String apiUrl = "http://" + strServerIP + ":" + strServerPort + URL_GetCBStatusAuto + "?MemberID=" + java.net.URLEncoder.encode(memberId, "UTF-8")
+                    + "&Org_ID=" + java.net.URLEncoder.encode(orgId, "UTF-8");
+
+            Log.i("CB_DEBUG", "Request URL: " + apiUrl);
+
+            connection = (HttpURLConnection)
+                    new URL(apiUrl).openConnection();
+
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(msecHttpURLConnectionTimeout);
+            connection.setReadTimeout(msecHttpURLConnectionTimeout);
+            connection.setUseCaches(false);
+
+            int responseCode = connection.getResponseCode();
+
+            Log.i("CB_DEBUG", "HTTP response code: " + responseCode);
+
+            InputStream inputStream;
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                inputStream = connection.getInputStream();
+            } else {
+                inputStream = connection.getErrorStream();
+
+                String errorText = "";
+                if (inputStream != null) {
+                    try (BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(inputStream, "UTF-8"))) {
+                        String line;
+                        StringBuilder error = new StringBuilder();
+
+                        while ((line = reader.readLine()) != null) {
+                            error.append(line);
+                        }
+
+                        errorText = error.toString();
+                    }
+                }
+
+                Log.e("CB_DEBUG", "API error response: " + errorText);
+                return false;
+            }
+
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(inputStream, "UTF-8"))) {
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            }
+
+            String responseString = response.toString().trim();
+
+            Log.i("CB_DEBUG", "API response: " + responseString);
+
+            JSONArray jsonArray = new JSONArray(responseString);
+
+            Log.i("CB_DEBUG", "Rows received: " + jsonArray.length());
+
+            dbHelper = new ufinDbHelper(getBaseContext());
+            db = dbHelper.getWritableDatabase();
+
+            db.beginTransaction();
+
+            try {
+                db.delete(
+                        ufinDbContract.MemberCBStatusAuto.TABLE_NAME,
+                        ufinDbContract.MemberCBStatusAuto.COLUMN_MemberID
+                                + " = ? AND "
+                                + ufinDbContract.MemberCBStatusAuto.COLUMN_Org_ID
+                                + " = ?",
+                        new String[]{memberId, orgId}
+                );
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject row = jsonArray.getJSONObject(i);
+                    ContentValues values = new ContentValues();
+
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_MemberID,
+                            row.optString("MemberID", memberId)
+                    );
+
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_Org_ID,
+                            orgId
+                    );
+
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_LastLoanStatus,
+                            row.optString("LastLoanStatus", "")
+                    );
+
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_CBStatus,
+                            row.optString("CBStatus", "")
+                    );
+
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_Remark,
+                            row.optString("Remark", "")
+                    );
+
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_Checked_Date,
+                            row.optString("Checked_Date", "")
+                    );
+
+                    if (row.isNull("CBScore")) {
+                        values.putNull(
+                                ufinDbContract.MemberCBStatusAuto.COLUMN_CBScore
+                        );
+                    } else {
+                        values.put(
+                                ufinDbContract.MemberCBStatusAuto.COLUMN_CBScore,
+                                row.optDouble("CBScore")
+                        );
+                    }
+
+                    if (row.isNull("NoOfActiveLoans")) {
+                        values.putNull(
+                                ufinDbContract.MemberCBStatusAuto.COLUMN_NoOfActiveLoans
+                        );
+                    } else {
+                        values.put(
+                                ufinDbContract.MemberCBStatusAuto.COLUMN_NoOfActiveLoans,
+                                row.optInt("NoOfActiveLoans")
+                        );
+                    }
+
+                    putCBNullableDouble(
+                            values,
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_TotalLoanBalance,
+                            row,
+                            "TotalLoanBalance"
+                    );
+
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_MFIname,
+                            row.optString("MFIname", "")
+                    );
+
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_LoanStatus,
+                            row.optString("LoanStatus", "")
+                    );
+
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_LoanType,
+                            row.optString("LoanType", "")
+                    );
+
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_OwnGuarantor,
+                            row.optString("OwnGuarantor", "")
+                    );
+
+                    // Preserve the API's exact field spelling.
+                    values.put(
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_LoanStartSate,
+                            row.optString("LoanStartSate", "")
+                    );
+
+                    putCBNullableDouble(
+                            values,
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_DisbursementAmout,
+                            row,
+                            "DisbursementAmout"
+                    );
+
+                    putCBNullableDouble(
+                            values,
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_InstallamentAmount,
+                            row,
+                            "InstallamentAmount"
+                    );
+
+                    putCBNullableDouble(
+                            values,
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_CurrentBalance,
+                            row,
+                            "CurrentBalance"
+                    );
+
+                    putCBNullableDouble(
+                            values,
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_DelinquentAmount,
+                            row,
+                            "DelinquentAmount"
+                    );
+
+                    putCBNullableDouble(
+                            values,
+                            ufinDbContract.MemberCBStatusAuto.COLUMN_WriteOffAmount,
+                            row,
+                            "WriteOffAmount"
+                    );
+
+                    long insertedId = db.insert(
+                            ufinDbContract.MemberCBStatusAuto.TABLE_NAME,
+                            null,
+                            values
+                    );
+
+                    if (insertedId == -1) {
+                        throw new Exception(
+                                "SQLite insert failed for row " + i
+                        );
+                    }
+                }
+
+                db.setTransactionSuccessful();
+
+            } finally {
+                db.endTransaction();
+            }
+
+//            Log.i("CB_DEBUG", "SQLite transaction successful. MemberID=" + memberId + ", rows=" + jsonArray.length());
+
+            return true;
+
+        } catch (Exception e) {
+//            Log.e("CB_DEBUG", "GetCBStatusAuto failed", e);
+            return false;
+
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+
+            if (dbHelper != null) {
+                dbHelper.close();
+            }
+        }
+    }
+
+    //5
+    private void putCBNullableDouble(
+            ContentValues values,
+            String columnName,
+            JSONObject tableRow,
+            String jsonKey) {
+
+        if (tableRow.isNull(jsonKey)) {
+            values.putNull(columnName);
+        } else {
+            values.put(columnName, tableRow.optDouble(jsonKey));
+        }
+    }
+
+
+    //6
+    public String getCBStatusFromDatabase(long memberID, long orgID) {
+
+        String status = null;
+
+        ufinDbHelper helper = new ufinDbHelper(this);
+
+        try (SQLiteDatabase db = helper.getReadableDatabase();
+             Cursor cursor = db.query(
+                     ufinDbContract.MemberCBStatusAuto.TABLE_NAME,
+                     new String[]{
+                             ufinDbContract.MemberCBStatusAuto.COLUMN_CBStatus
+                     },
+                     ufinDbContract.MemberCBStatusAuto.COLUMN_MemberID + " = ? AND "
+                             + ufinDbContract.MemberCBStatusAuto.COLUMN_Org_ID + " = ?",
+                     new String[]{
+                             String.valueOf(memberID),
+                             String.valueOf(orgID)
+                     },
+                     null, null, null)) {
+
+            if (cursor.moveToFirst()) {
+                status = cursor.getString(0);
+            }
+
+        } catch (Exception e) {
+            Log.e("CB_STATUS", "Failed to read CB status", e);
+        } finally {
+            helper.close();
+        }
+        return status;
+    }
+/*
+//7
+    private void updateCreditCheckTextView(long memberID, long orgID, String cbStatus) {
+
+        String key = getCBTextViewKey(memberID, orgID);
+        long lsoId = selectedLSOID;   //
+        TextView tv = creditCheckTextViews.get(key);
+
+        if (tv == null) {
+            Log.w("CB_STATUS", "TextView not found for member: " + memberID);
+            return;
+        }
+        if (cbStatus == null || cbStatus.trim().isEmpty()) {
+            return;
+        }
+        String status = cbStatus.trim();
+        tv.setOnClickListener(null);
+        if ("Reject".equalsIgnoreCase(status)) {
+            tv.setText("क्रेडिट चेक: अडचण ");
+            tv.setBackgroundColor(Color.RED);
+
+            tv.setOnClickListener(v -> {
+                String remark = getCBRemarkFromDatabase(memberID, orgID);
+                if (remark.isEmpty()) {Toast.makeText(MainActivity.this, "Remark not found", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                CBRejectQuestionsAnswerFragment fragment = CBRejectQuestionsAnswerFragment.newInstance(
+                                memberID,
+                                lsoId,
+                                orgID,
+                                remark
+                        );
+                Log.e("TAG", "updateCreditCheckTextView: "+ "memberID=" + memberID + ", lsoId=" + lsoId + ", orgID=" + orgID + ", remark=" + remark);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            });
+
+        } else if ("OK".equalsIgnoreCase(status) || "Accept".equalsIgnoreCase(status)) {
+            tv.setText("क्रेडिट चेक: ओके");
+            tv.setBackgroundColor(Color.GREEN);
+
+        } else {
+            tv.setText("क्रेडिट चेक: " + status);
+            tv.setBackgroundColor(Color.argb(255, 255, 191, 0));
+        }
+        tv.invalidate();
+    }*/
+
+    /*
+//8
+    public void registerCreditCheckTextView(
+            long memberID,
+            long orgID,
+            TextView textView) {
+
+        creditCheckTextViews.put(getCBTextViewKey(memberID, orgID), textView
+        );
+    }*/
+    //9
+
+    public boolean isCBDataAvailable(long memberID, long orgID) {
+
+        boolean isAvailable = false;
+
+        ufinDbHelper dbHelper = new ufinDbHelper(getApplicationContext());
+
+        try (SQLiteDatabase db = dbHelper.getReadableDatabase();
+             Cursor cursor = db.query(
+                     ufinDbContract.MemberCBStatusAuto.TABLE_NAME,
+                     new String[]{
+                             ufinDbContract.MemberCBStatusAuto.COLUMN_MemberID
+                     },
+                     ufinDbContract.MemberCBStatusAuto.COLUMN_MemberID + " = ? AND "
+                             + ufinDbContract.MemberCBStatusAuto.COLUMN_Org_ID + " = ?",
+                     new String[]{
+                             String.valueOf(memberID),
+                             String.valueOf(orgID)
+                     },
+                     null,
+                     null,
+                     null
+             )) {
+
+            isAvailable = cursor.moveToFirst();
+
+        } catch (Exception e) {
+            Log.e("CB_CHECK", "Failed to check CB data", e);
+
+        } finally {
+            dbHelper.close();
+        }
+        return isAvailable;
+    }
+/*
+//10
+    public void SavedCBStatus(long memberID, long orgID) {
+
+       */
+/* new Thread(() -> {
+            String cbStatus = getCBStatusFromDatabase(memberID, orgID);
+
+            runOnUiThread(() ->
+                    updateCreditCheckTextView(memberID, orgID, cbStatus)
+            );
+        }).start();*//*
+
+
+        String cbStatus = getCBStatusFromDatabase(memberID, orgID);
+
+        updateCreditCheckTextView(memberID, orgID, cbStatus);
+    }
+*/
+
+   /* //11
+    //reject 29-10-26
+    private String getCBRemarkFromDatabase(long memberID, long orgID) {
+
+        String remark = "";
+
+        ufinDbHelper helper = new ufinDbHelper(this);
+
+        try (SQLiteDatabase db = helper.getReadableDatabase();
+             Cursor cursor = db.query(
+                     ufinDbContract.MemberCBStatusAuto.TABLE_NAME,
+                     new String[]{
+                             ufinDbContract.MemberCBStatusAuto.COLUMN_Remark
+                     },
+                     ufinDbContract.MemberCBStatusAuto.COLUMN_MemberID + " = ? AND "
+                             + ufinDbContract.MemberCBStatusAuto.COLUMN_Org_ID + " = ?",
+                     new String[]{
+                             String.valueOf(memberID),
+                             String.valueOf(orgID)
+                     },
+                     null,
+                     null,
+                     null
+             )) {
+
+            if (cursor.moveToFirst()) {
+                remark = cursor.getString(0);
+
+                if (remark == null) {
+                    remark = "";
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e("CB_REMARK", "Remark read failed", e);
+        } finally {
+            helper.close();
+        }
+
+        return remark;
+    }*/
+
+
+    public String GetCBRejectQuestions(
+            String strServerIP,
+            int rejectReasonID,
+            long lsoID,
+            long orgID
+    ) {
+
+        HttpURLConnection urlConnection = null;
+        String strResponse = "";
+        String strAPI;
+
+        try {
+
+            System.out.println("GetCBRejectQuestions");
+
+//            strAPI = "/api/TabData/GetCBRejectQuestions";
+
+            String strUrl = "http://" + strServerIP + ":" + strServerPort + URL_GetCBRejectQue
+                    + "?RejectReasonID=" + rejectReasonID
+                    + "&LSO_ID=" + lsoID
+                    + "&Org_ID=" + orgID;
+
+            System.out.println("GetCBRejectQuestions URL: " + strUrl);
+
+            URL url = new URL(strUrl);
+
+            Calendar cal = Calendar.getInstance();
+            long msecQueryTime = cal.getTimeInMillis();
+
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.setReadTimeout(msecHttpURLConnectionTimeout);
+            urlConnection.setConnectTimeout(msecHttpURLConnectionTimeout);
+            urlConnection.setRequestMethod("GET");
+
+            urlConnection.setUseCaches(false);
+            urlConnection.setDoInput(true);
+
+            urlConnection.connect();
+
+            int responseCode = urlConnection.getResponseCode();
+
+            System.out.println("GetCBRejectQuestions HTTP Code: " + responseCode);
+
+            InputStream inputStream;
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+
+                inputStream = new BufferedInputStream(
+                        urlConnection.getInputStream()
+                );
+
+            } else {
+                System.out.println("GetCBRejectQuestions HTTP Error: " + urlConnection.getResponseMessage());
+
+                inputStream = urlConnection.getErrorStream();
+
+                if (inputStream == null) {
+                    return null;
+                }
+            }
+
+            StringBuilder response = new StringBuilder();
+
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(inputStream, StandardCharsets.UTF_8)
+            );
+
+            String strOutput;
+
+            while ((strOutput = br.readLine()) != null) {
+
+                response.append(strOutput);
+            }
+
+            br.close();
+
+            cal = Calendar.getInstance();
+
+            long msecDownloadTime = cal.getTimeInMillis() - msecQueryTime;
+
+            strResponse = response.toString().trim();
+
+            System.out.println("GetCBRejectQuestions Response: " + strResponse);
+            System.out.println("GetCBRejectQuestions Response Time: " + msecDownloadTime + " ms");
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return strResponse;
+
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return null;
+    }
+
+    //answer
+    public String InsertCBRejectAnswers(String strServerIP, int rejectReasonID,
+                                        String rejectAnswerDate, String answer1,
+                                        String answer2, String answer3, String answer4,
+                                        String answer5, long lsoID, long orgID, long memberID) {
+
+        HttpURLConnection urlConnection = null;
+        String strResponse = "";
+
+        try {
+            String strUrl = "http://" + strServerIP + ":" + strServerPort + URL_InsertCBRejectAnswers
+                    + "?RejectReasonID=" + rejectReasonID
+                    + "&RejectAnswerDate=" + URLEncoder.encode(rejectAnswerDate, "UTF-8")
+                    + "&Answer1=" + URLEncoder.encode(answer1, "UTF-8")
+                    + "&Answer2=" + URLEncoder.encode(answer2, "UTF-8")
+                    + "&Answer3=" + URLEncoder.encode(answer3, "UTF-8")
+                    + "&Answer4=" + URLEncoder.encode(answer4, "UTF-8")
+                    + "&Answer5=" + URLEncoder.encode(answer5, "UTF-8")
+                    + "&LSO_ID=" + lsoID
+                    + "&Org_ID=" + orgID
+                    + "&MemberID=" + memberID;
+
+            System.out.println("InsertCBRejectAnswers URL: " + strUrl);
+
+            URL url = new URL(strUrl);
+
+            Calendar cal = Calendar.getInstance();
+            long msecQueryTime = cal.getTimeInMillis();
+
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.setReadTimeout(msecHttpURLConnectionTimeout);
+            urlConnection.setConnectTimeout(msecHttpURLConnectionTimeout);
+            urlConnection.setRequestMethod("POST");
+
+            urlConnection.setUseCaches(false);
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+
+            urlConnection.connect();
+
+            int responseCode = urlConnection.getResponseCode();
+
+            System.out.println("InsertCBRejectAnswers HTTP Code: " + responseCode);
+
+            InputStream inputStream;
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+
+                inputStream = new BufferedInputStream(
+                        urlConnection.getInputStream()
+                );
+
+            } else {
+
+                System.out.println("InsertCBRejectAnswers HTTP Error: "
+                        + urlConnection.getResponseMessage());
+
+                inputStream = urlConnection.getErrorStream();
+
+                if (inputStream == null) {
+                    return null;
+                }
+            }
+
+            StringBuilder response = new StringBuilder();
+
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(inputStream, StandardCharsets.UTF_8)
+            );
+
+            String strOutput;
+
+            while ((strOutput = br.readLine()) != null) {
+                response.append(strOutput);
+            }
+
+            br.close();
+
+            cal = Calendar.getInstance();
+
+//            long msecDownloadTime = cal.getTimeInMillis() - msecQueryTime;
+
+            strResponse = response.toString().trim();
+
+            System.out.println("InsertCBRejectAnswers Response: " + strResponse);
+//            System.out.println("InsertCBRejectAnswers Download Time: " + msecDownloadTime);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return strResponse;
+    }
+
+    //RK.....
+
     //bmp 18-Mar-26
     public boolean GetCSVFile(String strServerIP) {
         HttpURLConnection urlConnection = null;

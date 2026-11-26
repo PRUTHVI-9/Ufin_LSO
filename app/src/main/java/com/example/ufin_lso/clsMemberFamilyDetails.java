@@ -20,6 +20,7 @@ public class clsMemberFamilyDetails {
     //bmp 20-Sep-22
     int FundExpense;
     int BachatGatExpense;
+    int HouseRentIncome;
 
     public void Init_MemberFamilyDetails() {
         MemberFamilyDetailsID = 0;
@@ -41,6 +42,7 @@ public class clsMemberFamilyDetails {
 //bmp 20-Sep-22
         FundExpense = 0;
         BachatGatExpense = 0;
+        HouseRentIncome = 0;
     }
 
     public boolean Compare_MemberFamilyDetails(clsMemberFamilyDetails Obj) {
@@ -80,6 +82,8 @@ public class clsMemberFamilyDetails {
             return false;
         if(BachatGatExpense != Obj.BachatGatExpense)
             return false;
+        if(HouseRentIncome != Obj.HouseRentIncome)
+            return false;
 
         return true;
     }
@@ -103,5 +107,6 @@ public class clsMemberFamilyDetails {
 //bmp 20-Sep-22
         Obj.FundExpense = FundExpense;
         Obj.BachatGatExpense = BachatGatExpense;
+        Obj.HouseRentIncome = HouseRentIncome;
     }
 }

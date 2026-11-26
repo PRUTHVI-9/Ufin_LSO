@@ -1,5 +1,7 @@
 package com.example.ufin_lso;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -20,6 +22,7 @@ import android.net.Uri;
     import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -67,6 +70,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -124,6 +128,9 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
     String strFilename = "unknown";
     int selectedRevisitMemberIndex = -1;
     int selectedVisitDetailsID = -1;
+
+    private final HashMap<String, TextView> creditCheckTextViews = new HashMap<>();    //RK
+    long selectedLSOID; //RK
 
     public RevisitFragment() {
         // Required empty public constructor
@@ -244,7 +251,7 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                     strTemp.substring(2, 4);
             alRevisitDateDDMMYY.add(strTemp2);
         }
-/////////////////////////////////////////////////////////
+
 
         ArrayAdapter<String> adapterVisitDetailsDate = new ArrayAdapter<String>(mainActivity.getBaseContext(),
                 R.layout.simple_spinner_item_22sp, alRevisitDateDDMMYY);
@@ -519,7 +526,7 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                 String strVisitDate = mainActivity.RevisitMemberList.get(i).VisitDate.substring(0, 10);
                 if ((!strSelectDate.isEmpty()) && (!strVisitDate.equalsIgnoreCase(strSelectDate)))
                     continue;
-                if (    (!strSelectDate.isEmpty()) &&
+                if ((!strSelectDate.isEmpty()) &&
                         (strListType.equalsIgnoreCase("Blue") ||
                          strListType.equalsIgnoreCase("NewMember") ||
                          strListType.equalsIgnoreCase("DeActive") ||
@@ -708,6 +715,7 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                         TableRow.LayoutParams.MATCH_PARENT,
                         1f));
                 imgbtPhotoRevisitProof.setId(i);
+
                 imgbtPhotoRevisitProof.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -726,21 +734,21 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                                 oldFile.delete();
                             }
                         }
-                            /*Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                         Uri outuri = FileProvider.getUriForFile(mainActivity.getApplicationContext(), mainActivity.getApplicationContext().getPackageName() + ".provider", outFile);
 //                        cameraIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         cameraIntent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                         cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, outuri);
-                            startActivityIntent.launch(cameraIntent);*/
+                        startActivityIntent.launch(cameraIntent);
 
-                            //RK
+                        /*//RK
                             Intent cameraIntent = new Intent();
                             cameraIntent.setClassName(
                                     "com.example.cameraapp",
                                     "com.example.cameraapp.DocumentScannerActivity"
                             );
 
-                        startActivityIntent.launch(cameraIntent);
+                        startActivityIntent.launch(cameraIntent);*/
                     }
                 });
                 ImageButton imgbtPreviewRevisitProof = new ImageButton(mainActivity.getBaseContext());
@@ -750,6 +758,7 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                         TableRow.LayoutParams.MATCH_PARENT,
                         1f));
                 imgbtPreviewRevisitProof.setId(i);
+
                 imgbtPreviewRevisitProof.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -775,6 +784,7 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                         }
                     }
                 });
+
                 LinearLayout llhProof = new LinearLayout(mainActivity.getBaseContext());
                 llhProof.setOrientation(LinearLayout.HORIZONTAL);
                 llhProof.setLayoutParams(new TableRow.LayoutParams(
@@ -1188,12 +1198,11 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                     ));
                     trCreditCheck.setGravity(Gravity.CENTER_VERTICAL);
 
-
     // CREDIT CHECK
                     TextView tvCreditCheck = new TextView(mainActivity.getBaseContext());
 
                     tvCreditCheck.setTextSize(24);
-                    tvCreditCheck.setText("क्रेडिट चेक :बाकी");
+                tvCreditCheck.setText("क्रेडिट चेक :");
                     tvCreditCheck.setBackgroundColor(Color.argb(255, 255, 191, 0));
                     tvCreditCheck.setTextColor(tvref.getTextColors());
                     tvCreditCheck.setTypeface(Typeface.DEFAULT_BOLD);
@@ -1205,34 +1214,11 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                     creditCheckParams.gravity = Gravity.CENTER_VERTICAL;
                     tvCreditCheck.setLayoutParams(creditCheckParams);
 
-                   /* if(member.CreditCheck == -1) {
-                        tvCreditCheck.setBackgroundColor(Color.argb(255, 255, 191, 0));
-                        tvCreditCheck.setText("क्रेडिट चेक: बाकी");
-                    } else if(member.CreditCheck == 0) {
-                        tvCreditCheck.setBackgroundColor(Color.RED);
-                        tvCreditCheck.setText("क्रेडिट चेक:रिजेक्ट");
-                    } else if(member.CreditCheck == 1) {
-                        tvCreditCheck.setBackgroundColor(Color.GREEN);
-                        tvCreditCheck.setText("क्रेडिट चेक: ओके");
-                    }*/
-    // Keep your existing ID pattern
-                    //tvCreditCheck.setId(3 + iIDindex);
+                   long selectedMemberID = mainActivity.RevisitMemberList.get(i).MemberID;
 
-    // CB DETAIL BUTTON
-                    Button btCBDetail = new Button(mainActivity.getBaseContext());
+                registerCreditCheckTextView(selectedMemberID, mainActivity.OrgID, tvCreditCheck);
+                SavedCBStatus(selectedMemberID, mainActivity.OrgID);
 
-                    btCBDetail.setText("CB DETAIL");
-                    btCBDetail.setTextSize(16);
-                    btCBDetail.setTypeface(Typeface.DEFAULT_BOLD);
-                    btCBDetail.setGravity(Gravity.CENTER);
-
-                    TableRow.LayoutParams cbDetailParams = new TableRow.LayoutParams(
-                            TableRow.LayoutParams.WRAP_CONTENT,
-                            TableRow.LayoutParams.WRAP_CONTENT
-                    );
-                    cbDetailParams.gravity = Gravity.CENTER_VERTICAL;
-
-                    btCBDetail.setLayoutParams(cbDetailParams);
 
     // FAMILY MEMBERS BUTTON
                     Button btFamilyMembers = new Button(mainActivity.getBaseContext());
@@ -1269,22 +1255,7 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                         }
                     });
                     
-                    Button btCBCheck = new Button(mainActivity.getBaseContext());
-                    btCBCheck.setText("CB Check");
-                    btCBCheck.setTextSize(16);
-                    btCBCheck.setTypeface(Typeface.DEFAULT_BOLD);
-                    btCBCheck.setGravity(Gravity.CENTER);
-
-                    TableRow.LayoutParams cbCheckParams = new TableRow.LayoutParams(
-                            TableRow.LayoutParams.WRAP_CONTENT,
-                            TableRow.LayoutParams.WRAP_CONTENT);
-                    cbCheckParams.gravity = Gravity.CENTER_VERTICAL;
-                    btCBCheck.setLayoutParams(cbCheckParams);
-    // New ID
-                    //   btCBDetail.setId(5 + iIDindex);
-
-
-    // PREVIEW BUTTON
+                    // PREVIEW BUTTON
                     Button btPreviewCBCheck = new Button(mainActivity.getBaseContext());
 
                     btPreviewCBCheck.setText("PREVIEW");
@@ -1317,6 +1288,102 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
 
                     //  btPrintCBCheck.setId(7 + iIDindex);
 
+  //RK 9/10/26
+//                final long selectedMemberID = mainActivity.RevisitMemberList.get(i).MemberID;
+
+                //1
+                Button btCBCheck = new Button(mainActivity.getBaseContext());
+                btCBCheck.setText("CB Check");
+                btCBCheck.setTextSize(16);
+                btCBCheck.setTypeface(Typeface.DEFAULT_BOLD);
+                btCBCheck.setGravity(Gravity.CENTER);
+
+                TableRow.LayoutParams cbCheckParams = new TableRow.LayoutParams(
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        TableRow.LayoutParams.WRAP_CONTENT);
+                cbCheckParams.gravity = Gravity.CENTER_VERTICAL;
+                btCBCheck.setLayoutParams(cbCheckParams);
+
+                //2
+                /*btCBCheck.setOnClickListener(view -> {
+                    mainActivity.checkCBStatusAndSaveDetails(
+                            selectedMemberID,
+                            mainActivity.LSO_ID,
+                            mainActivity.OrgID
+                    );
+                    System.out.printf("ID",selectedMemberID,mainActivity.LSO_ID,mainActivity.OrgID);
+                });*/
+                btCBCheck.setOnClickListener(view -> {
+
+                    btCBCheck.setEnabled(false);
+                    btCBCheck.setText("Checking...");
+
+                    mainActivity.checkCBStatusAndSaveDetails(
+                            selectedMemberID,
+                            mainActivity.LSO_ID,
+                            mainActivity.OrgID,
+                          new  CBCheckCallback() {
+
+                                @Override
+                                public void onSuccess(String cbStatus) {
+
+                                    btCBCheck.setEnabled(true);
+                                    btCBCheck.setText("CB Check");
+
+                                    updateCreditCheckTextView(
+                                            selectedMemberID,
+                                            mainActivity.OrgID,
+                                            cbStatus
+                                    );
+                                }
+
+                                @Override
+                                public void onFailure(String message) {
+
+                                    btCBCheck.setEnabled(true);
+                                    btCBCheck.setText("CB Check");
+
+                                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                    );
+                });
+//
+
+//
+                 //3
+                Button btCBDetail = new Button(mainActivity.getBaseContext());
+                btCBDetail.setText("CB DETAIL");
+                btCBDetail.setTextSize(16);
+                btCBDetail.setTypeface(Typeface.DEFAULT_BOLD);
+                btCBDetail.setGravity(Gravity.CENTER);
+
+                TableRow.LayoutParams cbDetailParams = new TableRow.LayoutParams(
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        TableRow.LayoutParams.WRAP_CONTENT );
+                cbDetailParams.gravity = Gravity.CENTER_VERTICAL;
+
+                btCBDetail.setLayoutParams(cbDetailParams);
+
+                //4
+                btCBDetail.setOnClickListener(v -> {
+                    boolean isCBChecked = mainActivity.isCBDataAvailable(selectedMemberID, mainActivity.OrgID);
+                    if(!isCBChecked){
+                        Toast.makeText(mainActivity, "Please perform CB Check first", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    CreditCheckDetailFragment fragment = CreditCheckDetailFragment.newInstance(selectedMemberID, mainActivity.OrgID);
+                    //5
+                    mainActivity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack("CB_DETAIL")
+                            .commit();
+                            Log.d(TAG, "MemberID received: " + selectedMemberID);
+                            Log.d(TAG, "OrgID received: " + mainActivity.OrgID);
+                            Log.d(TAG, "Table name: " + ufinDbContract.MemberCBStatusAuto.TABLE_NAME);
+                });                     ///RK
+
                     trCreditCheck.addView(tvCreditCheck);
                     trCreditCheck.addView(btCBCheck);
                     trCreditCheck.addView(btCBDetail);
@@ -1325,7 +1392,6 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                     trCreditCheck.addView(btFamilyMembers);
 
                     //----
-
 
                 llh1.addView(tvCenterGroup);
                 llh1.addView(tvGroupType);
@@ -1467,8 +1533,155 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
             pbSync.setVisibility(View.INVISIBLE);
         }
     }
+
+    //RK
+    private void updateCreditCheckTextView(long memberID, long orgID, String cbStatus) {
+
+        String key = getCBTextViewKey(memberID, orgID);
+        long lsoId = mainActivity.LSO_ID;   //  selectedLSOID
+        TextView tv = creditCheckTextViews.get(key);
+
+        if (tv == null) {
+            Log.w("CB_STATUS", "TextView not found for member: " + memberID);
+            return;
+        }
+        if (cbStatus == null || cbStatus.trim().isEmpty()) {
+            return;
+        }
+        String status = cbStatus.trim();
+        tv.setOnClickListener(null);
+        if ("Reject".equalsIgnoreCase(status)) {
+            tv.setText("क्रेडिट चेक: अडचण ");
+            tv.setBackgroundColor(Color.RED);
+
+          /*  tv.setOnClickListener(v -> {
+                String remark = getCBRemarkFromDatabase(memberID, orgID);
+                if (remark.isEmpty()) {
+//                    Toast.makeText(MainActivity, "Remark not found", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                *//*CBRejectQuestionsAnswerFragment fragment = CBRejectQuestionsAnswerFragment.newInstance(
+                        memberID,
+                        lsoId,
+                        orgID,
+                        remark
+                );*//*
+                Log.e("TAG", "updateCreditCheckTextView: "+ "memberID=" + memberID + ", lsoId=" + lsoId + ", orgID=" + orgID + ", remark=" + remark);
+               requireActivity(). getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            });*/
+
+        } else if ("OK".equalsIgnoreCase(status) || "Accept".equalsIgnoreCase(status)) {
+            tv.setText("क्रेडिट चेक: ओके");
+            tv.setBackgroundColor(Color.GREEN);
+
+        } else {
+            tv.setText("क्रेडिट चेक: " + status);
+            tv.setBackgroundColor(Color.argb(255, 255, 191, 0));
+        }
+        tv.invalidate();
+    }
+
+    //8
+    public void registerCreditCheckTextView(
+            long memberID,
+            long orgID,
+            TextView textView) {
+
+        creditCheckTextViews.put(getCBTextViewKey(memberID, orgID), textView
+        );
+    }
+    public String getCBTextViewKey(long memberID, long orgID) {
+        return memberID + "_" + orgID;
+    }
+
+
+    public void SavedCBStatus(long memberID, long orgID) {
+
+        String cbStatus = mainActivity.getCBStatusFromDatabase(memberID, orgID);
+
+        updateCreditCheckTextView(memberID, orgID, cbStatus);
+    }
+    private String getCBRemarkFromDatabase(long memberID, long orgID) {
+
+        String remark = "";
+
+        ufinDbHelper helper = new ufinDbHelper(requireContext());
+
+        try (SQLiteDatabase db = helper.getReadableDatabase();
+             Cursor cursor = db.query(
+                     ufinDbContract.MemberCBStatusAuto.TABLE_NAME,
+                     new String[]{
+                             ufinDbContract.MemberCBStatusAuto.COLUMN_Remark
+                     },
+                     ufinDbContract.MemberCBStatusAuto.COLUMN_MemberID + " = ? AND "
+                             + ufinDbContract.MemberCBStatusAuto.COLUMN_Org_ID + " = ?",
+                     new String[]{
+                             String.valueOf(memberID),
+                             String.valueOf(orgID)
+                     },
+                     null,
+                     null,
+                     null
+             )) {
+
+            if (cursor.moveToFirst()) {
+                remark = cursor.getString(0);
+
+                if (remark == null) {
+                    remark = "";
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e("CB_REMARK", "Remark read failed", e);
+        } finally {
+            helper.close();
+        }
+
+        return remark;
+    }
+
+    //6
+    /*private String getCBStatusFromDatabase(long memberID, long orgID) {
+
+        String status = null;
+
+        ufinDbHelper helper = new ufinDbHelper(requireContext());
+
+        try (SQLiteDatabase db = helper.getReadableDatabase();
+             Cursor cursor = db.query(
+                     ufinDbContract.MemberCBStatusAuto.TABLE_NAME,
+                     new String[]{
+                             ufinDbContract.MemberCBStatusAuto.COLUMN_CBStatus
+                     },
+                     ufinDbContract.MemberCBStatusAuto.COLUMN_MemberID + " = ? AND "
+                             + ufinDbContract.MemberCBStatusAuto.COLUMN_Org_ID + " = ?",
+                     new String[]{
+                             String.valueOf(memberID),
+                             String.valueOf(orgID)
+                     },
+                     null, null, null)) {
+
+            if (cursor.moveToFirst()) {
+                status = cursor.getString(0);
+            }
+
+        } catch (Exception e) {
+            Log.e("CB_STATUS", "Failed to read CB status", e);
+        } finally {
+            helper.close();
+        }
+        return status;
+    }*/
+
+    //RK
+
 ////bmp 07-Jul-25
-        /*ActivityResultLauncher<Intent> startActivityIntent = registerForActivityResult(
+    ActivityResultLauncher<Intent> startActivityIntent = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -1499,10 +1712,10 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                         ShowdlgAlertonActivityResult("CAMERA REQUEST CANCELED!");
                     }
                 }
-                });*/
+            });
 
     //Rk
-        ActivityResultLauncher<Intent> startActivityIntent = registerForActivityResult(
+/*ActivityResultLauncher<Intent> startActivityIntent = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
 
@@ -1627,7 +1840,7 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                         }
                     }
                 }
-        );
+);*/
     void ShowdlgAlertonActivityResult(String strMessage) {
 //        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(mainActivity.getApplicationContext());
         AlertDialog.Builder dlgAlert = new AlertDialog.Builder(getContext());
@@ -1997,11 +2210,6 @@ public class RevisitFragment extends Fragment implements View.OnClickListener {
                             (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_HOMELOAN_REQUIRED) ||
                             (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_TURNLOAN_REQUIRED) ) {
                         mainActivity.GetMemberCBCheck(mainActivity.RevisitMemberList.get(i).MemberID);
-//                    } else if(      (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_LOAN_NOT_REQUIRED) ||
-//                                    (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_LOAN_REQUIRED_GROUP_NOT_READY) ||
-//                                    (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_ANOTHER_LOAN_CREDIT_REJECT) ||
-//                                    (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_MOVEDTO_NEWPLACE_PERMANENT_BLACKLIST) ||
-//                                    (mainActivity.RevisitMemberList.get(i).VisitDetailsID == clsRevisitMember.REVISIT_REMARK_ID_NO_RATIONCARD) ) {
                     } else {
                         mainActivity.GetMemberLoanStatus(mainActivity.RevisitMemberList.get(i).MemberID);
                     }
